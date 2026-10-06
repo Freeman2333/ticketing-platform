@@ -1,0 +1,65 @@
+name: ticketing-platform
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Not wired into backend code yet (project-plan.md Step 0: Redis is "No"
+  # in backend-design.md §10) - provisioned now to avoid a second infra
+  # bootstrap once seat-hold locks/rate limiting/BullMQ land in Phase 2.
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:6379:6379'
+    volumes:
+      - redis_data:/data
+
+  # Not wired into backend code yet (project-plan.md Step 0: RabbitMQ is
+  # "No" in backend-design.md §10) - provisioned now for when
+  # EventsApi/EventEmitterModule get extracted to real services.
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - '127.0.0.1:5672:5672'
+      # Management UI - localhost only (backend-design.md §9, misconfiguration).
+      - '127.0.0.1:15672:15672'
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  # Real MinIO's own images (Docker Hub and Quay) now require a login and
+  # are no longer freely pullable - MinIO gated them after this design was
+  # written. adobe/s3mock is a stand-in that speaks the same S3 API, used
+  # only because the real image isn't freely available; the env var names
+  # below stay MINIO_* since they're the documented contract
+  # (integration-design.md §1), not tied to which binary answers them.
+  minio:
+    image: adobe/s3mock:latest
+    restart: unless-stopped
+    environment:
+      COM_ADOBE_TESTING_S3MOCK_STORE_INITIAL_BUCKETS: ${MINIO_BUCKET}
+      COM_ADOBE_TESTING_S3MOCK_STORE_ROOT: /s3mockroot
+      COM_ADOBE_TESTING_S3MOCK_STORE_RETAIN_FILES_ON_EXIT: 'true'
+    ports:
+      - '127.0.0.1:9000:9090'
+    volumes:
+      - minio_data:/s3mockroot
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+  minio_data:
