@@ -6,7 +6,14 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { config } from 'dotenv';
+import { resolve } from 'node:path';
 import { AppModule } from './app/app.module';
+
+// Credentials live in the repo-root .env (shared with docker-compose.yml,
+// integration-design.md §1), not a per-app one - same reasoning as
+// prisma7.config.ts.
+config({ path: resolve(__dirname, '../../../.env') });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

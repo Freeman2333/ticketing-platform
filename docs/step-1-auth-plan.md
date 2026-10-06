@@ -6,11 +6,11 @@ In progress. Breaks `project-plan.md` §8, Step 1 into concrete, ordered tasks, 
 
 ## Part A — Prisma foundation (blocks everything else)
 
-- [ ] Install Prisma; `schema.prisma` with the `multiSchema` preview feature enabled, `datasource` pointing at `DATABASE_URL`.
-- [ ] Model the `auth` schema: `User` (id, email, password_hash, role enum, created_at), `RefreshToken` (id, user_id → User, token_hash, expires_at) — per `backend-design.md` §8.
-- [ ] First migration via `prisma migrate dev`, applied against the local Postgres (already running via `docker-compose.yml`).
-- [ ] `PrismaModule`/`PrismaService` — one shared connection pool for the whole Phase 1 monolith (`backend-design.md` §11), injected by the `auth` module (and later `events`/`orders`).
-- [ ] Add `DATABASE_URL` to the backend's actual `.env`, matching the credentials already in `docker-compose.yml`.
+- [x] Install Prisma; `schema.prisma` with the `multiSchema` preview feature enabled, `datasource` pointing at `DATABASE_URL`.
+- [x] Model the `auth` schema: `User` (id, email, password_hash, role enum, created_at), `RefreshToken` (id, user_id → User, token_hash, expires_at) — per `backend-design.md` §8.
+- [x] First migration via `prisma migrate dev`, applied against the local Postgres (already running via `docker-compose.yml`).
+- [x] `PrismaModule`/`PrismaService` — one shared connection pool for the whole Phase 1 monolith (`backend-design.md` §11), injected by the `auth` module (and later `events`/`orders`).
+- [x] Add `DATABASE_URL` to the backend's actual `.env`, matching the credentials already in `docker-compose.yml`.
 
 ## Part B — Backend `auth` module
 
