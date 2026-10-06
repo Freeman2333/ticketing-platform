@@ -71,6 +71,12 @@ export default defineConfig((_env, argv) => {
           './App': './src/App.tsx',
         },
         shared: ['react', 'react-dom'],
+        // The dts exchange writes a `@mf-types` folder into each package's
+        // own root, which the dev server's watcher then sees as a source
+        // change and recompiles on - which re-triggers the exchange, in a
+        // loop with the other side. Off until cross-remote type-checking is
+        // an actual requirement.
+        dts: false,
       }),
     ],
   };

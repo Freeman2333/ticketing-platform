@@ -54,6 +54,11 @@ export default defineConfig((_env, argv) => {
             },
           },
         },
+        {
+          test: /\.css$/,
+          use: ['postcss-loader'],
+          type: 'css',
+        },
       ],
     },
     plugins: [
@@ -69,6 +74,12 @@ export default defineConfig((_env, argv) => {
         // No build-time `remotes:` block - registered at runtime in
         // src/mf.ts at module load time.
         shared: ['react', 'react-dom'],
+        // The dts exchange writes a `@mf-types` folder into each package's
+        // own root, which the dev server's watcher then sees as a source
+        // change and recompiles on - which re-triggers the exchange, in a
+        // loop with the other side. Off until cross-remote type-checking is
+        // an actual requirement.
+        dts: false,
       }),
     ],
   };

@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+@import '@ticketing/ui/theme.css';
+
+/* Tailwind's automatic content detection only scans this file's own
+   directory tree. Button's source lives in the @ticketing/ui package, so
+   it has to be added explicitly or its classes never get generated. */
+@source '../../ui/src';

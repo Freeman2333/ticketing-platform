@@ -97,7 +97,7 @@ Locally, `nx serve catalog` starts both `catalog` and `shell` together, each on 
 
 ## 6. Shared UI / design system
 
-`shell` and every remote consume a single shared Nx library, `libs/ui`, built on shadcn/ui and Tailwind CSS. Components are generated once into `libs/ui` via the shadcn CLI and exposed as a Module Federation shared singleton — never regenerated independently inside `shell` or any remote. Design tokens (colors, spacing, radii) live in one shared Tailwind preset that each app's own `tailwind.config` extends, so the generated utility classes stay in sync across independently-built apps instead of drifting apart over time.
+`shell` and every remote consume a single shared Nx library, `libs/ui` (package `@ticketing/ui`), built on shadcn/ui and Tailwind CSS (v4). Components are generated once into `libs/ui` via the shadcn CLI and exposed as a Module Federation shared singleton — never regenerated independently inside `shell` or any remote. Design tokens (colors, spacing, radii) live in one shared CSS file, `libs/ui/theme.css`, that each app imports after `@import "tailwindcss";` in its own entry CSS — Tailwind v4 has no `tailwind.config.js` presets array by default, so a shared CSS import is what keeps generated utility classes in sync across independently-built apps, replacing the v3-style preset this section originally assumed.
 
 This follows the same pattern already used for `@ticketing/auth-client` (§3) and `libs/api-client` (§4): anything that must stay visually or behaviorally identical across `shell` and remotes lives in exactly one shared library, never duplicated per app.
 

@@ -1,5 +1,6 @@
 import { Component, Suspense, type ReactNode } from 'react';
 import { lazyProvider } from './mf';
+import { Button } from '@ticketing/ui';
 
 // ProviderBoundary catches the lazy() rejection that fires when a provider's
 // remoteEntry.js can't be fetched (provider not running, network error,
@@ -39,6 +40,7 @@ export function App() {
   return (
     <main>
       <h1>shell</h1>
+      <Button variant={'destructive'}>Test button (Tailwind + shadcn)</Button>
       <ProviderBoundary name="catalog">
         <ProviderCatalog />
       </ProviderBoundary>
