@@ -93,7 +93,7 @@ This keeps the API contract in exactly one place in the frontend workspace. When
 
 `shell`'s router only matches a top-level path prefix (e.g. `/catalog/*`) and mounts `catalog`'s root component; everything under that prefix is routed entirely by `catalog`'s own router, lazily loaded via `React.lazy`/`Suspense`. This keeps `shell` from needing to know `catalog`'s route tree, consistent with the "thin shell" rule in §2.
 
-Locally, `nx serve shell` starts `shell` and all configured remotes together via Nx's Module Federation dev-server executor, each on its assigned port (`shell`: 4200, `catalog`: 4201 by default). The `--devRemotes=catalog` flag restricts which remotes run in live-reload dev mode versus serving from their last static build.
+Locally, `nx serve catalog` starts both `catalog` and `shell` together, each on its assigned port (`shell`: 4200, `catalog`: 4201) — the generated `catalog` project depends on `shell:serve`, so the remote is what brings the pair up, not the host. (Confirmed against the actual generator output, `@nx/react:consumer`/`:provider` — this is the opposite direction from what an earlier draft of this section assumed.)
 
 ## 6. Shared UI / design system
 
