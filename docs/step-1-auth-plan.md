@@ -14,9 +14,9 @@ In progress. Breaks `project-plan.md` §8, Step 1 into concrete, ordered tasks, 
 
 ## Part B — Backend `auth` module
 
-- [ ] Scaffold `AuthModule` with the `public/`/`internal/` folder seam (`backend-design.md` §3).
-- [ ] `internal/`: `AuthController`, `AuthService`, Prisma-backed repositories.
-- [ ] `public/`: `AuthApi` interface + DTOs — `validateUser()`, `issueTokens()`, `getUserById()` (signatures sketched in `backend-design.md` §2).
+- [x] Scaffold `AuthModule` with the `public/`/`internal/` folder seam (`backend-design.md` §3).
+- [x] `internal/`: `AuthController`, `AuthService`, Prisma-backed repositories.
+- [x] `public/`: `AuthApi` interface + DTOs — `validateUser()`, `issueTokens()`, `getUserById()` (signatures sketched in `backend-design.md` §2).
 - [ ] Password hashing: `argon2id`.
 - [ ] JWT: short-lived access token (HS256, ~15 min) + refresh token (stored hashed, rotated on use) via `@nestjs/jwt`.
 - [ ] Endpoints: `POST /auth/register`, `POST /auth/login`, `POST /auth/refresh` (reads/rotates the httpOnly/Secure/SameSite refresh cookie), `POST /auth/logout`, `GET /auth/me` (`backend-design.md` §5).
