@@ -5,6 +5,12 @@
   "references": [
     {
       "path": "./packages/ui"
+    },
+    {
+      "path": "./packages/backend-e2e"
+    },
+    {
+      "path": "./packages/backend"
     }
   ],
   "compilerOptions": {}
