@@ -44,6 +44,7 @@ The `shell` stays deliberately "thin": its only responsibilities are routing bet
 This is enforced as a design rule, not just a convention: if a feature decision would add business logic to `shell`, that logic belongs in a remote instead. The reasoning is that the shell is the one piece of the frontend hosting fabric that's expensive to get wrong — it's rarely redeployed, and every remote depends on it being stable. A shell that absorbs business logic over time stops being a hosting shell and becomes just another remote with extra privilege, which defeats the purpose of splitting the frontend into independently deployable pieces in the first place.
 
 **Components inside `shell`:**
+
 - `AppShell` — the root layout (header/footer/content outlet).
 - `Header` / `Footer` — nav bar (auth-aware login/logout control), footer.
 - `AppRouter` — top-level routing, matching path prefixes to remotes (§5).
@@ -54,6 +55,7 @@ This is enforced as a design rule, not just a convention: if a feature decision 
 One explicit exception to "no business content": `shell` owns the login/register pages. No "auth remote" exists or is planned — remotes are `catalog` now, then `checkout/cart`/`account/orders`/`admin dashboard` in Phase 6 — so authentication has to live somewhere in Phase 1, and it isn't `catalog`'s domain. Session/auth is cross-cutting infrastructure needed before any remote mounts, not event-browsing business logic, so it stays in `shell`.
 
 **Components inside `catalog`** (the only remote in Phase 1 — `checkout/cart`, `account/orders`, and `admin dashboard` are added only in Phase 6, `project-plan.md` §5):
+
 - `CatalogRouter` — `catalog`'s own internal routing (`/` list, `/:eventId` details), entirely owned here — `shell` never sees it (§5).
 - `EventList` — the event list page, with the debounced filter (§9); renders a list of `EventCard`.
 - `EventDetailsPage` — event details + seat map (separate queries, §7); renders `EventInfo`, `SeatMap`, `ReservationPanel`.
@@ -73,7 +75,7 @@ Instead, auth/session handling lives in a plain shared library, `@ticketing/auth
 - `onAuthChange()` — subscription for login/logout/token-refresh events.
 - A fetch/axios interceptor that attaches the access token to outgoing requests and triggers a refresh on 401.
 
-`shell` owns the orchestration — login, logout, and refresh-token rotation (consistent with the token flow in [`backend-design.md`](./backend-design.md) §6) — by calling into `@ticketing/auth-client`. Remotes (`catalog` and later additions) only ever *read* the current token through the same library; they never reimplement refresh logic themselves.
+`shell` owns the orchestration — login, logout, and refresh-token rotation (consistent with the token flow in [`backend-design.md`](./backend-design.md) §6) — by calling into `@ticketing/auth-client`. Remotes (`catalog` and later additions) only ever _read_ the current token through the same library; they never reimplement refresh logic themselves.
 
 The underlying reasoning: a token is session data, not UI state. Centralizing its handling in one shared library — rather than React state passed across the federation boundary — means the refresh logic can't drift out of sync between shell and remote, and removes the runtime coupling risk that comes with sharing stateful UI primitives like Context across independently-deployed applications.
 

@@ -21,32 +21,32 @@ Build a **modular monolith** first (one NestJS app, strict module seams), then m
 
 These were decided in planning discussion and apply across all phases unless a later phase explicitly revisits one:
 
-| Area | Decision |
-|---|---|
-| Monorepo | Nx |
-| Package manager | pnpm |
-| Backend framework | NestJS |
-| Database | PostgreSQL |
-| ORM | Prisma only, across all modules (ORM diversity across services was considered and dropped — one less variable while learning NestJS itself) |
-| Cache / locks / queues | Redis (caching, distributed seat-hold locks, rate limiting, BullMQ, pub/sub) |
-| Message brokers | RabbitMQ first (work queues, retries, DLQ), Kafka later (event streaming, consumer groups, replay) |
-| Object storage | MinIO (S3-compatible) |
-| Local infra | Full `docker-compose.yml` from day one (Postgres, Redis, RabbitMQ, MinIO) even before all of them are wired into code, so the environment never needs re-bootstrapping mid-project |
-| Frontend architecture | Microfrontends via Module Federation |
-| Frontend tooling | Nx's Rspack-based Module Federation generators (shell host + remotes), not hand-wired Vite MF, not Next.js MF (currently less stable) |
-| Data fetching | TanStack Query, typed client generated from the backend's OpenAPI spec |
-| Auth | Passport JWT + refresh, RBAC guards now; OAuth2/OIDC via Keycloak considered for a later phase |
-| Testing | Jest (unit), Supertest + Testcontainers (e2e, real ephemeral Postgres — no mocked DB) |
-| CI/CD | GitHub Actions (introduced once there's more than one phase to protect against regressions) |
-| Observability (later) | OpenTelemetry, Prometheus, Grafana, Loki, Jaeger |
-| Load testing (later) | k6, targeted at the ticket-sale-spike scenario |
-| Orchestration (later) | Kubernetes, once the monolith is actually split into services |
+| Area                   | Decision                                                                                                                                                                           |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Monorepo               | Nx                                                                                                                                                                                 |
+| Package manager        | pnpm                                                                                                                                                                               |
+| Backend framework      | NestJS                                                                                                                                                                             |
+| Database               | PostgreSQL                                                                                                                                                                         |
+| ORM                    | Prisma only, across all modules (ORM diversity across services was considered and dropped — one less variable while learning NestJS itself)                                        |
+| Cache / locks / queues | Redis (caching, distributed seat-hold locks, rate limiting, BullMQ, pub/sub)                                                                                                       |
+| Message brokers        | RabbitMQ first (work queues, retries, DLQ), Kafka later (event streaming, consumer groups, replay)                                                                                 |
+| Object storage         | MinIO (S3-compatible)                                                                                                                                                              |
+| Local infra            | Full `docker-compose.yml` from day one (Postgres, Redis, RabbitMQ, MinIO) even before all of them are wired into code, so the environment never needs re-bootstrapping mid-project |
+| Frontend architecture  | Microfrontends via Module Federation                                                                                                                                               |
+| Frontend tooling       | Nx's Rspack-based Module Federation generators (shell host + remotes), not hand-wired Vite MF, not Next.js MF (currently less stable)                                              |
+| Data fetching          | TanStack Query, typed client generated from the backend's OpenAPI spec                                                                                                             |
+| Auth                   | Passport JWT + refresh, RBAC guards now; OAuth2/OIDC via Keycloak considered for a later phase                                                                                     |
+| Testing                | Jest (unit), Supertest + Testcontainers (e2e, real ephemeral Postgres — no mocked DB)                                                                                              |
+| CI/CD                  | GitHub Actions (introduced once there's more than one phase to protect against regressions)                                                                                        |
+| Observability (later)  | OpenTelemetry, Prometheus, Grafana, Loki, Jaeger                                                                                                                                   |
+| Load testing (later)   | k6, targeted at the ticket-sale-spike scenario                                                                                                                                     |
+| Orchestration (later)  | Kubernetes, once the monolith is actually split into services                                                                                                                      |
 
 ## 5. Phased roadmap
 
 Each phase builds on the previous one; later phases are intentionally not designed in detail yet — they get system-design documents of their own when their turn comes.
 
-1. **Phase 1 — Modular monolith + first microfrontend pair.** One NestJS app with `auth`, `events`, `orders` modules (strict module seams, Prisma multiSchema), Swagger, guards/pipes/interceptors, Terminus health checks, `EventEmitterModule` for in-process side effects, `@nestjs/schedule` for reservation expiry, a WebSocket gateway for live seat-availability updates, and event poster uploads to MinIO (`system-design.md` §3/§7). In parallel: an Nx Module Federation `shell` (host) + `catalog` (first remote) consuming the API. Full `docker-compose.yml` stood up now. *This is the phase currently being designed — see §6.*
+1. **Phase 1 — Modular monolith + first microfrontend pair.** One NestJS app with `auth`, `events`, `orders` modules (strict module seams, Prisma multiSchema), Swagger, guards/pipes/interceptors, Terminus health checks, `EventEmitterModule` for in-process side effects, `@nestjs/schedule` for reservation expiry, a WebSocket gateway for live seat-availability updates, and event poster uploads to MinIO (`system-design.md` §3/§7). In parallel: an Nx Module Federation `shell` (host) + `catalog` (first remote) consuming the API. Full `docker-compose.yml` stood up now. _This is the phase currently being designed — see §6._
 2. **Phase 2 — Redis.** Seat-hold distributed locks (TTL-based) to solve the "last seat" race, rate limiting on the booking endpoint, response caching where it matters.
 3. **Phase 3 — Microservice extraction.** Start with a TCP/Redis transport to feel the shape of the problem, then move to RabbitMQ. Extract `notifications` first (lowest risk, no state to migrate), add BullMQ for queued email/push work.
 4. **Phase 4 — Saga + payments.** Stripe (test mode) integration; booking → payment → ticket-issuance flow with compensation on failure, outbox pattern, idempotent consumers. First real use of the CQRS module if it fits naturally here.
@@ -60,7 +60,7 @@ This plan document is the single source of truth for **scope and sequencing** �
 
 [`system-design.md`](./system-design.md) sits above the phase-specific documents below — it fixes "what" the whole product is (functional requirements, data model, cross-cutting concerns) and the constraints the documents below must stay consistent with. It was written after `backend-design.md` and an initial pass of `frontend-design.md` already existed, so both were then reconciled against it; new phase-specific documents going forward should be checked against it as they're written, not after the fact.
 
-Each phase that's actively being designed also gets its own detailed system-design document(s), built *from* this plan and `system-design.md`, not instead of them:
+Each phase that's actively being designed also gets its own detailed system-design document(s), built _from_ this plan and `system-design.md`, not instead of them:
 
 - [`backend-design.md`](./backend-design.md) — Phase 1 backend architecture (module breakdown, isolation rules, request pipeline, API specification, security, data model, scalability, testing strategy).
 - [`frontend-design.md`](./frontend-design.md) — Phase 1 frontend architecture (shell/remote split, Module Federation setup, data fetching, WebSocket consumption, performance, accessibility, rendering strategy).

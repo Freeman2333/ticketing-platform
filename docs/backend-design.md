@@ -35,6 +35,7 @@ Features this phase is built to exercise (checked items are in scope for Phase 1
 Three modules in Phase 1, each a self-contained slice of the domain:
 
 ### `auth` module
+
 - **Responsibility**: user registration/login, JWT issuance + refresh, role management.
 - **Owns**: `auth` Postgres schema — `users`, `refresh_tokens` tables.
 - **Public interface** (sketch): `AuthApi` — `validateUser()`, `issueTokens()`, `getUserById()`. Other modules that need "who is this user" (e.g. Orders needs the buyer's id) only ever get an id/role passed in via the request context — they never call into `auth` to look up a user.
@@ -42,6 +43,7 @@ Three modules in Phase 1, each a self-contained slice of the domain:
 - **Refresh flow**: the refresh token lives in an httpOnly/Secure/SameSite cookie, never in the request body (`system-design.md` §8, A07). `POST /auth/refresh` reads it from the cookie, and on success rotates it — the old refresh token is invalidated and a new one replaces it in the response cookie.
 
 ### `events` module
+
 - **Responsibility**: event catalog, venues, seat maps, availability; the WebSocket gateway for live seat-availability updates (`system-design.md` §3/§4/§7 — owned here because `seats` belongs to this module's schema), built on **Socket.IO** (NestJS's default WS adapter) rather than raw `ws` — the Redis adapter for horizontal scaling (below) and the "room"-based scoping in §5 only exist for Socket.IO; event poster uploads to MinIO (`system-design.md` §3 — `posterUrl` is a field on `Event`), processed with **sharp** (resize, WebP conversion, `system-design.md` §8).
 - **Owns**: `events` Postgres schema — `events`, `venues`, `seats` tables.
 - **Public interface** (sketch): `EventsApi` — `getEvent(id)`, `listEvents(filter)`, `getSeatAvailability(eventId)`, `reserveSeats(eventId, seatIds)` (the last one marks seats as held; actual distributed locking is a later-phase concern — see roadmap). Poster upload and the WebSocket gateway are internal to this module, not part of the cross-module contract.
@@ -49,6 +51,7 @@ Three modules in Phase 1, each a self-contained slice of the domain:
 - **Serving posters**: the bucket is public-read, served to the browser directly from a dedicated MinIO hostname behind the reverse proxy (§10) — not a presigned URL and not proxied through the backend. Presigned URLs were considered and rejected here specifically: they expire, which would conflict with the long-lived `Cache-Control` headers on posters and the Redis-cached event-details response (§ Scalability and performance) — both assume `posterUrl` stays stable. Uploading still goes through the backend (`POST /events/:id/poster`) regardless, since `sharp` has to process the file before it's written to MinIO.
 
 ### `orders` module
+
 - **Responsibility**: order/booking lifecycle — `draft` → `reserved` → `paid` → `issued`, plus `cancelled` (`system-design.md` §5) — payment itself is a later phase; Phase 1 models the state machine and the happy path up to "reserved".
 - **Owns**: `orders` Postgres schema — `orders`, `order_items` tables. A unique constraint on `order_items.seat_id` (among active order items) is part of the Phase 1 schema — a second, DB-level line of defense against double-booking alongside the Redis lock added in Phase 2 (`system-design.md` § Database performance); it doesn't depend on Redis existing yet.
 - **Depends on**: `EventsApi` (to reserve seats and read event data) via DI token, never on `EventsService` directly.
@@ -70,10 +73,10 @@ These are hard rules, enforced by folder structure and lint, not just convention
 
 Two patterns cover all cross-module interaction, chosen specifically because both have an obvious "what this becomes after extraction":
 
-| Need | Phase 1 (monolith) | After extraction |
-|---|---|---|
-| Synchronous read/command (e.g. Orders needs to reserve seats) | DI-token interface (`EventsApi`), injected and called in-process | Swap the DI provider for an HTTP/gRPC client with the same interface — callers don't change |
-| Side effect / notification (e.g. "an order was placed") | `EventEmitterModule`, in-process `emit`/`@OnEvent` | Swap the emitter for a RabbitMQ/Kafka publisher; consumers subscribe to the same event name/payload over the broker |
+| Need                                                          | Phase 1 (monolith)                                               | After extraction                                                                                                    |
+| ------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Synchronous read/command (e.g. Orders needs to reserve seats) | DI-token interface (`EventsApi`), injected and called in-process | Swap the DI provider for an HTTP/gRPC client with the same interface — callers don't change                         |
+| Side effect / notification (e.g. "an order was placed")       | `EventEmitterModule`, in-process `emit`/`@OnEvent`               | Swap the emitter for a RabbitMQ/Kafka publisher; consumers subscribe to the same event name/payload over the broker |
 
 Concretely: `OrdersModule` depends on an `EVENTS_API` injection token typed as `EventsApi`. Today, `EventsModule` provides a local class implementing it. Later, a microservice client implementing the same interface gets provided instead, and `OrdersService` doesn't change a single line.
 
@@ -86,6 +89,7 @@ The WebSocket broadcast for live seat availability (`system-design.md` §3/§7) 
 Conventions already fixed in `system-design.md` §6: REST documented via Swagger/OpenAPI, no versioning, one error shape across all endpoints, JWT bearer auth in the `Authorization` header; the WebSocket channel is separate from this REST surface.
 
 **`auth`:**
+
 - `POST /auth/register` — role chosen at signup is self-service for `attendee`/`organizer`; `admin` is never self-service, assigned out-of-band.
 - `POST /auth/login`
 - `POST /auth/refresh` — reads the refresh token from the httpOnly cookie, rotates it.
@@ -94,6 +98,7 @@ Conventions already fixed in `system-design.md` §6: REST documented via Swagger
 - **Future (Phase 6, alongside the admin dashboard remote)**: user/role management endpoints (list users, change a user's role) — not designed yet.
 
 **`events`:**
+
 - `GET /events` — list with filters, public.
 - `GET /events/:id` — details (venue, title, time, poster), cached (§ Performance).
 - `GET /events/:id/seats` — kept separate from the above on purpose: seat availability is never cached, event details are, so splitting the endpoint lets each follow its own caching behavior.
@@ -107,6 +112,7 @@ Conventions already fixed in `system-design.md` §6: REST documented via Swagger
 - **WebSocket** (not REST): a client joins a room scoped to one event (e.g. `event:{id}`) and receives updates only for that event, not every event at once.
 
 **`orders`:**
+
 - `POST /orders` — body `{ eventId, seatIds }`; creates `Order` + `OrderItem`s, calling `EventsApi.reserveSeats()` internally. Authenticated attendee.
 - `GET /orders` — the caller's own orders; `userId` comes from the JWT, never from a request parameter (A01, `system-design.md` §8).
 - `GET /orders/:id` — ownership-checked.
@@ -124,11 +130,13 @@ Conventions already fixed in `system-design.md` §6: REST documented via Swagger
 ## 7. Security
 
 **Auth & RBAC:**
+
 - **Token flow**: login returns a short-lived access token (JWT, ~15 min) and a longer-lived refresh token (stored hashed in the `auth` schema, rotated on use).
 - **Role model**: a `role` enum on `users` (`attendee`, `organizer`, `admin` to start). The JWT payload carries `sub` (user id) and `role`, so downstream guards never need a DB round-trip to check permissions.
 - **Where checks live**: `RolesGuard` + `@Roles('organizer')` decorator on controller methods that need it (e.g. creating an event). Module-level business rules (e.g. "only the order's owner can cancel it") are checked in the service layer against the id in the request context, not via a generic guard.
 
 **Rest of OWASP Top 10:2025 (`system-design.md` §8), as it applies to this backend:**
+
 - Injection: Prisma parameterizes every query; raw SQL (if ever needed) must use a parameterized method, never string concatenation.
 - Insecure design: already addressed by decisions elsewhere in this doc — the DB unique constraint on `order_items.seat_id` (§2), the Redis lock (Phase 2), rate limiting on reservation (Phase 2), TTL on holds.
 - Integrity: Stripe webhooks are verified by signature before being trusted — a Phase 4 concern, not detailed further here yet.
@@ -151,7 +159,7 @@ orders.orders         (id, user_id [opaque id, no FK], event_id [opaque id, no F
 orders.order_items    (id, order_id -> orders.orders, seat_id [opaque id, no FK], price)
 ```
 
-Note the deliberate asymmetry: foreign keys exist *within* a schema, never *across* schemas — `orders.orders.user_id` and `event_id` are just stored ids, validated at write time via the module's public API, not enforced by the database.
+Note the deliberate asymmetry: foreign keys exist _within_ a schema, never _across_ schemas — `orders.orders.user_id` and `event_id` are just stored ids, validated at write time via the module's public API, not enforced by the database.
 
 **Indexes** (`system-design.md` § Database performance): a composite index on `seats(event_id, status)` — the hot "available seats for event X" query — plus `orders.user_id`, `order_items.order_id`, `order_items.seat_id`.
 
@@ -167,12 +175,12 @@ Note the deliberate asymmetry: foreign keys exist *within* a schema, never *acro
 
 `docker-compose.yml` provisions four services from day one:
 
-| Service | Wired into code in Phase 1? | Why provisioned now anyway |
-|---|---|---|
-| Postgres | Yes | Core datastore for all three modules |
-| Redis | No | Needed soon for seat-hold locks, rate limiting, BullMQ — avoids a second infra bootstrap later |
-| RabbitMQ | No | Needed when `EventsApi`/`EventEmitterModule` get extracted to real services |
-| MinIO | Yes | Event poster uploads (`system-design.md` §3); public-read bucket, served to the browser directly (§2, `events` module) via its own dedicated hostname behind the reverse proxy — never mounted under a path on the main proxy, since MinIO's S3 request signing doesn't support that |
+| Service  | Wired into code in Phase 1? | Why provisioned now anyway                                                                                                                                                                                                                                                           |
+| -------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Postgres | Yes                         | Core datastore for all three modules                                                                                                                                                                                                                                                 |
+| Redis    | No                          | Needed soon for seat-hold locks, rate limiting, BullMQ — avoids a second infra bootstrap later                                                                                                                                                                                       |
+| RabbitMQ | No                          | Needed when `EventsApi`/`EventEmitterModule` get extracted to real services                                                                                                                                                                                                          |
+| MinIO    | Yes                         | Event poster uploads (`system-design.md` §3); public-read bucket, served to the browser directly (§2, `events` module) via its own dedicated hostname behind the reverse proxy — never mounted under a path on the main proxy, since MinIO's S3 request signing doesn't support that |
 
 ## 11. Scalability and performance
 

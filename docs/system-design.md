@@ -25,20 +25,23 @@ This is a mini Ticketmaster-style ticketing platform — events, venues, seat bo
 ## 2. Goals and non-goals
 
 **Goals:**
+
 - Depth in NestJS and backend production patterns (concurrency, async workflows, caching, messaging) on a realistic domain.
 - Depth in microfrontends (Module Federation), with the rest of the frontend stack as support.
 - A system that behaves like a real production ticketing platform for the scenarios it implements, even though it will never serve real traffic or real payments.
 
 **Non-goals:**
+
 - Not a commercial product — no real users, no real payment processing (Stripe is used in test mode only, in a later phase).
 - Not optimized for build speed or minimal scope — depth of learning is prioritized over shipping quickly.
-- Not designed to scale beyond what's needed to meaningfully exercise the tools being learned (e.g. Kafka/k6 load testing is about *exercising* the scenario, not about actually surviving real-world traffic).
+- Not designed to scale beyond what's needed to meaningfully exercise the tools being learned (e.g. Kafka/k6 load testing is about _exercising_ the scenario, not about actually surviving real-world traffic).
 
 **Constraint: zero cost.** No paid third-party services or libraries anywhere in the stack. Every piece of infrastructure (Postgres, Redis, RabbitMQ, MinIO, Kafka, the observability stack) is self-hosted via `docker-compose` on the developer's own machine; Stripe is used in test mode only. Features like seat maps are plain data (a `seats` table) rendered with a hand-built UI component, never a licensed third-party product. Every new tool or service considered in later phases is checked against this constraint before being adopted.
 
 ## 3. Functional requirements
 
 **Attendee:**
+
 - Register, log in, log out, session refresh.
 - Browse the event list, with filters.
 - View event details: venue, seat map, availability, price.
@@ -50,15 +53,18 @@ This is a mini Ticketmaster-style ticketing platform — events, venues, seat bo
 - Cancel an order, where its state allows it.
 
 **Organizer:**
+
 - Create and manage a venue (its seat map).
 - Create and manage an event (schedule, pricing), including uploading a poster/cover image for it, stored in object storage (MinIO).
 - View sales/usage analytics for their own events — from Phase 5, once event streaming and the analytics read model exist.
 
 **Admin:**
+
 - Manage users and roles.
 - View an admin dashboard of overall platform activity.
 
 **System (not user-facing):**
+
 - Send notifications (email/push) on order events — from Phase 3.
 - Automatically expire unpaid seat holds once their TTL elapses (already specified in `backend-design.md`).
 - Stream sales/usage events for analytics — from Phase 5.
@@ -125,6 +131,7 @@ Relationships, in plain terms:
 ## 7. Key flows
 
 **Browse → select seat → reserve (happy path, Phase 1)**
+
 1. Attendee opens the site; `shell` loads, then loads the `catalog` remote.
 2. `catalog` calls the backend's `events` module to list events, then to fetch one event's details (venue, seat map, availability).
 3. Attendee selects a seat and submits a reservation request.
@@ -132,6 +139,7 @@ Relationships, in plain terms:
 5. The backend returns the hold's expiry time; `catalog` shows a countdown.
 
 **Two attendees race for the last seat (concurrency, Phase 2)**
+
 1. Two attendees, in two browser tabs, both click "reserve" on the same last available seat within milliseconds of each other.
 2. Both requests hit the `orders` module at roughly the same time.
 3. Both try to acquire a Redis lock on that seat id; only one succeeds, the other's attempt fails immediately.
@@ -139,6 +147,7 @@ Relationships, in plain terms:
 5. The attendee who didn't gets an immediate "seat no longer available" response — not a slow one, and not left waiting.
 
 **Reservation → payment → ticket issuance (async/saga, Phase 4)**
+
 1. Attendee, holding a `reserved` order, submits payment details.
 2. Backend charges the order via Stripe (test mode); a `Payment` row is created for the attempt.
 3. On success, the order moves to `paid` and a domain event is emitted.
@@ -147,6 +156,7 @@ Relationships, in plain terms:
 6. If the payment fails (e.g. a declined card), the order stays `reserved` — the seat hold is still valid until its TTL — and the attendee can retry, producing another `Payment` row for the same order.
 
 **Live seat availability (real-time, Phase 1)**
+
 1. Attendee A reserves a seat, per the happy-path flow.
 2. Once the seat is successfully marked held, the backend publishes an update over the WebSocket gateway for that event.
 3. Every other attendee currently viewing that event's seat map receives the update over the same channel and sees the seat flip to "held" instantly, without refreshing.
@@ -158,6 +168,7 @@ Relationships, in plain terms:
 **Capacity estimate (hypothetical, used as a design target, not a real traffic promise):** 50,000 registered attendees; one popular event with 2,000 seats whose on-sale moment draws 5,000 reservation attempts within the first minute, front-loaded into a burst of roughly 500–1,000 requests/sec in the first few seconds. About 3,000 of those attempts are necessarily rejected ("seat no longer available") once the 2,000 seats are taken.
 
 **Targets derived from that estimate:**
+
 - The reserve endpoint, under that burst (Redis lock contention included): p95 latency < 300ms — including for the ~3,000 requests that get rejected; a rejection must be fast, not hung.
 - Catalog browsing (served from cache): p95 latency < 150ms.
 - The Phase 7 k6 load test targets exactly this scenario — ramp to 1,000 virtual users reserving seats for one 2,000-seat event — and asserts both no double-booked seat (correctness) and the latency targets above.

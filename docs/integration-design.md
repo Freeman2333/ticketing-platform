@@ -7,6 +7,7 @@ Complete for Phase 1. Scope is narrower than originally planned in `project-plan
 ## 1. Env/config contract
 
 **Backend:**
+
 - `DATABASE_URL` — Postgres connection string.
 - `JWT_SECRET` — HS256 signing secret (`backend-design.md` §2).
 - `CORS_ORIGIN` — the one allowed frontend origin (`backend-design.md` §6).
@@ -15,6 +16,7 @@ Complete for Phase 1. Scope is narrower than originally planned in `project-plan
 - `REDIS_URL`, `RABBITMQ_URL` — added when their phases arrive (Phase 2, Phase 3); not needed yet.
 
 **Frontend:**
+
 - Only environment variables prefixed `NX_PUBLIC_*` are ever bundled into client code (Nx/Rspack convention) — anything without that prefix stays server-only and is never exposed to the browser.
 - `NX_PUBLIC_API_URL` — the backend's base URL, consumed by `libs/api-client`.
 - `NX_PUBLIC_WS_URL` — the backend's WebSocket gateway URL, consumed by `socket.io-client` (`frontend-design.md` §8).
