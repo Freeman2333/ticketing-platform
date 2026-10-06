@@ -6,3 +6,6 @@ allowBuilds:
   nx: true
   unrs-resolver: true
   '@nestjs/core': false
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true

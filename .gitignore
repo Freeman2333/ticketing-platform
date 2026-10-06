@@ -54,3 +54,6 @@ Thumbs.db
 .env.*
 !.env.example
 test-output
+
+# generated Prisma client (packages/backend/prisma/schema.prisma)
+packages/backend/src/generated/
