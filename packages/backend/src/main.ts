@@ -6,6 +6,7 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 import { config } from 'dotenv';
 import { resolve } from 'node:path';
 import { AppModule } from './app/app.module';
@@ -14,6 +15,7 @@ config({ path: resolve(__dirname, '../../../.env') });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 
