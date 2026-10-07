@@ -88,6 +88,15 @@ export class AuthService {
     return this.issueTokens(this.toUserDto(existing.user));
   }
 
+  async revokeRefreshToken(refreshToken: string): Promise<void> {
+    const existing = await this.refreshTokensRepository.findByHash(
+      hashRefreshToken(refreshToken),
+    );
+    if (existing) {
+      await this.refreshTokensRepository.deleteById(existing.id);
+    }
+  }
+
   private toUserDto(user: User): UserDto {
     return { id: user.id, email: user.email, role: user.role };
   }

@@ -71,6 +71,19 @@ export class AuthController {
     return { accessToken: tokens.accessToken };
   }
 
+  @Post('logout')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken = req.cookies?.[REFRESH_TOKEN_COOKIE_NAME];
+    if (refreshToken) {
+      await this.authService.revokeRefreshToken(refreshToken);
+    }
+    res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, REFRESH_COOKIE_OPTIONS);
+  }
+
   private setRefreshCookie(res: Response, refreshToken: string) {
     res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
       ...REFRESH_COOKIE_OPTIONS,
