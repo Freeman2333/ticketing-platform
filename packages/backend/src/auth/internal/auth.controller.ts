@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -8,6 +9,7 @@ import {
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import type { CookieOptions, Request, Response } from 'express';
 import {
   REFRESH_TOKEN_COOKIE_NAME,
@@ -26,7 +28,10 @@ const REFRESH_COOKIE_OPTIONS: CookieOptions = {
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Post('register')
   async register(
@@ -82,6 +87,24 @@ export class AuthController {
       await this.authService.revokeRefreshToken(refreshToken);
     }
     res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, REFRESH_COOKIE_OPTIONS);
+  }
+
+  @Get('me')
+  async me(@Req() req: Request) {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) throw new UnauthorizedException();
+
+    let payload: { sub: string };
+    try {
+      payload = await this.jwtService.verifyAsync<{ sub: string }>(token);
+    } catch {
+      throw new UnauthorizedException();
+    }
+
+    const user = await this.authService.getUserById(payload.sub);
+    if (!user) throw new UnauthorizedException();
+
+    return user;
   }
 
   private setRefreshCookie(res: Response, refreshToken: string) {

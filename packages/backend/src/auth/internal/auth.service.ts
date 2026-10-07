@@ -97,6 +97,11 @@ export class AuthService {
     }
   }
 
+  async getUserById(id: string): Promise<UserDto | null> {
+    const user = await this.usersRepository.findById(id);
+    return user ? this.toUserDto(user) : null;
+  }
+
   private toUserDto(user: User): UserDto {
     return { id: user.id, email: user.email, role: user.role };
   }
