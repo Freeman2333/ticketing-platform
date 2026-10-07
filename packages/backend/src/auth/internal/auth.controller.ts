@@ -4,10 +4,11 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
-import type { CookieOptions, Response } from 'express';
+import type { CookieOptions, Request, Response } from 'express';
 import {
   REFRESH_TOKEN_COOKIE_NAME,
   REFRESH_TOKEN_TTL_MS,
@@ -54,6 +55,20 @@ export class AuthController {
     const tokens = await this.authService.issueTokens(user);
     this.setRefreshCookie(res, tokens.refreshToken);
     return { accessToken: tokens.accessToken, user };
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken = req.cookies?.[REFRESH_TOKEN_COOKIE_NAME];
+    if (!refreshToken) throw new UnauthorizedException();
+
+    const tokens = await this.authService.rotateRefreshToken(refreshToken);
+    this.setRefreshCookie(res, tokens.refreshToken);
+    return { accessToken: tokens.accessToken };
   }
 
   private setRefreshCookie(res: Response, refreshToken: string) {

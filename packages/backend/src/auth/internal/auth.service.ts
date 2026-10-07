@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Prisma, Role, User } from '../../generated/prisma/client';
 import { TokensDto } from '../public/dto/tokens.dto';
@@ -74,6 +74,18 @@ export class AuthService {
     );
 
     return { accessToken, refreshToken };
+  }
+
+  async rotateRefreshToken(refreshToken: string): Promise<TokensDto> {
+    const existing = await this.refreshTokensRepository.findByHash(
+      hashRefreshToken(refreshToken),
+    );
+    if (!existing || existing.expiresAt < new Date()) {
+      throw new UnauthorizedException();
+    }
+
+    await this.refreshTokensRepository.deleteById(existing.id);
+    return this.issueTokens(this.toUserDto(existing.user));
   }
 
   private toUserDto(user: User): UserDto {

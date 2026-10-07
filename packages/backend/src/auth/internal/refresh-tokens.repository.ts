@@ -10,4 +10,15 @@ export class RefreshTokensRepository {
       data: { userId, tokenHash, expiresAt },
     });
   }
+
+  findByHash(tokenHash: string) {
+    return this.prisma.refreshToken.findFirst({
+      where: { tokenHash },
+      include: { user: true },
+    });
+  }
+
+  deleteById(id: string) {
+    return this.prisma.refreshToken.delete({ where: { id } });
+  }
 }
