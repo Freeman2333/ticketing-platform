@@ -43,6 +43,22 @@ export class AuthService {
     }
   }
 
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<UserDto | null> {
+    const user = await this.usersRepository.findByEmail(email);
+    if (!user) return null;
+
+    const isValid = await this.passwordHasher.verify(
+      user.passwordHash,
+      password,
+    );
+    if (!isValid) return null;
+
+    return this.toUserDto(user);
+  }
+
   async issueTokens(user: UserDto): Promise<TokensDto> {
     const accessToken = this.jwtService.sign({
       sub: user.id,
