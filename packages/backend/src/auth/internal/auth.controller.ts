@@ -8,8 +8,8 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import type { CookieOptions, Request, Response } from 'express';
 import {
   REFRESH_TOKEN_COOKIE_NAME,
@@ -18,6 +18,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 const REFRESH_COOKIE_OPTIONS: CookieOptions = {
   httpOnly: true,
@@ -28,10 +29,7 @@ const REFRESH_COOKIE_OPTIONS: CookieOptions = {
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   async register(
@@ -90,18 +88,9 @@ export class AuthController {
   }
 
   @Get('me')
+  @UseGuards(JwtAuthGuard)
   async me(@Req() req: Request) {
-    const token = req.headers.authorization?.replace('Bearer ', '');
-    if (!token) throw new UnauthorizedException();
-
-    let payload: { sub: string };
-    try {
-      payload = await this.jwtService.verifyAsync<{ sub: string }>(token);
-    } catch {
-      throw new UnauthorizedException();
-    }
-
-    const user = await this.authService.getUserById(payload.sub);
+    const user = await this.authService.getUserById(req.user!.sub);
     if (!user) throw new UnauthorizedException();
 
     return user;
