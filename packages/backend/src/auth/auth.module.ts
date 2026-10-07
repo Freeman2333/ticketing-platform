@@ -9,6 +9,7 @@ import { UsersRepository } from './internal/users.repository';
 @Module({
   imports: [
     JwtModule.registerAsync({
+      global: true,
       useFactory: () => ({
         secret: process.env.JWT_SECRET,
         signOptions: { expiresIn: '15m' },

@@ -8,7 +8,6 @@ import {
   Req,
   Res,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
 import type { CookieOptions, Request, Response } from 'express';
 import {
@@ -18,7 +17,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { Public } from '../../common/decorators/public.decorator';
 
 const REFRESH_COOKIE_OPTIONS: CookieOptions = {
   httpOnly: true,
@@ -32,6 +31,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @Public()
   async register(
     @Body() dto: RegisterDto,
     @Res({ passthrough: true }) res: Response,
@@ -47,6 +47,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @Public()
   @HttpCode(HttpStatus.OK)
   async login(
     @Body() dto: LoginDto,
@@ -61,6 +62,7 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @Public()
   @HttpCode(HttpStatus.OK)
   async refresh(
     @Req() req: Request,
@@ -75,6 +77,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @Public()
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(
     @Req() req: Request,
@@ -88,7 +91,6 @@ export class AuthController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
   async me(@Req() req: Request) {
     const user = await this.authService.getUserById(req.user!.sub);
     if (!user) throw new UnauthorizedException();
