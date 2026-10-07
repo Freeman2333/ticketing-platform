@@ -6,7 +6,8 @@
     "noUnusedLocals": false,
     "noImplicitAny": false
   },
-  "include": ["jest.config.ts", "src/**/*.ts"],
+  "files": [],
+  "include": [],
   "references": [
     {
       "path": "./tsconfig.spec.json"
