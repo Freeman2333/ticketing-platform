@@ -35,8 +35,8 @@ In progress. Breaks `project-plan.md` §8, Step 1 into concrete, ordered tasks, 
 
 - [x] Add **React Router** to `shell` (top-level routing) and `catalog` (its own internal routing) — new decision, not previously fixed in `frontend-design.md`. `<BrowserRouter>` lives only in each package's own standalone `bootstrap.tsx`; the shared `App.tsx` exposed via Module Federation just uses `<Routes>`/`<Route>`, relying on whichever host already provides a router.
 - [x] `AuthBootstrap` — attempts a silent refresh via the httpOnly cookie before rendering any protected content (`frontend-design.md` §2, `system-design.md` §8 A07). No protected content exists yet to actually gate - this just wires the token into memory before `App` renders.
-- [ ] `LoginPage` / `RegisterPage` — forms calling `@ticketing/auth-client`.
-- [ ] `Header` with an auth-aware login/logout control.
+- [x] `LoginPage` / `RegisterPage` — forms calling `@ticketing/auth-client` (react-hook-form + hand-written zod schemas, marked with `TODO(Step 1 Auth Part E)` comments for replacement once Orval generates these from the OpenAPI spec).
+- [x] `Header` with an auth-aware login/logout control — `useIsAuthenticated()` (useSyncExternalStore over `@ticketing/auth-client`'s token store), logout redirects to `/`.
 
 ## Part E — `libs/api-client` (first generation)
 

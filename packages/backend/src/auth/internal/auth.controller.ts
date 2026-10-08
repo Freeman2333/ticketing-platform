@@ -9,15 +9,19 @@ import {
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import type { CookieOptions, Request, Response } from 'express';
 import {
   REFRESH_TOKEN_COOKIE_NAME,
   REFRESH_TOKEN_TTL_MS,
 } from './auth.constants';
 import { AuthService } from './auth.service';
+import { AuthResponseDto } from './dto/auth-response.dto';
 import { LoginDto } from './dto/login.dto';
+import { RefreshResponseDto } from './dto/refresh-response.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Public } from '../../common/decorators/public.decorator';
+import { UserDto } from '../public/dto/user.dto';
 
 const REFRESH_COOKIE_OPTIONS: CookieOptions = {
   httpOnly: true,
@@ -32,10 +36,11 @@ export class AuthController {
 
   @Post('register')
   @Public()
+  @ApiCreatedResponse({ type: AuthResponseDto })
   async register(
     @Body() dto: RegisterDto,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<AuthResponseDto> {
     const user = await this.authService.register(
       dto.email,
       dto.password,
@@ -49,10 +54,11 @@ export class AuthController {
   @Post('login')
   @Public()
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: AuthResponseDto })
   async login(
     @Body() dto: LoginDto,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<AuthResponseDto> {
     const user = await this.authService.validateUser(dto.email, dto.password);
     if (!user) throw new UnauthorizedException();
 
@@ -64,10 +70,11 @@ export class AuthController {
   @Post('refresh')
   @Public()
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: RefreshResponseDto })
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<RefreshResponseDto> {
     const refreshToken = req.cookies?.[REFRESH_TOKEN_COOKIE_NAME];
     if (!refreshToken) throw new UnauthorizedException();
 
@@ -91,7 +98,8 @@ export class AuthController {
   }
 
   @Get('me')
-  async me(@Req() req: Request) {
+  @ApiOkResponse({ type: UserDto })
+  async me(@Req() req: Request): Promise<UserDto> {
     const user = await this.authService.getUserById(req.user!.sub);
     if (!user) throw new UnauthorizedException();
 
