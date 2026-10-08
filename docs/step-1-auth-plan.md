@@ -22,7 +22,7 @@ In progress. Breaks `project-plan.md` §8, Step 1 into concrete, ordered tasks, 
 - [x] Endpoints: `POST /auth/register`, `POST /auth/login`, `POST /auth/refresh` (reads/rotates the httpOnly/Secure/SameSite refresh cookie), `POST /auth/logout`, `GET /auth/me` (`backend-design.md` §5).
 - [x] `JwtAuthGuard` + `RolesGuard`/`@Roles()` — wired globally now, even though only `auth` routes use them yet; `events`/`orders` reuse later.
 - [x] Request pipeline in `main.ts`: global `ValidationPipe`, `helmet`, CORS restricted to `http://localhost:4200` with `credentials: true`, global exception filter normalizing the error shape (`backend-design.md` §6).
-- [ ] `@nx/enforce-module-boundaries` with a `scope:auth` tag — first real module, so this is where it gets set up (`backend-design.md` §3.5).
+- [x] Module boundary lint rule for `auth/internal/` — `@nx/enforce-module-boundaries` only works between separate Nx projects, and `auth` is a folder inside the single `backend` project, so a plain ESLint `no-restricted-imports` rule (scoped to `packages/backend/src/**`, exempting `auth/` itself) is used instead; same intent as `backend-design.md` §3.5.
 - [ ] Unit tests for `AuthService`.
 - [ ] E2E test (Supertest + Testcontainers): register → login → refresh → `GET /auth/me` — the template suite other modules copy (`backend-design.md` §9).
 
