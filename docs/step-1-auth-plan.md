@@ -20,8 +20,8 @@ In progress. Breaks `project-plan.md` §8, Step 1 into concrete, ordered tasks, 
 - [x] Password hashing: `argon2id`.
 - [x] JWT: short-lived access token (HS256, ~15 min) + refresh token (stored hashed, rotated on use) via `@nestjs/jwt`.
 - [x] Endpoints: `POST /auth/register`, `POST /auth/login`, `POST /auth/refresh` (reads/rotates the httpOnly/Secure/SameSite refresh cookie), `POST /auth/logout`, `GET /auth/me` (`backend-design.md` §5).
-- [ ] `JwtAuthGuard` + `RolesGuard`/`@Roles()` — wired globally now, even though only `auth` routes use them yet; `events`/`orders` reuse later.
-- [ ] Request pipeline in `main.ts`: global `ValidationPipe`, `helmet`, CORS restricted to `http://localhost:4200` with `credentials: true`, global exception filter normalizing the error shape (`backend-design.md` §6).
+- [x] `JwtAuthGuard` + `RolesGuard`/`@Roles()` — wired globally now, even though only `auth` routes use them yet; `events`/`orders` reuse later.
+- [x] Request pipeline in `main.ts`: global `ValidationPipe`, `helmet`, CORS restricted to `http://localhost:4200` with `credentials: true`, global exception filter normalizing the error shape (`backend-design.md` §6).
 - [ ] `@nx/enforce-module-boundaries` with a `scope:auth` tag — first real module, so this is where it gets set up (`backend-design.md` §3.5).
 - [ ] Unit tests for `AuthService`.
 - [ ] E2E test (Supertest + Testcontainers): register → login → refresh → `GET /auth/me` — the template suite other modules copy (`backend-design.md` §9).
