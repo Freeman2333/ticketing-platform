@@ -90,6 +90,7 @@ export default defineConfig((_env, argv) => {
           'react-dom',
           'react-router-dom',
           '@ticketing/auth-client',
+          '@ticketing/ui',
         ],
         // The dts exchange writes a `@mf-types` folder into each package's
         // own root, which the dev server's watcher then sees as a source

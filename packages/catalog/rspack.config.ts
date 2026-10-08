@@ -70,7 +70,7 @@ export default defineConfig((_env, argv) => {
         exposes: {
           './App': './src/App.tsx',
         },
-        shared: ['react', 'react-dom', 'react-router-dom'],
+        shared: ['react', 'react-dom', 'react-router-dom', '@ticketing/ui'],
         // The dts exchange writes a `@mf-types` folder into each package's
         // own root, which the dev server's watcher then sees as a source
         // change and recompiles on - which re-triggers the exchange, in a

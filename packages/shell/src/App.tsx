@@ -2,12 +2,11 @@ import { Component, Suspense, type ReactNode } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { lazyProvider } from './mf';
 import { Button } from '@ticketing/ui';
+import { Header } from './Header';
+import { LoginPage } from './LoginPage';
+import { RegisterPage } from './RegisterPage';
 
-// ProviderBoundary catches the lazy() rejection that fires when a provider's
-// remoteEntry.js can't be fetched (provider not running, network error,
-// etc.). Without it any one missing provider unmounts the whole consumer
-// tree. React has no built-in functional error boundary so this is a class.
-// Wrap each <ProviderBoundary> in your router of choice if you need routing.
+
 class ProviderBoundary extends Component<
   { children: ReactNode; name: string },
   { error: Error | null }
@@ -51,9 +50,14 @@ function HomePage() {
 
 export function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-    </Routes>
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+      </Routes>
+    </>
   );
 }
 
