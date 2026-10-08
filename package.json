@@ -54,6 +54,7 @@
     "dotenv": "^18.0.5",
     "eslint": "^9.8.0",
     "jest": "~30.3.0",
+    "jest-environment-jsdom": "~30.3.0",
     "jest-environment-node": "~30.3.0",
     "jest-util": "~30.3.0",
     "nx": "23.2.0",
