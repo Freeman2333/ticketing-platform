@@ -20,7 +20,7 @@ export function Header() {
   }
 
   return (
-    <header className="flex items-center justify-between border-b p-4">
+    <header className="bg-background sticky top-0 z-50 flex items-center justify-between border-b p-4">
       <span className="font-semibold">Ticketing</span>
       <nav className="flex gap-2">
         {isLoggedIn ? (

@@ -43,3 +43,19 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 }
+
+/*
+ * Without this, `border`/`ring` utilities fall back to currentColor instead
+ * of the tokens above (Tailwind's default border color is currentColor, not
+ * a theme color) - this is shadcn's standard base-layer reset.
+ */
+@layer base {
+  * {
+    border-color: var(--color-border);
+    outline-color: var(--color-ring);
+  }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
