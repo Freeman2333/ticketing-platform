@@ -33,7 +33,7 @@ In progress. Breaks `project-plan.md` §8, Step 1 into concrete, ordered tasks, 
 
 ## Part D — Frontend `shell`
 
-- [ ] Add **React Router** to `shell` (top-level routing) and `catalog` (its own internal routing) — new decision, not previously fixed in `frontend-design.md`.
+- [x] Add **React Router** to `shell` (top-level routing) and `catalog` (its own internal routing) — new decision, not previously fixed in `frontend-design.md`. `<BrowserRouter>` lives only in each package's own standalone `bootstrap.tsx`; the shared `App.tsx` exposed via Module Federation just uses `<Routes>`/`<Route>`, relying on whichever host already provides a router.
 - [ ] `AuthBootstrap` — attempts a silent refresh via the httpOnly cookie before rendering any protected content (`frontend-design.md` §2, `system-design.md` §8 A07).
 - [ ] `LoginPage` / `RegisterPage` — forms calling `@ticketing/auth-client`.
 - [ ] `Header` with an auth-aware login/logout control.

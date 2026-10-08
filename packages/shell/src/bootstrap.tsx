@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import { loadProvidersManifest } from './mf';
 import './styles.css';
@@ -17,7 +18,9 @@ loadProvidersManifest()
   .finally(() => {
     createRoot(container).render(
       <StrictMode>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </StrictMode>,
     );
   });

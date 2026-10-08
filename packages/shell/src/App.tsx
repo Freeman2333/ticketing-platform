@@ -1,4 +1,5 @@
 import { Component, Suspense, type ReactNode } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { lazyProvider } from './mf';
 import { Button } from '@ticketing/ui';
 
@@ -36,7 +37,7 @@ class ProviderBoundary extends Component<
 
 const ProviderCatalog = lazyProvider('catalog', 'App');
 
-export function App() {
+function HomePage() {
   return (
     <main>
       <h1>shell</h1>
@@ -45,6 +46,14 @@ export function App() {
         <ProviderCatalog />
       </ProviderBoundary>
     </main>
+  );
+}
+
+export function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+    </Routes>
   );
 }
 

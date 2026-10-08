@@ -73,7 +73,7 @@ export default defineConfig((_env, argv) => {
         name: NAME,
         // No build-time `remotes:` block - registered at runtime in
         // src/mf.ts at module load time.
-        shared: ['react', 'react-dom'],
+        shared: ['react', 'react-dom', 'react-router-dom'],
         // The dts exchange writes a `@mf-types` folder into each package's
         // own root, which the dev server's watcher then sees as a source
         // change and recompiles on - which re-triggers the exchange, in a
