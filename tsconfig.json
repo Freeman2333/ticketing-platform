@@ -11,6 +11,9 @@
     },
     {
       "path": "./packages/backend"
+    },
+    {
+      "path": "./packages/auth-client"
     }
   ],
   "compilerOptions": {}

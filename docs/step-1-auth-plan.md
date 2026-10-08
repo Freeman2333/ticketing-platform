@@ -24,12 +24,12 @@ In progress. Breaks `project-plan.md` §8, Step 1 into concrete, ordered tasks, 
 - [x] Request pipeline in `main.ts`: global `ValidationPipe`, `helmet`, CORS restricted to `http://localhost:4200` with `credentials: true`, global exception filter normalizing the error shape (`backend-design.md` §6).
 - [x] Module boundary lint rule for `auth/internal/` — `@nx/enforce-module-boundaries` only works between separate Nx projects, and `auth` is a folder inside the single `backend` project, so a plain ESLint `no-restricted-imports` rule (scoped to `packages/backend/src/**`, exempting `auth/` itself) is used instead; same intent as `backend-design.md` §3.5.
 - [x] Unit tests for `AuthService` — `register`, `validateUser`, `issueTokens`, `rotateRefreshToken`, `revokeRefreshToken` (`getUserById` skipped, trivial one-liner).
-- [ ] E2E test (Supertest + Testcontainers): register → login → refresh → `GET /auth/me` — the template suite other modules copy (`backend-design.md` §9).
+- [~] E2E test (Supertest + Testcontainers): register → login → refresh → `GET /auth/me` — skipped by explicit decision, not a priority for this project right now.
 
 ## Part C — `@ticketing/auth-client` (shared library)
 
-- [ ] Scaffold `libs/auth-client`, package `@ticketing/auth-client`, published as a Module Federation shared singleton (`frontend-design.md` §3).
-- [ ] `getAccessToken()`, `onAuthChange()`, and an axios interceptor attaching the bearer token and triggering refresh on 401.
+- [x] Scaffold `packages/auth-client` (repo convention is `packages/`, not `libs/`), package `@ticketing/auth-client`. Module Federation `shared: { singleton: true }` wiring deferred to Part D, when `shell`/`catalog` actually consume it.
+- [x] `getAccessToken()`/`setAccessToken()`, `onAuthChange()`, and an axios interceptor attaching the bearer token and triggering refresh on 401 (with in-flight refresh dedup and a guard against refreshing the refresh call itself).
 
 ## Part D — Frontend `shell`
 
