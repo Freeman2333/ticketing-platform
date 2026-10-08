@@ -1,6 +1,7 @@
 import { defineConfig } from '@rspack/cli';
 import { rspack } from '@rspack/core';
 import { ModuleFederationPlugin } from '@module-federation/enhanced/rspack';
+import { config as loadEnv } from 'dotenv';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -8,6 +9,16 @@ import { fileURLToPath } from 'node:url';
 // does, because the file uses `import` statements). Derive it from the
 // module URL so the config works regardless of how the loader interprets it.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+loadEnv({ path: path.resolve(__dirname, '../../.env') });
+
+// Only NX_PUBLIC_* vars are ever bundled into client code
+// (integration-design.md §2) - everything else in .env stays server-only.
+const publicEnvDefines = Object.fromEntries(
+  Object.entries(process.env)
+    .filter(([key]) => key.startsWith('NX_PUBLIC_'))
+    .map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)]),
+);
 
 const PORT = 4200;
 const NAME = 'shell';
@@ -62,6 +73,7 @@ export default defineConfig((_env, argv) => {
       ],
     },
     plugins: [
+      new rspack.DefinePlugin(publicEnvDefines),
       new rspack.HtmlRspackPlugin({ template: './index.html' }),
       // Ships public/remotes-manifest.json next to the production build too,
       // so swapping a provider's URL only means editing that file - no shell
@@ -73,7 +85,12 @@ export default defineConfig((_env, argv) => {
         name: NAME,
         // No build-time `remotes:` block - registered at runtime in
         // src/mf.ts at module load time.
-        shared: ['react', 'react-dom', 'react-router-dom'],
+        shared: [
+          'react',
+          'react-dom',
+          'react-router-dom',
+          '@ticketing/auth-client',
+        ],
         // The dts exchange writes a `@mf-types` folder into each package's
         // own root, which the dev server's watcher then sees as a source
         // change and recompiles on - which re-triggers the exchange, in a

@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { AuthBootstrap } from './AuthBootstrap';
 import { App } from './App';
 import { loadProvidersManifest } from './mf';
 import './styles.css';
@@ -19,7 +20,9 @@ loadProvidersManifest()
     createRoot(container).render(
       <StrictMode>
         <BrowserRouter>
-          <App />
+          <AuthBootstrap>
+            <App />
+          </AuthBootstrap>
         </BrowserRouter>
       </StrictMode>,
     );
