@@ -1,10 +1,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthBootstrap } from './AuthBootstrap';
 import { App } from './App';
 import { loadProvidersManifest } from './mf';
 import './styles.css';
+
+const queryClient = new QueryClient();
 
 const container = document.getElementById('root');
 if (!container) throw new Error('#root element not found');
@@ -19,11 +22,13 @@ loadProvidersManifest()
   .finally(() => {
     createRoot(container).render(
       <StrictMode>
-        <BrowserRouter>
-          <AuthBootstrap>
-            <App />
-          </AuthBootstrap>
-        </BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <AuthBootstrap>
+              <App />
+            </AuthBootstrap>
+          </BrowserRouter>
+        </QueryClientProvider>
       </StrictMode>,
     );
   });

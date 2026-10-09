@@ -1,13 +1,13 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { httpClient, setAccessToken } from '@ticketing/auth-client';
+import { setAccessToken } from '@ticketing/auth-client';
+import { authControllerRefresh } from '@ticketing/api-client';
 
 export function AuthBootstrap({ children }: { children: ReactNode }) {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    httpClient
-      .post<{ accessToken: string }>('/auth/refresh')
-      .then((response) => setAccessToken(response.data.accessToken))
+    authControllerRefresh()
+      .then((response) => setAccessToken(response.accessToken))
       .catch(() => setAccessToken(null))
       .finally(() => setIsReady(true));
   }, []);

@@ -8,6 +8,7 @@ import type { RegisterDtoRole } from './registerDtoRole.js';
 
 export interface RegisterDto {
   email: string;
+  /** @minLength 8 */
   password: string;
   role: RegisterDtoRole;
 }

@@ -40,4 +40,4 @@ In progress. Breaks `project-plan.md` §8, Step 1 into concrete, ordered tasks, 
 
 ## Part E — `libs/api-client` (first generation)
 
-- [ ] Install Orval; generate `libs/api-client` from the backend's Swagger/OpenAPI JSON (now with real `auth` endpoints) — TanStack Query hooks (`frontend-design.md` §4).
+- [x] Install Orval; generate `packages/api-client` from the backend's Swagger/OpenAPI JSON (now with real `auth` endpoints) — TanStack Query hooks (`frontend-design.md` §4). Package is `packages/api-client`, not `libs/api-client` — repo convention (`packages/`, not `libs/`) already established by `auth-client`/`ui`.

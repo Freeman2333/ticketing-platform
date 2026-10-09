@@ -225,6 +225,9 @@ importers:
 
   packages/api-client:
     dependencies:
+      '@tanstack/react-query':
+        specifier: ^5.104.1
+        version: 5.104.1(react@19.3.0)
       '@ticketing/auth-client':
         specifier: workspace:*
         version: link:../auth-client
@@ -352,6 +355,12 @@ importers:
       '@module-federation/runtime':
         specifier: ^2.4.0
         version: 2.9.2
+      '@tanstack/react-query':
+        specifier: ^5.104.1
+        version: 5.104.1(react@19.3.0)
+      '@ticketing/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@ticketing/auth-client':
         specifier: workspace:*
         version: link:../auth-client

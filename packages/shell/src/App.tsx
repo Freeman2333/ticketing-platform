@@ -50,14 +50,14 @@ function HomePage() {
 
 export function App() {
   return (
-    <>
+    <div className="flex min-h-svh flex-col">
       <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Routes>
-    </>
+    </div>
   );
 }
 

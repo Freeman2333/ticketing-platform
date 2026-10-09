@@ -2,7 +2,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { httpClient, setAccessToken } from '@ticketing/auth-client';
+import { setAccessToken } from '@ticketing/auth-client';
+import {
+  AuthControllerRegisterBody,
+  useAuthControllerRegister,
+} from '@ticketing/api-client';
 import {
   Button,
   Card,
@@ -24,33 +28,19 @@ import {
   SelectValue,
 } from '@ticketing/ui';
 
-// TODO(Step 1 Auth Part E): replace with the Zod schema Orval generates
-// from the backend's OpenAPI spec once libs/api-client exists - this
-// duplicates RegisterDto's class-validator rules by hand for now. Role is
-// restricted to attendee/organizer here too - admin is never self-service.
-const registerSchema = z.object({
-  email: z.email(),
-  password: z.string().min(8),
-  role: z.enum(['attendee', 'organizer']),
-});
-
-type RegisterFormValues = z.infer<typeof registerSchema>;
+type RegisterFormValues = z.infer<typeof AuthControllerRegisterBody>;
 
 export function RegisterPage() {
   const navigate = useNavigate();
   const form = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(AuthControllerRegisterBody),
   });
+  const registerMutation = useAuthControllerRegister();
 
-  // TODO(Step 1 Auth Part E): replace with the useMutation hook Orval
-  // generates for POST /auth/register once libs/api-client exists.
   async function onSubmit(values: RegisterFormValues) {
     try {
-      const response = await httpClient.post<{ accessToken: string }>(
-        '/auth/register',
-        values,
-      );
-      setAccessToken(response.data.accessToken);
+      const response = await registerMutation.mutateAsync({ data: values });
+      setAccessToken(response.accessToken);
       navigate('/');
     } catch {
       form.setError('root.serverError', {
@@ -60,7 +50,7 @@ export function RegisterPage() {
   }
 
   return (
-    <main className="bg-muted flex min-h-svh flex-col items-center justify-center p-6">
+    <main className="bg-muted flex flex-1 flex-col items-center justify-center p-6">
       <div className="w-full max-w-sm">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

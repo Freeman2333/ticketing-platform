@@ -10,6 +10,8 @@
     "@hookform/resolvers": "^5.9.1",
     "@module-federation/enhanced": "^2.4.0",
     "@module-federation/runtime": "^2.4.0",
+    "@tanstack/react-query": "^5.104.1",
+    "@ticketing/api-client": "workspace:*",
     "@ticketing/auth-client": "workspace:*",
     "@ticketing/ui": "workspace:*",
     "react": "^19.0.0",

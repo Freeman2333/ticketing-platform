@@ -4,9 +4,8 @@
  * Ticketing Platform API
  * OpenAPI spec version: 0.1
  */
+import * as zod from 'zod';
 
-export interface LoginDto {
-  email: string;
-  /** @minLength 8 */
-  password: string;
-}
+
+export const AppControllerGetDataResponse = zod.unknown()
+

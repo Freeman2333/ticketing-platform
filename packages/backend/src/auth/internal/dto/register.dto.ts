@@ -5,11 +5,11 @@ import { Role } from '../../../generated/prisma/client';
 const SELF_SERVICE_ROLES: Role[] = [Role.attendee, Role.organizer];
 
 export class RegisterDto {
-  @ApiProperty()
+  @ApiProperty({ format: 'email' })
   @IsEmail()
   email!: string;
 
-  @ApiProperty()
+  @ApiProperty({ minLength: 8 })
   @MinLength(8)
   password!: string;
 

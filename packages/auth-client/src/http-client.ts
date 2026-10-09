@@ -5,6 +5,8 @@ interface RetriableRequestConfig extends InternalAxiosRequestConfig {
   _retried?: boolean;
 }
 
+const REFRESH_ENDPOINT = '/api/auth/refresh';
+
 export const httpClient = axios.create({
   baseURL: process.env.NX_PUBLIC_API_URL,
   withCredentials: true,
@@ -22,7 +24,7 @@ let refreshPromise: Promise<string> | null = null;
 
 function refreshAccessToken(): Promise<string> {
   refreshPromise ??= httpClient
-    .post<{ accessToken: string }>('/auth/refresh')
+    .post<{ accessToken: string }>(REFRESH_ENDPOINT)
     .then((response) => response.data.accessToken)
     .finally(() => {
       refreshPromise = null;
@@ -34,7 +36,7 @@ httpClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as RetriableRequestConfig | undefined;
-    const isRefreshCall = originalRequest?.url === '/auth/refresh';
+    const isRefreshCall = originalRequest?.url === REFRESH_ENDPOINT;
 
     if (
       error.response?.status !== 401 ||

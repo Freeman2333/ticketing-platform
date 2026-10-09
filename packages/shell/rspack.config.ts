@@ -43,7 +43,13 @@ export default defineConfig((_env, argv) => {
       hot: true,
       static: { directory: path.resolve(__dirname, 'public') },
     },
-    resolve: { extensions: ['...', '.ts', '.tsx', '.jsx'] },
+    resolve: {
+      extensions: ['...', '.ts', '.tsx', '.jsx'],
+      // Orval emits ESM-style relative imports with an explicit `.js`
+      // extension even though the generated files are `.ts` - map one to
+      // the other so rspack can actually find them.
+      extensionAlias: { '.js': ['.ts', '.js'] },
+    },
     module: {
       rules: [
         {
@@ -89,6 +95,8 @@ export default defineConfig((_env, argv) => {
           'react',
           'react-dom',
           'react-router-dom',
+          '@tanstack/react-query',
+          '@ticketing/api-client',
           '@ticketing/auth-client',
           '@ticketing/ui',
         ],

@@ -2,7 +2,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { httpClient, setAccessToken } from '@ticketing/auth-client';
+import { setAccessToken } from '@ticketing/auth-client';
+import {
+  AuthControllerLoginBody,
+  useAuthControllerLogin,
+} from '@ticketing/api-client';
 import {
   Button,
   Card,
@@ -19,29 +23,19 @@ import {
   Input,
 } from '@ticketing/ui';
 
-// TODO(Step 1 Auth Part E): replace with the Zod schema Orval generates
-// from the backend's OpenAPI spec once libs/api-client exists - this
-// duplicates LoginDto's class-validator rules by hand for now.
-const loginSchema = z.object({
-  email: z.email(),
-  password: z.string().min(8),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginFormValues = z.infer<typeof AuthControllerLoginBody>;
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const form = useForm<LoginFormValues>({ resolver: zodResolver(loginSchema) });
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(AuthControllerLoginBody),
+  });
+  const loginMutation = useAuthControllerLogin();
 
-  // TODO(Step 1 Auth Part E): replace with the useMutation hook Orval
-  // generates for POST /auth/login once libs/api-client exists.
   async function onSubmit(values: LoginFormValues) {
     try {
-      const response = await httpClient.post<{ accessToken: string }>(
-        '/auth/login',
-        values,
-      );
-      setAccessToken(response.data.accessToken);
+      const response = await loginMutation.mutateAsync({ data: values });
+      setAccessToken(response.accessToken);
       navigate('/');
     } catch {
       form.setError('root.serverError', {
@@ -51,7 +45,7 @@ export function LoginPage() {
   }
 
   return (
-    <main className="bg-muted flex min-h-svh flex-col items-center justify-center p-6">
+    <main className="bg-muted flex flex-1 flex-col items-center justify-center p-6">
       <div className="w-full max-w-sm">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

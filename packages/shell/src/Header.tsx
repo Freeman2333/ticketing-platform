@@ -1,18 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  httpClient,
-  setAccessToken,
-  useIsAuthenticated,
-} from '@ticketing/auth-client';
+import { setAccessToken, useIsAuthenticated } from '@ticketing/auth-client';
+import { useAuthControllerLogout } from '@ticketing/api-client';
 import { Button } from '@ticketing/ui';
 
 export function Header() {
   const navigate = useNavigate();
   const isLoggedIn = useIsAuthenticated();
+  const logoutMutation = useAuthControllerLogout();
 
   async function handleLogout() {
     try {
-      await httpClient.post('/auth/logout');
+      await logoutMutation.mutateAsync();
     } finally {
       setAccessToken(null);
       navigate('/');

@@ -17,4 +17,13 @@ export default defineConfig({
       },
     },
   },
+  apiClientZod: {
+    input: 'http://localhost:3000/api/docs-json',
+    output: {
+      mode: 'tags-split',
+      target: 'packages/api-client/src/zod',
+      client: 'zod',
+      fileExtension: '.zod.ts',
+    },
+  },
 });
