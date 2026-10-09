@@ -32,6 +32,23 @@ export class EventsService implements EventsApi {
     throw new Error('Not implemented - no caller until Orders (Step 3).');
   }
 
+  async createEvent(
+    venueId: string,
+    title: string,
+    startsAt: Date,
+  ): Promise<EventDto> {
+    const event = await this.eventsRepository.create(venueId, title, startsAt);
+    return this.toEventDto(event);
+  }
+
+  async updateEvent(
+    id: string,
+    data: { title?: string; startsAt?: Date },
+  ): Promise<EventDto> {
+    const event = await this.eventsRepository.update(id, data);
+    return this.toEventDto(event);
+  }
+
   private toEventDto(event: Event): EventDto {
     return {
       id: event.id,

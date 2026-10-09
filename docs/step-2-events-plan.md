@@ -12,12 +12,12 @@ In progress. Breaks `project-plan.md` §8, Step 2 into concrete, ordered tasks, 
 
 ## Part B — Backend `events` module (core CRUD, no realtime/upload yet)
 
-- [ ] Scaffold `EventsModule` with the `public/`/`internal/` folder seam (`backend-design.md` §3), same pattern as `auth`.
-- [ ] `internal/`: `EventsController`, `EventsService`, `VenuesController`, Prisma-backed repositories.
-- [ ] `public/`: `EventsApi` interface + DTOs — `getEvent(id)`, `listEvents(filter)`, `getSeatAvailability(eventId)` (`backend-design.md` §2). `reserveSeats(eventId, seatIds)` is also part of the interface per the design doc, but nothing calls it yet — Orders (Step 3) is its only caller, so it's implemented here as a stub worth revisiting once Step 3 exists, not fully exercised.
-- [ ] Endpoints: `GET /events`, `GET /events/:id`, `GET /events/:id/seats`, `POST /events`, `PATCH /events/:id`, `POST /venues`, `GET /venues`, `GET /venues/:id`, `PATCH /venues/:id` (`backend-design.md` §5). Mutating endpoints are `organizer`-only plus an ownership check, reusing `RolesGuard`/`@Roles()` from Step 1.
-- [ ] `@ApiProperty()` (with `format`/`minLength`/`enum` where relevant) on every DTO from the start — Step 1 Part E found out the hard way that Swagger needs this to describe real fields, not empty objects.
-- [ ] Unit tests for `EventsService`.
+- [x] Scaffold `EventsModule` with the `public/`/`internal/` folder seam (`backend-design.md` §3), same pattern as `auth`.
+- [x] `internal/`: `EventsController`, `EventsService`, `VenuesController`, Prisma-backed repositories.
+- [x] `public/`: `EventsApi` interface + DTOs — `getEvent(id)`, `listEvents()`, `getSeatAvailability(eventId)` (`backend-design.md` §2). `listEvents()` has no filter parameter yet - its shape isn't decided anywhere, so it's deferred rather than guessed. `reserveSeats(eventId, seatIds)` is also part of the interface per the design doc, but nothing calls it yet — Orders (Step 3) is its only caller, so it's implemented here as a stub, not fully exercised.
+- [x] Endpoints: `GET /events`, `GET /events/:id`, `GET /events/:id/seats`, `POST /events`, `PATCH /events/:id`, `POST /venues`, `GET /venues`, `GET /venues/:id`, `PATCH /venues/:id` (`backend-design.md` §5). Mutating endpoints are `organizer`-only plus an ownership check (returns 404, not 403, on an ownership mismatch - doesn't reveal another organizer's resource exists), reusing `RolesGuard`/`@Roles()` from Step 1 - also required adding `RolesGuard` as a global `APP_GUARD` in `AppModule`, which hadn't been wired yet since nothing used `@Roles()` before this.
+- [x] `@ApiProperty()` (with `format`/`minLength`/`enum` where relevant) on every DTO from the start — Step 1 Part E found out the hard way that Swagger needs this to describe real fields, not empty objects.
+- [~] Unit tests for `EventsService` — skipped by explicit decision, not a priority for this project right now.
 
 ## Part C — WebSocket gateway (live seat availability)
 
