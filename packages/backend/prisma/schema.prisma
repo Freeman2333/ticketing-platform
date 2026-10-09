@@ -9,11 +9,11 @@ generator client {
 }
 
 // Each backend module owns its own schema (backend-design.md §3) - only
-// `auth` exists so far; `events`/`orders` are added here when those
-// modules are scaffolded, not pre-declared ahead of having models in them.
+// `auth`/`events` exist so far; `orders` is added here when that module
+// is scaffolded, not pre-declared ahead of having models in it.
 datasource db {
   provider = "postgresql"
-  schemas  = ["auth"]
+  schemas  = ["auth", "events"]
 }
 
 enum Role {
@@ -47,4 +47,52 @@ model RefreshToken {
 
   @@map("refresh_tokens")
   @@schema("auth")
+}
+
+model Venue {
+  id          String @id @default(uuid())
+  organizerId String @map("organizer_id")
+  name        String
+  address     String
+
+  events Event[]
+
+  @@map("venues")
+  @@schema("events")
+}
+
+model Event {
+  id        String   @id @default(uuid())
+  venueId   String   @map("venue_id")
+  title     String
+  startsAt  DateTime @map("starts_at")
+  posterUrl String?  @map("poster_url")
+
+  venue Venue  @relation(fields: [venueId], references: [id])
+  seats Seat[]
+
+  @@map("events")
+  @@schema("events")
+}
+
+enum SeatStatus {
+  available
+  held
+  booked
+
+  @@schema("events")
+}
+
+model Seat {
+  id      String     @id @default(uuid())
+  eventId String     @map("event_id")
+  label   String
+  status  SeatStatus @default(available)
+  price   Int
+
+  event Event @relation(fields: [eventId], references: [id])
+
+  @@index([eventId, status])
+  @@map("seats")
+  @@schema("events")
 }
