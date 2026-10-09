@@ -21,9 +21,9 @@ In progress. Breaks `project-plan.md` §8, Step 2 into concrete, ordered tasks, 
 
 ## Part C — WebSocket gateway (live seat availability)
 
-- [ ] Socket.IO gateway (not raw `ws`) inside the `events` module — a client joins a room scoped to one event (`event:{id}`) and only receives updates for that event (`backend-design.md` §2/§5).
-- [ ] Broadcast on a successful seat hold happens inside `EventsApi.reserveSeats()` itself — not a new cross-module communication pattern (`backend-design.md` §4). Real end-to-end exercise of this waits on Step 3 (Orders) actually calling `reserveSeats()`; for now, verify the gateway/room join-leave mechanics work in isolation.
-- [ ] No Redis pub/sub adapter yet — single-instance only; that's a Phase 2 addition once Redis exists (`backend-design.md` §2 note).
+- [x] Socket.IO gateway (not raw `ws`) inside the `events` module — a client joins a room scoped to one event (`event:{id}`) and only receives updates for that event (`backend-design.md` §2/§5). `EventsGateway` with `joinEvent`/`leaveEvent` handlers; had to pin `@nestjs/websockets`/`@nestjs/platform-socket.io` to the 11.x line (not latest 12.x) to match this project's Nest 11 core.
+- [x] Broadcast on a successful seat hold happens inside `EventsApi.reserveSeats()` itself — not a new cross-module communication pattern (`backend-design.md` §4). Gateway/room join-leave mechanics verified in isolation (Socket.IO handshake + room join/leave both confirmed working); actually wiring the broadcast call waits on Step 3 (Orders) calling `reserveSeats()` with a real implementation.
+- [x] No Redis pub/sub adapter yet — single-instance only; that's a Phase 2 addition once Redis exists (`backend-design.md` §2 note). Nothing to do here, confirmed as intentionally out of scope.
 
 ## Part D — Event poster upload
 
