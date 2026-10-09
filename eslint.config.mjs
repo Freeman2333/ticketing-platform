@@ -23,4 +23,21 @@ export default defineConfig(
       ],
     },
   },
+  {
+    files: ['packages/backend/src/**/*.ts'],
+    ignores: ['packages/backend/src/events/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/events/internal/*', '**/events/internal'],
+              message: 'Import from events/public instead of events/internal.',
+            },
+          ],
+        },
+      ],
+    },
+  },
 );
