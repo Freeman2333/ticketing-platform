@@ -1,16 +1,13 @@
 import { Route, Routes } from 'react-router-dom';
+import { EventDetailsPage } from './EventDetailsPage';
+import { EventList } from './EventList';
+import './styles.css';
 
-function CatalogHome() {
-  return (
-    <section data-testid="catalog">
-      <h1>Hello from catalog</h1>
-    </section>
-  );
-}
 export function App() {
   return (
     <Routes>
-      <Route path="/" element={<CatalogHome />} />
+      <Route path="/" element={<EventList />} />
+      <Route path="/:eventId" element={<EventDetailsPage />} />
     </Routes>
   );
 }

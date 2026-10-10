@@ -1,6 +1,7 @@
 import { defineConfig } from '@rspack/cli';
 import { rspack } from '@rspack/core';
 import { ModuleFederationPlugin } from '@module-federation/enhanced/rspack';
+import { config as loadEnv } from 'dotenv';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -8,6 +9,14 @@ import { fileURLToPath } from 'node:url';
 // does, because the file uses `import` statements). Derive it from the
 // module URL so the config works regardless of how the loader interprets it.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+loadEnv({ path: path.resolve(__dirname, '../../.env') });
+
+const publicEnvDefines = Object.fromEntries(
+  Object.entries(process.env)
+    .filter(([key]) => key.startsWith('NX_PUBLIC_'))
+    .map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)]),
+);
 
 const PORT = 4201;
 const NAME = 'catalog';
@@ -32,7 +41,10 @@ export default defineConfig((_env, argv) => {
       hot: true,
       headers: { 'Access-Control-Allow-Origin': '*' },
     },
-    resolve: { extensions: ['...', '.ts', '.tsx', '.jsx'] },
+    resolve: {
+      extensions: ['...', '.ts', '.tsx', '.jsx'],
+      extensionAlias: { '.js': ['.ts', '.js'] },
+    },
     module: {
       rules: [
         {
@@ -54,9 +66,15 @@ export default defineConfig((_env, argv) => {
             },
           },
         },
+        {
+          test: /\.css$/,
+          use: ['postcss-loader'],
+          type: 'css',
+        },
       ],
     },
     plugins: [
+      new rspack.DefinePlugin(publicEnvDefines),
       // excludeChunks is REQUIRED on a provider: without it the federation
       // remoteEntry chunk gets injected into the standalone HTML and breaks
       // direct serves.
@@ -70,7 +88,15 @@ export default defineConfig((_env, argv) => {
         exposes: {
           './App': './src/App.tsx',
         },
-        shared: ['react', 'react-dom', 'react-router-dom', '@ticketing/ui'],
+        shared: [
+          'react',
+          'react-dom',
+          'react-router-dom',
+          '@tanstack/react-query',
+          '@ticketing/api-client',
+          '@ticketing/auth-client',
+          '@ticketing/ui',
+        ],
         // The dts exchange writes a `@mf-types` folder into each package's
         // own root, which the dev server's watcher then sees as a source
         // change and recompiles on - which re-triggers the exchange, in a

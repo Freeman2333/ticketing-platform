@@ -1,7 +1,6 @@
 import { Component, Suspense, type ReactNode } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { lazyProvider } from './mf';
-import { Button } from '@ticketing/ui';
 import { Header } from './Header';
 import { LoginPage } from './LoginPage';
 import { RegisterPage } from './RegisterPage';
@@ -38,9 +37,7 @@ const ProviderCatalog = lazyProvider('catalog', 'App');
 
 function HomePage() {
   return (
-    <main>
-      <h1>shell</h1>
-      <Button variant={'destructive'}>Test button (Tailwind + shadcn)</Button>
+    <main className="mx-auto max-w-5xl px-4 py-6">
       <ProviderBoundary name="catalog">
         <ProviderCatalog />
       </ProviderBoundary>

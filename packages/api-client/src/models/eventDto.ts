@@ -4,7 +4,6 @@
  * Ticketing Platform API
  * OpenAPI spec version: 0.1
  */
-import type { EventDtoPosterUrl } from './eventDtoPosterUrl.js';
 
 export interface EventDto {
   id: string;
@@ -12,5 +11,5 @@ export interface EventDto {
   title: string;
   startsAt: string;
   /** @nullable */
-  posterUrl: EventDtoPosterUrl;
+  posterUrl: string | null;
 }

@@ -17,6 +17,12 @@
   "references": [
     {
       "path": "../ui"
+    },
+    {
+      "path": "../auth-client"
+    },
+    {
+      "path": "../api-client"
     }
   ]
 }

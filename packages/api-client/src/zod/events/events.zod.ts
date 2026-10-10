@@ -12,9 +12,7 @@ export const EventsControllerListEventsResponseItem = zod.object({
   "venueId": zod.string(),
   "title": zod.string(),
   "startsAt": zod.iso.datetime({"offset":true}),
-  "posterUrl": zod.looseObject({
-
-}).nullable()
+  "posterUrl": zod.string().nullable()
 })
 export const EventsControllerListEventsResponse = zod.array(EventsControllerListEventsResponseItem)
 
@@ -29,9 +27,7 @@ export const EventsControllerCreateResponse = zod.object({
   "venueId": zod.string(),
   "title": zod.string(),
   "startsAt": zod.iso.datetime({"offset":true}),
-  "posterUrl": zod.looseObject({
-
-}).nullable()
+  "posterUrl": zod.string().nullable()
 })
 
 export const EventsControllerGetEventParams = zod.object({
@@ -43,9 +39,7 @@ export const EventsControllerGetEventResponse = zod.object({
   "venueId": zod.string(),
   "title": zod.string(),
   "startsAt": zod.iso.datetime({"offset":true}),
-  "posterUrl": zod.looseObject({
-
-}).nullable()
+  "posterUrl": zod.string().nullable()
 })
 
 export const EventsControllerUpdateParams = zod.object({
@@ -62,9 +56,7 @@ export const EventsControllerUpdateResponse = zod.object({
   "venueId": zod.string(),
   "title": zod.string(),
   "startsAt": zod.iso.datetime({"offset":true}),
-  "posterUrl": zod.looseObject({
-
-}).nullable()
+  "posterUrl": zod.string().nullable()
 })
 
 export const EventsControllerGetSeatsParams = zod.object({
@@ -93,8 +85,6 @@ export const EventsControllerUploadPosterResponse = zod.object({
   "venueId": zod.string(),
   "title": zod.string(),
   "startsAt": zod.iso.datetime({"offset":true}),
-  "posterUrl": zod.looseObject({
-
-}).nullable()
+  "posterUrl": zod.string().nullable()
 })
 

@@ -348,6 +348,15 @@ importers:
       '@module-federation/enhanced':
         specifier: ^2.4.0
         version: 2.9.2(@rspack/core@2.2.8(@module-federation/runtime-tools@2.9.2)(@swc/helpers@0.5.18))(typescript@6.0.3)(webpack@5.111.1)
+      '@tanstack/react-query':
+        specifier: ^5.104.1
+        version: 5.104.1(react@19.3.0)
+      '@ticketing/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@ticketing/auth-client':
+        specifier: workspace:*
+        version: link:../auth-client
       '@ticketing/ui':
         specifier: workspace:*
         version: link:../ui
@@ -376,6 +385,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.0
         version: 19.3.0(@types/react@19.3.0)
+      dotenv:
+        specifier: ^18.0.5
+        version: 18.0.5
       typescript:
         specifier: ~6.0.3
         version: 6.0.3

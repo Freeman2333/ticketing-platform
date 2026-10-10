@@ -13,6 +13,6 @@ export class EventDto {
   @ApiProperty()
   startsAt!: Date;
 
-  @ApiProperty({ nullable: true })
+  @ApiProperty({ type: String, nullable: true })
   posterUrl!: string | null;
 }
