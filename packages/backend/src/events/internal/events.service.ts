@@ -18,8 +18,8 @@ export class EventsService implements EventsApi {
     return event ? this.toEventDto(event) : null;
   }
 
-  async listEvents(): Promise<EventDto[]> {
-    const events = await this.eventsRepository.findMany();
+  async listEvents(filter?: { title?: string }): Promise<EventDto[]> {
+    const events = await this.eventsRepository.findMany(filter?.title);
     return events.map((event) => this.toEventDto(event));
   }
 

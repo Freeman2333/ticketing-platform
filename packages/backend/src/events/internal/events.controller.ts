@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseInterceptors,
@@ -17,6 +18,7 @@ import {
   ApiConsumes,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiQuery,
 } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { Public } from '../../common/decorators/public.decorator';
@@ -41,9 +43,10 @@ export class EventsController {
 
   @Get()
   @Public()
+  @ApiQuery({ name: 'title', required: false })
   @ApiOkResponse({ type: EventDto, isArray: true })
-  listEvents(): Promise<EventDto[]> {
-    return this.eventsService.listEvents();
+  listEvents(@Query('title') title?: string): Promise<EventDto[]> {
+    return this.eventsService.listEvents({ title });
   }
 
   @Get(':id')

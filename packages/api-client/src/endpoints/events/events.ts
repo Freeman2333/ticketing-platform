@@ -26,6 +26,7 @@ import type {
 import type {
   CreateEventDto,
   EventDto,
+  EventsControllerListEventsParams,
   EventsControllerUploadPosterBody,
   SeatDto,
   UpdateEventDto
@@ -52,13 +53,14 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 };
 
 export const eventsControllerListEvents = (
-
+    params?: EventsControllerListEventsParams,
  signal?: AbortSignal
 ) => {
 
 
       return customInstance<EventDto[]>(
-      {url: `/api/events`, method: 'GET', signal
+      {url: `/api/events`, method: 'GET',
+        params, signal
     },
       );
     }
@@ -66,23 +68,23 @@ export const eventsControllerListEvents = (
 
 
 
-export const getEventsControllerListEventsQueryKey = () => {
+export const getEventsControllerListEventsQueryKey = (params?: EventsControllerListEventsParams,) => {
     return [
-    `/api/events`
+    `/api/events`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getEventsControllerListEventsQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>>, }
+export const getEventsControllerListEventsQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>(params?: EventsControllerListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListEventsQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListEventsQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListEvents>>> = ({ signal }) => eventsControllerListEvents(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListEvents>>> = ({ signal }) => eventsControllerListEvents(params, signal);
 
 
 
@@ -96,7 +98,7 @@ export type EventsControllerListEventsQueryError = unknown
 
 
 export function useEventsControllerListEvents<TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>> & Pick<
+ params: undefined |  EventsControllerListEventsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof eventsControllerListEvents>>,
           TError,
@@ -106,7 +108,7 @@ export function useEventsControllerListEvents<TData = Awaited<ReturnType<typeof 
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useEventsControllerListEvents<TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>> & Pick<
+ params?: EventsControllerListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof eventsControllerListEvents>>,
           TError,
@@ -116,16 +118,16 @@ export function useEventsControllerListEvents<TData = Awaited<ReturnType<typeof 
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useEventsControllerListEvents<TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>>, }
+ params?: EventsControllerListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
 export function useEventsControllerListEvents<TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>>, }
+ params?: EventsControllerListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerListEventsQueryOptions(options)
+  const queryOptions = getEventsControllerListEventsQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

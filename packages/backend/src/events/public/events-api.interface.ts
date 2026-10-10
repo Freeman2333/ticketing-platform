@@ -3,7 +3,7 @@ import { SeatDto } from './dto/seat.dto';
 
 export interface EventsApi {
   getEvent(id: string): Promise<EventDto | null>;
-  listEvents(): Promise<EventDto[]>;
+  listEvents(filter?: { title?: string }): Promise<EventDto[]>;
   getSeatAvailability(eventId: string): Promise<SeatDto[]>;
   reserveSeats(eventId: string, seatIds: string[]): Promise<void>;
 }

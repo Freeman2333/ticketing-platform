@@ -7,6 +7,10 @@
 import * as zod from 'zod';
 
 
+export const EventsControllerListEventsQueryParams = zod.object({
+  "title": zod.string().optional()
+})
+
 export const EventsControllerListEventsResponseItem = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),

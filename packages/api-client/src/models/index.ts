@@ -10,6 +10,7 @@ export * from './createEventDto.js';
 export * from './createVenueDto.js';
 export * from './eventDto.js';
 export * from './eventDtoPosterUrl.js';
+export * from './eventsControllerListEventsParams.js';
 export * from './eventsControllerUploadPosterBody.js';
 export * from './loginDto.js';
 export * from './refreshResponseDto.js';

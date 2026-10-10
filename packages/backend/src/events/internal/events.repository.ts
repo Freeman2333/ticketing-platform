@@ -9,8 +9,12 @@ export class EventsRepository {
     return this.prisma.event.findUnique({ where: { id } });
   }
 
-  findMany() {
-    return this.prisma.event.findMany();
+  findMany(titleContains?: string) {
+    return this.prisma.event.findMany({
+      where: titleContains
+        ? { title: { contains: titleContains, mode: 'insensitive' } }
+        : undefined,
+    });
   }
 
   create(venueId: string, title: string, startsAt: Date) {

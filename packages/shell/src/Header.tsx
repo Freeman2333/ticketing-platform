@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { setAccessToken, useIsAuthenticated } from '@ticketing/auth-client';
 import { useAuthControllerLogout } from '@ticketing/api-client';
 import { Button } from '@ticketing/ui';
+import { EventSearch } from './EventSearch';
 
 export function Header() {
   const navigate = useNavigate();
@@ -19,7 +20,10 @@ export function Header() {
 
   return (
     <header className="bg-background sticky top-0 z-50 flex items-center justify-between border-b p-4">
-      <span className="font-semibold">Ticketing</span>
+      <Link to="/" className="font-semibold">
+        Ticketing
+      </Link>
+      <EventSearch />
       <nav className="flex gap-2">
         {isLoggedIn ? (
           <Button variant="outline" onClick={handleLogout}>
