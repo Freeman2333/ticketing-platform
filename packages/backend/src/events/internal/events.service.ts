@@ -49,6 +49,11 @@ export class EventsService implements EventsApi {
     return this.toEventDto(event);
   }
 
+  async setPosterUrl(id: string, posterUrl: string): Promise<EventDto> {
+    const event = await this.eventsRepository.update(id, { posterUrl });
+    return this.toEventDto(event);
+  }
+
   private toEventDto(event: Event): EventDto {
     return {
       id: event.id,

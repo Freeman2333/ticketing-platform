@@ -27,10 +27,10 @@ In progress. Breaks `project-plan.md` §8, Step 2 into concrete, ordered tasks, 
 
 ## Part D — Event poster upload
 
-- [ ] `POST /events/:id/poster` — `organizer` + ownership check (`backend-design.md` §2/§5).
-- [ ] Processing with **sharp** (resize, WebP conversion) before writing to MinIO (`backend-design.md` §2, `system-design.md` §8).
-- [ ] `events` module's own MinIO bucket/prefix — never shared with another module (`backend-design.md` §3, module isolation rule 1).
-- [ ] Posters served directly from a dedicated MinIO hostname behind the reverse proxy — not presigned, not proxied through the backend (`backend-design.md` §2).
+- [x] `POST /events/:id/poster` — `organizer` + ownership check (`backend-design.md` §2/§5). Verified end-to-end: uploaded a real JPEG, got back a `posterUrl`, downloaded it directly from `s3mock` and confirmed it's a real 1200x630 WebP file.
+- [x] Processing with **sharp** (resize, WebP conversion) before writing to MinIO (`backend-design.md` §2, `system-design.md` §8). `processPosterImage()` — resize to 1200x630 (`fit: 'cover'`) + WebP conversion; the exact dimensions aren't fixed anywhere in the design docs, so this is an arbitrary-but-reasonable default, not a locked decision.
+- [x] `events` module's own MinIO bucket/prefix — never shared with another module (`backend-design.md` §3, module isolation rule 1). Uses `MINIO_BUCKET` (`event-posters`) with an `events/{id}.webp` key prefix.
+- [x] Posters served directly from a dedicated MinIO hostname behind the reverse proxy — not presigned, not proxied through the backend (`backend-design.md` §2). `posterUrl` is the direct `s3mock` URL; also had to add the missing `MINIO_ENDPOINT` var to `.env`/`.env.example` (documented in `integration-design.md` §1 but never actually added until now).
 
 ## Part E — `catalog` remote: browsing UI
 

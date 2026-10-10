@@ -7,8 +7,17 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import type { Request } from 'express';
 import { Public } from '../../common/decorators/public.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -18,6 +27,8 @@ import { SeatDto } from '../public/dto/seat.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventsService } from './events.service';
+import { PosterStorageService } from './poster-storage.service';
+import { processPosterImage } from './process-poster-image';
 import { VenuesRepository } from './venues.repository';
 
 @Controller('events')
@@ -25,6 +36,7 @@ export class EventsController {
   constructor(
     private readonly eventsService: EventsService,
     private readonly venuesRepository: VenuesRepository,
+    private readonly posterStorageService: PosterStorageService,
   ) {}
 
   @Get()
@@ -95,5 +107,40 @@ export class EventsController {
       title: dto.title,
       startsAt: dto.startsAt ? new Date(dto.startsAt) : undefined,
     });
+  }
+
+  @Post(':id/poster')
+  @Roles(Role.organizer)
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: { file: { type: 'string', format: 'binary' } },
+    },
+  })
+  @ApiOkResponse({ type: EventDto })
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadPoster(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: Request,
+  ): Promise<EventDto> {
+    const event = await this.eventsService.getEvent(id);
+    if (!event) throw new NotFoundException();
+
+    const venue = await this.venuesRepository.findById(event.venueId);
+    if (!venue || venue.organizerId !== req.user!.sub) {
+      throw new NotFoundException();
+    }
+
+    const processed = await processPosterImage(file.buffer);
+    const posterUrl = await this.posterStorageService.upload(
+      `events/${id}.webp`,
+      processed,
+      'image/webp',
+    );
+
+    return this.eventsService.setPosterUrl(id, posterUrl);
   }
 }

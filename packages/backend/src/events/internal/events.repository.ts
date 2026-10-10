@@ -17,7 +17,10 @@ export class EventsRepository {
     return this.prisma.event.create({ data: { venueId, title, startsAt } });
   }
 
-  update(id: string, data: { title?: string; startsAt?: Date }) {
+  update(
+    id: string,
+    data: { title?: string; startsAt?: Date; posterUrl?: string },
+  ) {
     return this.prisma.event.update({ where: { id }, data });
   }
 }
