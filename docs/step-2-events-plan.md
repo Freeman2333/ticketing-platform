@@ -36,7 +36,7 @@ In progress. Breaks `project-plan.md` §8, Step 2 into concrete, ordered tasks, 
 
 - [ ] Regenerate `@ticketing/api-client` via Orval now that `events`/`venues` endpoints exist in the OpenAPI spec — same `orval.config.ts`, no new tooling (`frontend-design.md` §4).
 - [ ] `CatalogRouter` — `catalog`'s own internal routing (`/` list, `/:eventId` details), entirely owned here, `shell` never sees it (`frontend-design.md` §2/§5).
-- [ ] `EventList` + `EventCard` — list page with a debounced (~300ms) filter (`frontend-design.md` §2/§9).
+- [ ] `EventList` + `EventCard` — list page with a debounced (~300ms) filter (`frontend-design.md` §2/§9). `EventCard` design: hand-built from `@ticketing/ui` primitives (`Card`, `Badge` - the latter still needs porting, same manual process as `Card`/`Select`/`Form`), following the standard ticketing-site convention seen across real examples (Eventbrite/Ticketmaster-style and shadcn-based event-card blocks): poster with a fixed `aspect-ratio` on top, title, date/venue below, a price/status badge. Not copied from any specific paid component source - just the common, well-established pattern, rebuilt the same way we've rebuilt every other shadcn component in this project.
 - [ ] `EventDetailsPage` — event info + seat map as separate queries (`frontend-design.md` §2/§7); renders `EventInfo` and `SeatMap`.
 - [ ] `Seat` component — memoized, `aria-label`'d (e.g. "Seat A12, available, $45"), status never conveyed by color alone (`frontend-design.md` §2/§10).
 - [ ] `EventListSkeleton` / `SeatMapSkeleton` loading placeholders, added to `@ticketing/ui` (`frontend-design.md` §2).

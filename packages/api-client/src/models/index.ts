@@ -6,9 +6,19 @@
  */
 
 export * from './authResponseDto.js';
+export * from './createEventDto.js';
+export * from './createVenueDto.js';
+export * from './eventDto.js';
+export * from './eventDtoPosterUrl.js';
+export * from './eventsControllerUploadPosterBody.js';
 export * from './loginDto.js';
 export * from './refreshResponseDto.js';
 export * from './registerDto.js';
 export * from './registerDtoRole.js';
+export * from './seatDto.js';
+export * from './seatDtoStatus.js';
+export * from './updateEventDto.js';
+export * from './updateVenueDto.js';
 export * from './userDto.js';
 export * from './userDtoRole.js';
+export * from './venueDto.js';
