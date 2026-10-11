@@ -17,7 +17,7 @@ export default defineConfig({
         operations: {
           EventsController_listEvents: {
             query: {
-              useInfinite: true,
+              useSuspenseInfiniteQuery: true,
               useInfiniteQueryParam: 'page',
             },
           },

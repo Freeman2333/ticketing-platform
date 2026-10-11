@@ -1,5 +1,6 @@
 import { Component, Suspense, type ReactNode } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { Spinner } from '@ticketing/ui';
 import { lazyProvider } from './mf';
 import { Header } from './Header';
 import { LoginPage } from './LoginPage';
@@ -26,7 +27,13 @@ class ProviderBoundary extends Component<
       );
     }
     return (
-      <Suspense fallback={<p>Loading {this.props.name}...</p>}>
+      <Suspense
+        fallback={
+          <div className="flex min-h-[70vh] items-center justify-center">
+            <Spinner className="size-8" />
+          </div>
+        }
+      >
         {this.props.children}
       </Suspense>
     );
@@ -37,7 +44,7 @@ const ProviderCatalog = lazyProvider('catalog', 'App');
 
 function HomePage() {
   return (
-    <main className="mx-auto max-w-7xl px-4 py-6">
+    <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
       <ProviderBoundary name="catalog">
         <ProviderCatalog />
       </ProviderBoundary>

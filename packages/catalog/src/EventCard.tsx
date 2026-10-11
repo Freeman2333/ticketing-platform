@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Card, CardContent } from '@ticketing/ui';
+import { Card, CardContent, Skeleton } from '@ticketing/ui';
 import type { EventDto } from '@ticketing/api-client';
 
 export function EventCard({ event }: { event: EventDto }) {
@@ -25,5 +25,17 @@ export function EventCard({ event }: { event: EventDto }) {
         </CardContent>
       </Card>
     </Link>
+  );
+}
+
+export function EventCardSkeleton() {
+  return (
+    <Card className="overflow-hidden">
+      <Skeleton className="aspect-video w-full rounded-none" />
+      <CardContent className="flex flex-col gap-1">
+        <Skeleton className="h-5 w-3/4" />
+        <Skeleton className="h-4 w-1/2" />
+      </CardContent>
+    </Card>
   );
 }
