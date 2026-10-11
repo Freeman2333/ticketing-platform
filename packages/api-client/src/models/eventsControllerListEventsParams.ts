@@ -7,4 +7,6 @@
 
 export type EventsControllerListEventsParams = {
 title?: string;
+page?: number;
+limit?: number;
 };

@@ -5,18 +5,23 @@
  * OpenAPI spec version: 0.1
  */
 import {
+  useInfiniteQuery,
   useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
+  DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
+  InfiniteData,
   MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
@@ -26,6 +31,7 @@ import type {
 import type {
   CreateEventDto,
   EventDto,
+  EventListDto,
   EventsControllerListEventsParams,
   EventsControllerUploadPosterBody,
   SeatDto,
@@ -58,7 +64,7 @@ export const eventsControllerListEvents = (
 ) => {
 
 
-      return customInstance<EventDto[]>(
+      return customInstance<EventListDto>(
       {url: `/api/events`, method: 'GET',
         params, signal
     },
@@ -68,11 +74,81 @@ export const eventsControllerListEvents = (
 
 
 
+export const getEventsControllerListEventsInfiniteQueryKey = (params?: EventsControllerListEventsParams,) => {
+    return [
+    'infinite', `/api/events`, ...(params ? [params] : [])
+    ] as const;
+    }
+
 export const getEventsControllerListEventsQueryKey = (params?: EventsControllerListEventsParams,) => {
     return [
     `/api/events`, ...(params ? [params] : [])
     ] as const;
     }
+
+
+export const getEventsControllerListEventsInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(params?: EventsControllerListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListEventsInfiniteQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListEvents>>, QueryKey, EventsControllerListEventsParams['page']> = ({ signal, pageParam }) => eventsControllerListEvents({...params, 'page': pageParam ?? params?.['page']}, signal);
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type EventsControllerListEventsInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListEvents>>>
+export type EventsControllerListEventsInfiniteQueryError = unknown
+
+
+export function useEventsControllerListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
+ params: undefined |  EventsControllerListEventsParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerListEvents>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerListEvents>>, QueryKey
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
+ params?: EventsControllerListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerListEvents>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerListEvents>>, QueryKey
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
+ params?: EventsControllerListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>>, }
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
+ params?: EventsControllerListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>>, }
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerListEventsInfiniteQueryOptions(params,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
 
 
 export const getEventsControllerListEventsQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>(params?: EventsControllerListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>>, }

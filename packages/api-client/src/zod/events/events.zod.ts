@@ -8,17 +8,21 @@ import * as zod from 'zod';
 
 
 export const EventsControllerListEventsQueryParams = zod.object({
-  "title": zod.string().optional()
+  "title": zod.string().optional(),
+  "page": zod.number().optional(),
+  "limit": zod.number().optional()
 })
 
-export const EventsControllerListEventsResponseItem = zod.object({
+export const EventsControllerListEventsResponse = zod.object({
+  "items": zod.array(zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),
   "startsAt": zod.iso.datetime({"offset":true}),
   "posterUrl": zod.string().nullable()
+})),
+  "hasMore": zod.boolean()
 })
-export const EventsControllerListEventsResponse = zod.array(EventsControllerListEventsResponseItem)
 
 export const EventsControllerCreateBody = zod.object({
   "venueId": zod.string(),

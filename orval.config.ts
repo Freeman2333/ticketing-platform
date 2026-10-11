@@ -14,6 +14,14 @@ export default defineConfig({
           path: 'packages/api-client/src/mutator.ts',
           name: 'customInstance',
         },
+        operations: {
+          EventsController_listEvents: {
+            query: {
+              useInfinite: true,
+              useInfiniteQueryParam: 'page',
+            },
+          },
+        },
       },
     },
   },

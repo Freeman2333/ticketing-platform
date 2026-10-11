@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Event, Seat } from '../../generated/prisma/client';
 import { EventDto } from '../public/dto/event.dto';
+import { EventListDto } from '../public/dto/event-list.dto';
 import { SeatDto } from '../public/dto/seat.dto';
 import { EventsApi } from '../public/events-api.interface';
 import { EventsRepository } from './events.repository';
 import { SeatsRepository } from './seats.repository';
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_LIMIT = 20;
 
 @Injectable()
 export class EventsService implements EventsApi {
@@ -18,9 +22,21 @@ export class EventsService implements EventsApi {
     return event ? this.toEventDto(event) : null;
   }
 
-  async listEvents(filter?: { title?: string }): Promise<EventDto[]> {
-    const events = await this.eventsRepository.findMany(filter?.title);
-    return events.map((event) => this.toEventDto(event));
+  async listEvents(filter?: {
+    title?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<EventListDto> {
+    const limit = filter?.limit ?? DEFAULT_LIMIT;
+    const page = filter?.page ?? DEFAULT_PAGE;
+    const events = await this.eventsRepository.findMany(
+      filter?.title,
+      (page - 1) * limit,
+      limit + 1,
+    );
+    const hasMore = events.length > limit;
+    const items = hasMore ? events.slice(0, limit) : events;
+    return { items: items.map((event) => this.toEventDto(event)), hasMore };
   }
 
   async getSeatAvailability(eventId: string): Promise<SeatDto[]> {

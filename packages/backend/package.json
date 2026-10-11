@@ -100,6 +100,10 @@
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/multer": "^2.3.0",
-    "prisma": "7.10.0"
+    "prisma": "7.10.0",
+    "tsx": "^4.23.15"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

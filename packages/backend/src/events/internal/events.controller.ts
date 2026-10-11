@@ -25,6 +25,7 @@ import { Public } from '../../common/decorators/public.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../generated/prisma/client';
 import { EventDto } from '../public/dto/event.dto';
+import { EventListDto } from '../public/dto/event-list.dto';
 import { SeatDto } from '../public/dto/seat.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -44,9 +45,19 @@ export class EventsController {
   @Get()
   @Public()
   @ApiQuery({ name: 'title', required: false })
-  @ApiOkResponse({ type: EventDto, isArray: true })
-  listEvents(@Query('title') title?: string): Promise<EventDto[]> {
-    return this.eventsService.listEvents({ title });
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiOkResponse({ type: EventListDto })
+  listEvents(
+    @Query('title') title?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ): Promise<EventListDto> {
+    return this.eventsService.listEvents({
+      title,
+      page: page ? Number(page) : undefined,
+      limit: limit ? Number(limit) : undefined,
+    });
   }
 
   @Get(':id')

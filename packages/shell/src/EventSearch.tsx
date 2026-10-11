@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEventsControllerListEvents } from '@ticketing/api-client';
 import {
@@ -8,23 +8,20 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  useDebouncedState,
 } from '@ticketing/ui';
 
 export function EventSearch() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const { value: search, debouncedValue: debouncedSearch, setValue: setSearch } =
+    useDebouncedState('');
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timeout);
-  }, [search]);
-
-  const { data: events } = useEventsControllerListEvents(
+  const { data } = useEventsControllerListEvents(
     { title: debouncedSearch },
     { query: { enabled: debouncedSearch.length > 0 } },
   );
+  const events = data?.items;
 
   function selectEvent(eventId: string) {
     navigate(`/${eventId}`);
