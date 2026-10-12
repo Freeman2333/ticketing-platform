@@ -8,6 +8,7 @@ import { PosterStorageService } from './internal/poster-storage.service';
 import { SeatsRepository } from './internal/seats.repository';
 import { VenuesController } from './internal/venues.controller';
 import { VenuesRepository } from './internal/venues.repository';
+import { EVENTS_API } from './public/events-api.interface';
 
 @Module({
   controllers: [EventsController, VenuesController],
@@ -19,6 +20,8 @@ import { VenuesRepository } from './internal/venues.repository';
     PosterStorageService,
     SeatsRepository,
     VenuesRepository,
+    { provide: EVENTS_API, useExisting: EventsService },
   ],
+  exports: [EVENTS_API],
 })
 export class EventsModule {}

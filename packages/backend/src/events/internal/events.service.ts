@@ -65,6 +65,10 @@ export class EventsService implements EventsApi {
     }
   }
 
+  async mergeAnonymousViews(anonId: string, userId: string): Promise<void> {
+    await this.eventViewsRepository.mergeAnonymousViews(anonId, userId);
+  }
+
   async getRecentlyViewed(identity: {
     userId?: string;
     anonId?: string;

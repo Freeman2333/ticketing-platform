@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Post,
   Req,
   Res,
@@ -21,6 +22,8 @@ import { LoginDto } from './dto/login.dto';
 import { RefreshResponseDto } from './dto/refresh-response.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Public } from '../../common/decorators/public.decorator';
+import { EVENTS_API } from '../../events/public/events-api.interface';
+import type { EventsApi } from '../../events/public/events-api.interface';
 import { UserDto } from '../public/dto/user.dto';
 
 const REFRESH_COOKIE_OPTIONS: CookieOptions = {
@@ -32,13 +35,17 @@ const REFRESH_COOKIE_OPTIONS: CookieOptions = {
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    @Inject(EVENTS_API) private readonly eventsApi: EventsApi,
+  ) {}
 
   @Post('register')
   @Public()
   @ApiCreatedResponse({ type: AuthResponseDto })
   async register(
     @Body() dto: RegisterDto,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponseDto> {
     const user = await this.authService.register(
@@ -48,6 +55,7 @@ export class AuthController {
     );
     const tokens = await this.authService.issueTokens(user);
     this.setRefreshCookie(res, tokens.refreshToken);
+    await this.eventsApi.mergeAnonymousViews(req.anonId, user.id);
     return { accessToken: tokens.accessToken, user };
   }
 
@@ -57,6 +65,7 @@ export class AuthController {
   @ApiOkResponse({ type: AuthResponseDto })
   async login(
     @Body() dto: LoginDto,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponseDto> {
     const user = await this.authService.validateUser(dto.email, dto.password);
@@ -64,6 +73,7 @@ export class AuthController {
 
     const tokens = await this.authService.issueTokens(user);
     this.setRefreshCookie(res, tokens.refreshToken);
+    await this.eventsApi.mergeAnonymousViews(req.anonId, user.id);
     return { accessToken: tokens.accessToken, user };
   }
 

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { EventsModule } from '../events/events.module';
 import { AuthController } from './internal/auth.controller';
 import { AuthService } from './internal/auth.service';
 import { PasswordHasherService } from './internal/password-hasher.service';
@@ -8,6 +9,7 @@ import { UsersRepository } from './internal/users.repository';
 
 @Module({
   imports: [
+    EventsModule,
     JwtModule.registerAsync({
       global: true,
       useFactory: () => ({

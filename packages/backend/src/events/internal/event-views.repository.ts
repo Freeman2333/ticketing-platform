@@ -35,4 +35,22 @@ export class EventViewsRepository {
     });
     return views.map((view) => view.event);
   }
+
+  async mergeAnonymousViews(anonId: string, userId: string): Promise<void> {
+    const anonViews = await this.prisma.eventView.findMany({
+      where: { anonId },
+    });
+    if (anonViews.length === 0) return;
+
+    await this.prisma.$transaction([
+      ...anonViews.map((view) =>
+        this.prisma.eventView.upsert({
+          where: { userId_eventId: { userId, eventId: view.eventId } },
+          create: { userId, eventId: view.eventId, viewedAt: view.viewedAt },
+          update: {},
+        }),
+      ),
+      this.prisma.eventView.deleteMany({ where: { anonId } }),
+    ]);
+  }
 }
