@@ -25,7 +25,7 @@ export function Header() {
   }
 
   return (
-    <header className="bg-background sticky top-0 z-50 flex items-center justify-between border-b p-4">
+    <header className="bg-background sticky top-0 z-50 grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b p-4">
       <Link to="/" className="font-semibold">
         Ticketing
       </Link>
@@ -41,7 +41,7 @@ export function Header() {
           <ProviderCatalogSearch />
         </ProviderBoundary>
       )}
-      <nav className="flex gap-2">
+      <nav className="col-start-3 flex justify-end gap-2">
         {isLoggedIn ? (
           <Button variant="outline" onClick={handleLogout}>
             Log out

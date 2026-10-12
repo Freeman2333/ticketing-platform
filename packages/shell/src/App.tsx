@@ -27,13 +27,15 @@ function HomePage() {
 
 export function App() {
   return (
-    <div className="flex min-h-svh flex-col">
+    <div className="flex h-full flex-col">
       <Header />
-      <Routes>
-        <Route path="/*" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-      </Routes>
+      <div className="flex flex-1 flex-col overflow-y-auto">
+        <Routes>
+          <Route path="/*" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+      </div>
     </div>
   );
 }

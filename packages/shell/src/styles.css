@@ -1,6 +1,13 @@
 @import 'tailwindcss';
 @import '@ticketing/ui/theme.css';
 
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
 /* Tailwind's automatic content detection only scans this file's own
    directory tree. Button's source lives in the @ticketing/ui package, so
    it has to be added explicitly or its classes never get generated. */
