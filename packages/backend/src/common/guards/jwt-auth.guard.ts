@@ -9,6 +9,7 @@ import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
 import { Role } from '../../generated/prisma/client';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+import { IS_OPTIONAL_AUTH_KEY } from '../decorators/optional-auth.decorator';
 
 export interface AuthenticatedUser {
   sub: string;
@@ -35,15 +36,25 @@ export class JwtAuthGuard implements CanActivate {
     );
     if (isPublic) return true;
 
+    const isOptionalAuth = this.reflector.get<boolean>(
+      IS_OPTIONAL_AUTH_KEY,
+      context.getHandler(),
+    );
+
     const request = context.switchToHttp().getRequest<Request>();
     const token = request.headers.authorization?.replace('Bearer ', '');
-    if (!token) throw new UnauthorizedException();
+
+    if (!token) {
+      if (isOptionalAuth) return true;
+      throw new UnauthorizedException();
+    }
 
     try {
       request.user = await this.jwtService.verifyAsync<AuthenticatedUser>(
         token,
       );
     } catch {
+      if (isOptionalAuth) return true;
       throw new UnauthorizedException();
     }
 

@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Patch,
@@ -21,6 +23,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import type { Request } from 'express';
+import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../generated/prisma/client';
@@ -78,6 +81,22 @@ export class EventsController {
     if (!event) throw new NotFoundException();
 
     return this.eventsService.getSeatAvailability(id);
+  }
+
+  @Post(':id/view')
+  @OptionalAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async recordView(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<void> {
+    const event = await this.eventsService.getEvent(id);
+    if (!event) throw new NotFoundException();
+
+    await this.eventsService.recordView(id, {
+      userId: req.user?.sub,
+      anonId: req.anonId,
+    });
   }
 
   @Post()

@@ -70,6 +70,7 @@ model Event {
 
   venue Venue  @relation(fields: [venueId], references: [id])
   seats Seat[]
+  views EventView[]
 
   @@map("events")
   @@schema("events")
@@ -94,5 +95,22 @@ model Seat {
 
   @@index([eventId, status])
   @@map("seats")
+  @@schema("events")
+}
+
+model EventView {
+  id       String   @id @default(uuid())
+  anonId   String?  @map("anon_id")
+  userId   String?  @map("user_id")
+  eventId  String   @map("event_id")
+  viewedAt DateTime @default(now()) @map("viewed_at")
+
+  event Event @relation(fields: [eventId], references: [id])
+
+  @@unique([anonId, eventId])
+  @@unique([userId, eventId])
+  @@index([userId, viewedAt])
+  @@index([anonId, viewedAt])
+  @@map("event_views")
   @@schema("events")
 }

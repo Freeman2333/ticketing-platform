@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { EventViewsRepository } from './internal/event-views.repository';
 import { EventsController } from './internal/events.controller';
 import { EventsGateway } from './internal/events.gateway';
 import { EventsRepository } from './internal/events.repository';
@@ -14,6 +15,7 @@ import { VenuesRepository } from './internal/venues.repository';
     EventsService,
     EventsGateway,
     EventsRepository,
+    EventViewsRepository,
     PosterStorageService,
     SeatsRepository,
     VenuesRepository,

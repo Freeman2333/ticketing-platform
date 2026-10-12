@@ -4,6 +4,7 @@ import { EventDto } from '../public/dto/event.dto';
 import { EventListDto } from '../public/dto/event-list.dto';
 import { SeatDto } from '../public/dto/seat.dto';
 import { EventsApi } from '../public/events-api.interface';
+import { EventViewsRepository } from './event-views.repository';
 import { EventsRepository } from './events.repository';
 import { SeatsRepository } from './seats.repository';
 
@@ -15,6 +16,7 @@ export class EventsService implements EventsApi {
   constructor(
     private readonly eventsRepository: EventsRepository,
     private readonly seatsRepository: SeatsRepository,
+    private readonly eventViewsRepository: EventViewsRepository,
   ) {}
 
   async getEvent(id: string): Promise<EventDto | null> {
@@ -46,6 +48,19 @@ export class EventsService implements EventsApi {
 
   async reserveSeats(): Promise<void> {
     throw new Error('Not implemented - no caller until Orders (Step 3).');
+  }
+
+  async recordView(
+    eventId: string,
+    identity: { userId?: string; anonId?: string },
+  ): Promise<void> {
+    if (identity.userId) {
+      await this.eventViewsRepository.recordByUserId(identity.userId, eventId);
+      return;
+    }
+    if (identity.anonId) {
+      await this.eventViewsRepository.recordByAnonId(identity.anonId, eventId);
+    }
   }
 
   async createEvent(
