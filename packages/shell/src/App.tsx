@@ -1,51 +1,24 @@
-import { Component, Suspense, type ReactNode } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Spinner } from '@ticketing/ui';
 import { lazyProvider } from './mf';
+import { ProviderBoundary } from './ProviderBoundary';
 import { Header } from './Header';
 import { LoginPage } from './LoginPage';
 import { RegisterPage } from './RegisterPage';
-
-
-class ProviderBoundary extends Component<
-  { children: ReactNode; name: string },
-  { error: Error | null }
-> {
-  state = { error: null as Error | null };
-  static getDerivedStateFromError(error: Error) {
-    return { error };
-  }
-  render() {
-    if (this.state.error) {
-      return (
-        <div role="alert">
-          <p>
-            Provider &quot;{this.props.name}&quot; unavailable:{' '}
-            {this.state.error.message}
-          </p>
-        </div>
-      );
-    }
-    return (
-      <Suspense
-        fallback={
-          <div className="flex min-h-[70vh] items-center justify-center">
-            <Spinner className="size-8" />
-          </div>
-        }
-      >
-        {this.props.children}
-      </Suspense>
-    );
-  }
-}
 
 const ProviderCatalog = lazyProvider('catalog', 'App');
 
 function HomePage() {
   return (
     <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
-      <ProviderBoundary name="catalog">
+      <ProviderBoundary
+        name="catalog"
+        fallback={
+          <div className="flex min-h-[70vh] items-center justify-center">
+            <Spinner className="size-8" />
+          </div>
+        }
+      >
         <ProviderCatalog />
       </ProviderBoundary>
     </main>

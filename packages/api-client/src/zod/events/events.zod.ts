@@ -38,6 +38,23 @@ export const EventsControllerCreateResponse = zod.object({
   "posterUrl": zod.string().nullable()
 })
 
+export const EventsControllerGetRecentlyViewedResponse = zod.object({
+  "recentlyViewed": zod.array(zod.object({
+  "id": zod.string(),
+  "venueId": zod.string(),
+  "title": zod.string(),
+  "startsAt": zod.iso.datetime({"offset":true}),
+  "posterUrl": zod.string().nullable()
+})),
+  "upcoming": zod.array(zod.object({
+  "id": zod.string(),
+  "venueId": zod.string(),
+  "title": zod.string(),
+  "startsAt": zod.iso.datetime({"offset":true}),
+  "posterUrl": zod.string().nullable()
+}))
+})
+
 export const EventsControllerGetEventParams = zod.object({
   "id": zod.string()
 })
@@ -79,6 +96,12 @@ export const EventsControllerGetSeatsResponseItem = zod.object({
   "price": zod.number()
 })
 export const EventsControllerGetSeatsResponse = zod.array(EventsControllerGetSeatsResponseItem)
+
+export const EventsControllerRecordViewParams = zod.object({
+  "id": zod.string()
+})
+
+export const EventsControllerRecordViewResponse = zod.void()
 
 export const EventsControllerUploadPosterParams = zod.object({
   "id": zod.string()

@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   useEventsControllerGetEvent,
   useEventsControllerGetSeats,
+  useEventsControllerRecordView,
 } from '@ticketing/api-client';
 
 export function EventDetailsPage() {
@@ -12,6 +14,11 @@ export function EventDetailsPage() {
   const { data: seats, isLoading: isSeatsLoading } = useEventsControllerGetSeats(
     eventId!,
   );
+  const { mutate: recordView } = useEventsControllerRecordView();
+
+  useEffect(() => {
+    if (eventId) recordView({ id: eventId });
+  }, [eventId, recordView]);
 
   if (isEventLoading) return <p>Loading...</p>;
   if (!event) return <p>Event not found.</p>;

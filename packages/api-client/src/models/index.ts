@@ -14,6 +14,7 @@ export * from './eventListDto.js';
 export * from './eventsControllerListEventsParams.js';
 export * from './eventsControllerUploadPosterBody.js';
 export * from './loginDto.js';
+export * from './recentlyViewedDto.js';
 export * from './refreshResponseDto.js';
 export * from './registerDto.js';
 export * from './registerDtoRole.js';

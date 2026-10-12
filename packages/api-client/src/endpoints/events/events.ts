@@ -33,6 +33,7 @@ import type {
   EventListDto,
   EventsControllerListEventsParams,
   EventsControllerUploadPosterBody,
+  RecentlyViewedDto,
   SeatDto,
   UpdateEventDto
 } from '../../models';
@@ -263,7 +264,93 @@ const {mutation: mutationOptions} = options ?
       > => {
       return useMutation(getEventsControllerCreateMutationOptions(options), queryClient);
     }
-    export const eventsControllerGetEvent = (
+    export const eventsControllerGetRecentlyViewed = (
+
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<RecentlyViewedDto>(
+      {url: `/api/events/recently-viewed`, method: 'GET', signal
+    },
+      );
+    }
+
+
+
+
+export const getEventsControllerGetRecentlyViewedQueryKey = () => {
+    return [
+    `/api/events/recently-viewed`
+    ] as const;
+    }
+
+
+export const getEventsControllerGetRecentlyViewedQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerGetRecentlyViewedQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>> = ({ signal }) => eventsControllerGetRecentlyViewed(signal);
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type EventsControllerGetRecentlyViewedQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>>
+export type EventsControllerGetRecentlyViewedQueryError = unknown
+
+
+export function useEventsControllerGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerGetRecentlyViewedQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export const eventsControllerGetEvent = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -497,7 +584,66 @@ export function useEventsControllerGetSeats<TData = Awaited<ReturnType<typeof ev
 
 
 
-export const eventsControllerUploadPoster = (
+export const eventsControllerRecordView = (
+    id: string,
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<void>(
+      {url: `/api/events/${id}/view`, method: 'POST', signal
+    },
+      );
+    }
+
+
+
+
+export const getEventsControllerRecordViewMutationKey = () => ['eventsControllerRecordView'] as const;
+
+export const getEventsControllerRecordViewMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRecordView>>, TError,EventsControllerRecordViewMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRecordView>>, TError,EventsControllerRecordViewMutationVariables, TContext> => {
+
+const mutationKey = getEventsControllerRecordViewMutationKey();
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerRecordView>>, EventsControllerRecordViewMutationVariables> = (props) => {
+          const {id} = props ?? {};
+
+          return  eventsControllerRecordView(id,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EventsControllerRecordViewMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerRecordView>>>
+
+    export type EventsControllerRecordViewMutationError = unknown
+    export type EventsControllerRecordViewMutationVariables = {id: string}
+
+    export const useEventsControllerRecordView = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRecordView>>, TError,EventsControllerRecordViewMutationVariables, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof eventsControllerRecordView>>,
+        TError,
+        EventsControllerRecordViewMutationVariables,
+        TContext
+      > => {
+      return useMutation(getEventsControllerRecordViewMutationOptions(options), queryClient);
+    }
+    export const eventsControllerUploadPoster = (
     id: string,
     eventsControllerUploadPosterBody: EventsControllerUploadPosterBody,
  signal?: AbortSignal

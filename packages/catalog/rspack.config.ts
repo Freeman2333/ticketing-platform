@@ -87,6 +87,7 @@ export default defineConfig((_env, argv) => {
         filename: 'remoteEntry.js',
         exposes: {
           './App': './src/App.tsx',
+          './Search': './src/search/Search.tsx',
         },
         shared: [
           'react',

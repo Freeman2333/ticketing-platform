@@ -1,13 +1,19 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { setAccessToken, useIsAuthenticated } from '@ticketing/auth-client';
 import { useAuthControllerLogout } from '@ticketing/api-client';
 import { Button } from '@ticketing/ui';
-import { EventSearch } from './EventSearch';
+import { lazyProvider } from './mf';
+import { ProviderBoundary } from './ProviderBoundary';
+
+const ProviderCatalogSearch = lazyProvider('catalog', 'Search');
+const NON_CATALOG_PATHS = ['/login', '/register'];
 
 export function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
   const isLoggedIn = useIsAuthenticated();
   const logoutMutation = useAuthControllerLogout();
+  const showSearch = !NON_CATALOG_PATHS.includes(location.pathname);
 
   async function handleLogout() {
     try {
@@ -23,7 +29,18 @@ export function Header() {
       <Link to="/" className="font-semibold">
         Ticketing
       </Link>
-      <EventSearch />
+      {showSearch && (
+        <ProviderBoundary
+          name="catalog search"
+          fallback={
+            <div className="text-muted-foreground flex w-64 items-center rounded-md border px-3 py-2 text-sm opacity-50">
+              Search events...
+            </div>
+          }
+        >
+          <ProviderCatalogSearch />
+        </ProviderBoundary>
+      )}
       <nav className="flex gap-2">
         {isLoggedIn ? (
           <Button variant="outline" onClick={handleLogout}>
