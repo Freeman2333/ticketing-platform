@@ -89,15 +89,15 @@ export default defineConfig((_env, argv) => {
           './App': './src/App.tsx',
           './Search': './src/search/Search.tsx',
         },
-        shared: [
-          'react',
-          'react-dom',
-          'react-router-dom',
-          '@tanstack/react-query',
-          '@ticketing/api-client',
-          '@ticketing/auth-client',
-          '@ticketing/ui',
-        ],
+        shared: {
+          react: { singleton: true },
+          'react-dom': { singleton: true },
+          'react-router-dom': { singleton: true },
+          '@tanstack/react-query': { singleton: true },
+          '@ticketing/api-client': {},
+          '@ticketing/auth-client': { singleton: true },
+          '@ticketing/ui': {},
+        },
         // The dts exchange writes a `@mf-types` folder into each package's
         // own root, which the dev server's watcher then sees as a source
         // change and recompiles on - which re-triggers the exchange, in a
