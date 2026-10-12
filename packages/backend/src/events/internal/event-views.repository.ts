@@ -20,4 +20,19 @@ export class EventViewsRepository {
       update: { viewedAt: new Date() },
     });
   }
+
+  async findRecentlyViewed(
+    identity: { userId?: string; anonId?: string },
+    take: number,
+  ) {
+    const views = await this.prisma.eventView.findMany({
+      where: identity.userId
+        ? { userId: identity.userId }
+        : { anonId: identity.anonId },
+      orderBy: { viewedAt: 'desc' },
+      take,
+      include: { event: true },
+    });
+    return views.map((view) => view.event);
+  }
 }

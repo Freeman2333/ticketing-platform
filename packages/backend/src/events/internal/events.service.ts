@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Event, Seat } from '../../generated/prisma/client';
 import { EventDto } from '../public/dto/event.dto';
 import { EventListDto } from '../public/dto/event-list.dto';
+import { RecentlyViewedDto } from '../public/dto/recently-viewed.dto';
 import { SeatDto } from '../public/dto/seat.dto';
 import { EventsApi } from '../public/events-api.interface';
 import { EventViewsRepository } from './event-views.repository';
@@ -10,6 +11,7 @@ import { SeatsRepository } from './seats.repository';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 20;
+const RECENTLY_VIEWED_TOTAL = 4;
 
 @Injectable()
 export class EventsService implements EventsApi {
@@ -61,6 +63,30 @@ export class EventsService implements EventsApi {
     if (identity.anonId) {
       await this.eventViewsRepository.recordByAnonId(identity.anonId, eventId);
     }
+  }
+
+  async getRecentlyViewed(identity: {
+    userId?: string;
+    anonId?: string;
+  }): Promise<RecentlyViewedDto> {
+    const recentEvents = await this.eventViewsRepository.findRecentlyViewed(
+      identity,
+      RECENTLY_VIEWED_TOTAL,
+    );
+
+    const remaining = RECENTLY_VIEWED_TOTAL - recentEvents.length;
+    const upcomingEvents =
+      remaining > 0
+        ? await this.eventsRepository.findUpcoming(
+            recentEvents.map((event) => event.id),
+            remaining,
+          )
+        : [];
+
+    return {
+      recentlyViewed: recentEvents.map((event) => this.toEventDto(event)),
+      upcoming: upcomingEvents.map((event) => this.toEventDto(event)),
+    };
   }
 
   async createEvent(

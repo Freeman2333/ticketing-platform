@@ -29,6 +29,7 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../generated/prisma/client';
 import { EventDto } from '../public/dto/event.dto';
 import { EventListDto } from '../public/dto/event-list.dto';
+import { RecentlyViewedDto } from '../public/dto/recently-viewed.dto';
 import { SeatDto } from '../public/dto/seat.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -60,6 +61,16 @@ export class EventsController {
       title,
       page: page ? Number(page) : undefined,
       limit: limit ? Number(limit) : undefined,
+    });
+  }
+
+  @Get('recently-viewed')
+  @OptionalAuth()
+  @ApiOkResponse({ type: RecentlyViewedDto })
+  getRecentlyViewed(@Req() req: Request): Promise<RecentlyViewedDto> {
+    return this.eventsService.getRecentlyViewed({
+      userId: req.user?.sub,
+      anonId: req.anonId,
     });
   }
 
