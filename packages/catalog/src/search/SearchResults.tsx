@@ -1,3 +1,4 @@
+import type { RefObject } from 'react';
 import { EventDto, RecentlyViewedDto } from '@ticketing/api-client';
 import { CommandEmpty, CommandGroup } from '@ticketing/ui';
 import { EventResultItem } from './EventResultItem';
@@ -9,12 +10,18 @@ export function SearchResults({
   events,
   recentlyViewedData,
   onSelect,
+  hasNextPage,
+  isFetchingNextPage,
+  sentinelRef,
 }: {
   isDefaultState: boolean;
   isLoading: boolean;
   events: EventDto[] | undefined;
   recentlyViewedData: RecentlyViewedDto | undefined;
   onSelect: (eventId: string) => void;
+  hasNextPage: boolean | undefined;
+  isFetchingNextPage: boolean;
+  sentinelRef: RefObject<HTMLDivElement | null>;
 }) {
   if (isDefaultState) {
     return (
@@ -57,9 +64,15 @@ export function SearchResults({
             onSelect={() => onSelect(event.id)}
           />
         ))}
+        {isFetchingNextPage && <SearchResultsSkeleton rows={2} />}
+        {hasNextPage && <div ref={sentinelRef} />}
       </CommandGroup>
     );
   }
 
-  return <CommandEmpty>No events found.</CommandEmpty>;
+  return (
+    <CommandEmpty className="flex h-75 flex-col items-center justify-center text-center text-sm">
+      No events found.
+    </CommandEmpty>
+  );
 }
