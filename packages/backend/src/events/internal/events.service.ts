@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { Event, Seat } from '../../generated/prisma/client';
 import { EventDto } from '../public/dto/event.dto';
 import { EventListDto } from '../public/dto/event-list.dto';
@@ -50,6 +50,26 @@ export class EventsService implements EventsApi {
 
   async reserveSeats(): Promise<void> {
     throw new Error('Not implemented - no caller until Orders (Step 3).');
+  }
+
+  async createSeats(
+    eventId: string,
+    rows: { label: string; count: number; price: number }[],
+  ): Promise<SeatDto[]> {
+    const existingSeats = await this.seatsRepository.findByEventId(eventId);
+    if (existingSeats.length > 0) {
+      throw new ConflictException('Event already has seats');
+    }
+
+    const seatsToCreate = rows.flatMap((row) =>
+      Array.from({ length: row.count }, (_, i) => ({
+        label: `${row.label}${i + 1}`,
+        price: row.price,
+      })),
+    );
+
+    const seats = await this.seatsRepository.createMany(eventId, seatsToCreate);
+    return seats.map((seat) => this.toSeatDto(seat));
   }
 
   async recordView(

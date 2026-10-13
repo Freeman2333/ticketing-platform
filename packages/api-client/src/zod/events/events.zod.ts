@@ -97,6 +97,27 @@ export const EventsControllerGetSeatsResponseItem = zod.object({
 })
 export const EventsControllerGetSeatsResponse = zod.array(EventsControllerGetSeatsResponseItem)
 
+export const EventsControllerCreateSeatsParams = zod.object({
+  "id": zod.string()
+})
+
+export const EventsControllerCreateSeatsBody = zod.object({
+  "rows": zod.array(zod.object({
+  "label": zod.string(),
+  "count": zod.number(),
+  "price": zod.number()
+}))
+})
+
+export const EventsControllerCreateSeatsResponseItem = zod.object({
+  "id": zod.string(),
+  "eventId": zod.string(),
+  "label": zod.string(),
+  "status": zod.enum(['available', 'held', 'booked']),
+  "price": zod.number()
+})
+export const EventsControllerCreateSeatsResponse = zod.array(EventsControllerCreateSeatsResponseItem)
+
 export const EventsControllerRecordViewParams = zod.object({
   "id": zod.string()
 })

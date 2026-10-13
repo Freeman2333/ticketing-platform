@@ -7,6 +7,8 @@
 
 export * from './authResponseDto.js';
 export * from './createEventDto.js';
+export * from './createSeatRowDto.js';
+export * from './createSeatsDto.js';
 export * from './createVenueDto.js';
 export * from './eventDto.js';
 export * from './eventDtoPosterUrl.js';

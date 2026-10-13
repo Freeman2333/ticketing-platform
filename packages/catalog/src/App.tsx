@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
-import { EventDetailsPage } from './EventDetailsPage';
-import { EventList } from './EventList';
+import { EventDetailsPage } from './events/EventDetailsPage';
+import { EventList } from './events/EventList';
 import './styles.css';
 
 export function App() {

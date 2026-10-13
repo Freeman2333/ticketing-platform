@@ -32,6 +32,7 @@ import { EventListDto } from '../public/dto/event-list.dto';
 import { RecentlyViewedDto } from '../public/dto/recently-viewed.dto';
 import { SeatDto } from '../public/dto/seat.dto';
 import { CreateEventDto } from './dto/create-event.dto';
+import { CreateSeatsDto } from './dto/create-seats.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventsService } from './events.service';
 import { PosterStorageService } from './poster-storage.service';
@@ -92,6 +93,26 @@ export class EventsController {
     if (!event) throw new NotFoundException();
 
     return this.eventsService.getSeatAvailability(id);
+  }
+
+  @Post(':id/seats')
+  @Roles(Role.organizer)
+  @ApiBearerAuth()
+  @ApiCreatedResponse({ type: SeatDto, isArray: true })
+  async createSeats(
+    @Param('id') id: string,
+    @Body() dto: CreateSeatsDto,
+    @Req() req: Request,
+  ): Promise<SeatDto[]> {
+    const event = await this.eventsService.getEvent(id);
+    if (!event) throw new NotFoundException();
+
+    const venue = await this.venuesRepository.findById(event.venueId);
+    if (!venue || venue.organizerId !== req.user!.sub) {
+      throw new NotFoundException();
+    }
+
+    return this.eventsService.createSeats(id, dto.rows);
   }
 
   @Post(':id/view')

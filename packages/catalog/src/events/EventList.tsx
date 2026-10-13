@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { useEventsControllerListEventsSuspenseInfinite } from '@ticketing/api-client';
 import { useInfiniteScrollTrigger } from '@ticketing/ui';
-import { ErrorBoundary } from './ErrorBoundary';
+import { ErrorBoundary } from '../ErrorBoundary';
 import { EventCard, EventCardSkeleton } from './EventCard';
 
 const PAGE_SIZE = 8;

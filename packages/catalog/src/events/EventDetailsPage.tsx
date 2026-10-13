@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   useEventsControllerGetEvent,
   useEventsControllerGetSeats,
   useEventsControllerRecordView,
 } from '@ticketing/api-client';
+import { SeatMap } from './seats/SeatMap';
+import { SeatMapSkeleton } from './seats/SeatMapSkeleton';
 
 export function EventDetailsPage() {
   const { eventId } = useParams<{ eventId: string }>();
@@ -15,6 +17,21 @@ export function EventDetailsPage() {
     eventId!,
   );
   const { mutate: recordView } = useEventsControllerRecordView();
+
+  const [selectedSeatIds, setSelectedSeatIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const toggleSeat = useCallback((seatId: string) => {
+    setSelectedSeatIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(seatId)) {
+        next.delete(seatId);
+      } else {
+        next.add(seatId);
+      }
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     if (eventId) recordView({ id: eventId });
@@ -42,9 +59,13 @@ export function EventDetailsPage() {
 
       <h2 className="mt-6 text-lg font-semibold">Seats</h2>
       {isSeatsLoading ? (
-        <p>Loading seats...</p>
+        <SeatMapSkeleton />
       ) : (
-        <p>{seats?.length ?? 0} seats total</p>
+        <SeatMap
+          seats={seats ?? []}
+          selectedSeatIds={selectedSeatIds}
+          onToggleSeat={toggleSeat}
+        />
       )}
     </div>
   );

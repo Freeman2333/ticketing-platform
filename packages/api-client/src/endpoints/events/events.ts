@@ -33,6 +33,7 @@ import type {
 
 import type {
   CreateEventDto,
+  CreateSeatsDto,
   EventDto,
   EventListDto,
   EventsControllerListEventsParams,
@@ -652,7 +653,69 @@ export function useEventsControllerGetSeats<TData = Awaited<ReturnType<typeof ev
 
 
 
-export const eventsControllerRecordView = (
+export const eventsControllerCreateSeats = (
+    id: string,
+    createSeatsDto: CreateSeatsDto,
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<SeatDto[]>(
+      {url: `/api/events/${id}/seats`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createSeatsDto, signal
+    },
+      );
+    }
+
+
+
+
+export const getEventsControllerCreateSeatsMutationKey = () => ['eventsControllerCreateSeats'] as const;
+
+export const getEventsControllerCreateSeatsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreateSeats>>, TError,EventsControllerCreateSeatsMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreateSeats>>, TError,EventsControllerCreateSeatsMutationVariables, TContext> => {
+
+const mutationKey = getEventsControllerCreateSeatsMutationKey();
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerCreateSeats>>, EventsControllerCreateSeatsMutationVariables> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  eventsControllerCreateSeats(id,data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EventsControllerCreateSeatsMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerCreateSeats>>>
+    export type EventsControllerCreateSeatsMutationBody = CreateSeatsDto
+    export type EventsControllerCreateSeatsMutationError = unknown
+    export type EventsControllerCreateSeatsMutationVariables = {id: string;data: CreateSeatsDto}
+
+    export const useEventsControllerCreateSeats = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreateSeats>>, TError,EventsControllerCreateSeatsMutationVariables, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof eventsControllerCreateSeats>>,
+        TError,
+        EventsControllerCreateSeatsMutationVariables,
+        TContext
+      > => {
+      return useMutation(getEventsControllerCreateSeatsMutationOptions(options), queryClient);
+    }
+    export const eventsControllerRecordView = (
     id: string,
  signal?: AbortSignal
 ) => {
