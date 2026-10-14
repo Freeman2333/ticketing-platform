@@ -52,6 +52,10 @@ export class EventsService implements EventsApi {
     await this.seatsRepository.holdIfAvailable(eventId, seatIds);
   }
 
+  async releaseSeats(seatIds: string[]): Promise<void> {
+    await this.seatsRepository.updateStatus(seatIds, 'available');
+  }
+
   async createSeats(
     eventId: string,
     rows: { label: string; count: number; price: number }[],

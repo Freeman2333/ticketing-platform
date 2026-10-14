@@ -11,6 +11,7 @@ export interface EventsApi {
   }): Promise<EventListDto>;
   getSeatAvailability(eventId: string): Promise<SeatDto[]>;
   reserveSeats(eventId: string, seatIds: string[]): Promise<void>;
+  releaseSeats(seatIds: string[]): Promise<void>;
   mergeAnonymousViews(anonId: string, userId: string): Promise<void>;
 }
 

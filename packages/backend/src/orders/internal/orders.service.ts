@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { EVENTS_API } from '../../events/public/events-api.interface';
 import type { EventsApi } from '../../events/public/events-api.interface';
 import { OrdersRepository } from './orders.repository';
@@ -36,5 +41,26 @@ export class OrdersService {
 
     const reservedUntil = new Date(Date.now() + HOLD_DURATION_MS);
     return this.ordersRepository.markReserved(order.id, reservedUntil);
+  }
+
+  listOrders(userId: string) {
+    return this.ordersRepository.findByUserId(userId);
+  }
+
+  getOrder(orderId: string) {
+    return this.ordersRepository.findById(orderId);
+  }
+
+  async cancelOrder(orderId: string) {
+    const order = await this.ordersRepository.findById(orderId);
+    if (!order) {
+      throw new NotFoundException();
+    }
+    if (order.status !== 'reserved') {
+      throw new ConflictException('Only a reserved order can be cancelled');
+    }
+
+    await this.eventsApi.releaseSeats(order.items.map((item) => item.seatId));
+    return this.ordersRepository.markCancelled(orderId);
   }
 }

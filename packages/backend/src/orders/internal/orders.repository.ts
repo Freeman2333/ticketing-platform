@@ -32,6 +32,22 @@ export class OrdersRepository {
     return this.prisma.order.update({
       where: { id: orderId },
       data: { status: 'cancelled' },
+      include: { items: true },
+    });
+  }
+
+  findByUserId(userId: string) {
+    return this.prisma.order.findMany({
+      where: { userId },
+      include: { items: true },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  findById(orderId: string) {
+    return this.prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: true },
     });
   }
 }

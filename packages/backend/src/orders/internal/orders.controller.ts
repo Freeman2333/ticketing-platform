@@ -1,5 +1,14 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderDto } from './dto/order.dto';
@@ -21,5 +30,42 @@ export class OrdersController {
       dto.eventId,
       dto.seatIds,
     );
+  }
+
+  @Get()
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: OrderDto, isArray: true })
+  listOrders(@Req() req: Request): Promise<OrderDto[]> {
+    return this.ordersService.listOrders(req.user!.sub);
+  }
+
+  @Get(':id')
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: OrderDto })
+  async getOrder(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<OrderDto> {
+    const order = await this.ordersService.getOrder(id);
+    if (!order || order.userId !== req.user!.sub) {
+      throw new NotFoundException();
+    }
+
+    return order;
+  }
+
+  @Patch(':id/cancel')
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: OrderDto })
+  async cancelOrder(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<OrderDto> {
+    const order = await this.ordersService.getOrder(id);
+    if (!order || order.userId !== req.user!.sub) {
+      throw new NotFoundException();
+    }
+
+    return this.ordersService.cancelOrder(id);
   }
 }
