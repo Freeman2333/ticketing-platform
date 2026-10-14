@@ -56,12 +56,13 @@ One explicit exception to "no business content": `shell` owns the login/register
 
 **Components inside `catalog`** (the only remote in Phase 1 — `checkout/cart`, `account/orders`, and `admin dashboard` are added only in Phase 6, `project-plan.md` §5):
 
-- `CatalogRouter` — `catalog`'s own internal routing (`/` list, `/:eventId` details), entirely owned here — `shell` never sees it (§5).
+- `CatalogRouter` — `catalog`'s own internal routing (`/` list, `/:eventId` details, `/orders/:orderId` confirmation), entirely owned here — `shell` never sees it (§5).
 - `EventList` — the event list page, with the debounced filter (§9); renders a list of `EventCard`.
 - `EventDetailsPage` — event details + seat map (separate queries, §7); renders `EventInfo`, `SeatMap`, `ReservationPanel`.
 - `SeatMap` — the grid of `Seat` components, each memoized (§9/§10).
 - `Seat` — one seat: clickable, `aria-label`'d, status shown by color plus icon/text (§10).
-- `ReservationPanel` / `ReserveButton` — holds the current seat selection, submits `POST /orders`, shows optimistic UI (§9).
+- `ReservationPanel` / `ReserveButton` — holds the current seat selection, submits `POST /orders`; on success navigates to `/orders/:orderId` rather than showing the confirmation inline (decided 2026-10-13 - gives Phase 4's payment UI a natural home, and makes the order a bookmarkable/shareable URL backed by the already-planned `GET /orders/:id`).
+- `OrderPage` — fetches `GET /orders/:id` (ownership-checked), shows the order summary (event, seats, total price) and a hold countdown driven by `reservedUntil`; a `PATCH /orders/:id/cancel` action lives here too. Lives in `catalog` for now as a pragmatic Phase 1 placeholder - Phase 6 may eventually move it into a dedicated `account/orders` remote, but no remote exists yet to put it in.
 - `useSeatAvailability` — wraps the WebSocket subscription (§8) and writes updates into the TanStack Query cache (§7).
 - `EventListSkeleton` / `SeatMapSkeleton` — loading placeholders, from `libs/ui`.
 

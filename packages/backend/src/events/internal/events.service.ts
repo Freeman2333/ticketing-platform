@@ -48,8 +48,8 @@ export class EventsService implements EventsApi {
     return seats.map((seat) => this.toSeatDto(seat));
   }
 
-  async reserveSeats(): Promise<void> {
-    throw new Error('Not implemented - no caller until Orders (Step 3).');
+  async reserveSeats(eventId: string, seatIds: string[]): Promise<void> {
+    await this.seatsRepository.holdIfAvailable(eventId, seatIds);
   }
 
   async createSeats(

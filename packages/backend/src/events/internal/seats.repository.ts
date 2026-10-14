@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { SeatStatus } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
@@ -24,6 +24,20 @@ export class SeatsRepository {
     return this.prisma.seat.updateMany({
       where: { id: { in: seatIds } },
       data: { status },
+    });
+  }
+
+  async holdIfAvailable(eventId: string, seatIds: string[]): Promise<void> {
+    await this.prisma.$transaction(async (tx) => {
+      const result = await tx.seat.updateMany({
+        where: { id: { in: seatIds }, eventId, status: 'available' },
+        data: { status: 'held' },
+      });
+      if (result.count !== seatIds.length) {
+        throw new ConflictException(
+          'One or more selected seats are no longer available',
+        );
+      }
     });
   }
 }

@@ -32,9 +32,9 @@ Not started. Breaks `project-plan.md` §8, Step 3 into concrete, ordered tasks, 
 
 ## Part D — `catalog` remote: reservation UI
 
-- [ ] `ReservationPanel` / `ReserveButton` (`frontend-design.md` §2) — holds the current seat selection in plain `useState` (`frontend-design.md` §7, never crosses the `shell`↔`catalog` boundary), submits `POST /orders`.
+- [ ] `ReservationPanel` / `ReserveButton` (`frontend-design.md` §2) — holds the current seat selection in plain `useState` (`frontend-design.md` §7, never crosses the `shell`↔`catalog` boundary), submits `POST /orders`. On success, navigates to `/orders/:orderId` instead of showing a confirmation inline on `EventDetailsPage` (decided 2026-10-13).
 - [ ] Optimistic UI on the reserve click (`frontend-design.md` §9): mark the selected seats as `held` in the seat-map query's cache immediately via `setQueryData`, roll back on a 409/error response from the mutation.
-- [ ] Hold countdown, driven by the `reservedUntil` the backend returns (`system-design.md` §7); positioned `fixed`/`absolute` per the CLS guidance (`frontend-design.md` §9).
+- [ ] New route `/orders/:orderId` in `CatalogRouter`, rendering `OrderPage` (`frontend-design.md` §2) - fetches `GET /orders/:id`, shows event/seats/total price, a hold countdown driven by `reservedUntil` (positioned `fixed`/`absolute` per the CLS guidance, `frontend-design.md` §9), and a cancel action calling `PATCH /orders/:id/cancel`.
 - [ ] The WebSocket broadcast already fires from inside `EventsApi.reserveSeats()` once Part B implements it for real — Step 2 Part C's gateway/room mechanics are already verified in isolation; this is just the first real caller exercising them end-to-end.
 
 ## Not in this step

@@ -161,7 +161,7 @@ orders.order_items    (id, order_id -> orders.orders, seat_id [opaque id, no FK]
 
 Note the deliberate asymmetry: foreign keys exist _within_ a schema, never _across_ schemas — `orders.orders.user_id` and `event_id` are just stored ids, validated at write time via the module's public API, not enforced by the database.
 
-**Indexes** (`system-design.md` § Database performance): a composite index on `seats(event_id, status)` — the hot "available seats for event X" query — plus `orders.user_id`, `order_items.order_id`, `order_items.seat_id`.
+**Indexes** (`system-design.md` § Database performance): a composite index on `seats(event_id, status)` — the hot "available seats for event X" query — plus `orders.user_id` (for `GET /orders`) and `order_items.order_id` (for fetching one order's line items). No index on `order_items.seat_id` — nothing queries `OrderItem` by seat, that index was a leftover from an earlier plan where `seat_id` also had a unique constraint.
 
 **Migrations**: Prisma Migrate. `prisma migrate dev` locally generates and applies migration files against the local database; `prisma migrate deploy` applies already-generated migrations elsewhere (CI, any other environment) without generating new ones or allowing schema drift. Migration files are committed to the repo.
 

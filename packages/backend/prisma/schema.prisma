@@ -8,12 +8,10 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
-// Each backend module owns its own schema (backend-design.md §3) - only
-// `auth`/`events` exist so far; `orders` is added here when that module
-// is scaffolded, not pre-declared ahead of having models in it.
+// Each backend module owns its own schema (backend-design.md §3).
 datasource db {
   provider = "postgresql"
-  schemas  = ["auth", "events"]
+  schemas  = ["auth", "events", "orders"]
 }
 
 enum Role {
@@ -113,4 +111,40 @@ model EventView {
   @@index([anonId, viewedAt])
   @@map("event_views")
   @@schema("events")
+}
+
+enum OrderStatus {
+  draft
+  reserved
+  cancelled
+
+  @@schema("orders")
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  userId        String      @map("user_id")
+  eventId       String      @map("event_id")
+  status        OrderStatus @default(draft)
+  reservedUntil DateTime?   @map("reserved_until")
+  createdAt     DateTime    @default(now()) @map("created_at")
+
+  items OrderItem[]
+
+  @@index([userId])
+  @@map("orders")
+  @@schema("orders")
+}
+
+model OrderItem {
+  id      String @id @default(uuid())
+  orderId String @map("order_id")
+  seatId  String @map("seat_id")
+  price   Int
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@map("order_items")
+  @@schema("orders")
 }
