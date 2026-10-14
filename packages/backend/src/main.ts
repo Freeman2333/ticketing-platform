@@ -10,18 +10,18 @@ import cookieParser from 'cookie-parser';
 import { config } from 'dotenv';
 import helmet from 'helmet';
 import { resolve } from 'node:path';
-import { AppModule } from './app/app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 
 config({ path: resolve(__dirname, '../../../.env') });
 
 async function bootstrap() {
+  const { AppModule } = await import('./app/app.module');
   const app = await NestFactory.create(AppModule);
   app.use(helmet());
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: process.env.FRONTEND_ORIGIN,
     credentials: true,
   });
   app.useGlobalFilters(new AllExceptionsFilter());

@@ -3,11 +3,22 @@ import {
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
+import { SeatDto } from '../public/dto/seat.dto';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: { origin: process.env.FRONTEND_ORIGIN, credentials: true },
+})
 export class EventsGateway {
+  @WebSocketServer()
+  server!: Server;
+
+  broadcastSeatsUpdated(eventId: string, seats: SeatDto[]) {
+    this.server.to(`event:${eventId}`).emit('seatsUpdated', seats);
+  }
+
   @SubscribeMessage('joinEvent')
   joinEvent(
     @MessageBody() eventId: string,

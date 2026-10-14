@@ -20,7 +20,7 @@ export class HoldExpiryCron {
 
     for (const order of expiredOrders) {
       const seatIds = order.items.map((item) => item.seatId);
-      await this.eventsApi.releaseSeats(seatIds);
+      await this.eventsApi.releaseSeats(order.eventId, seatIds);
       await this.ordersRepository.markCancelled(order.id);
       this.eventEmitter.emit(
         'order.reservation_expired',

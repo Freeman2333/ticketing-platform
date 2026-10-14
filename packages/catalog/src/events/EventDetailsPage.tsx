@@ -9,6 +9,7 @@ import { formatDateTime } from '@ticketing/ui';
 import { ReservationPanel } from './ReservationPanel';
 import { SeatMap } from './seats/SeatMap';
 import { SeatMapSkeleton } from './seats/SeatMapSkeleton';
+import { useSeatAvailability } from './seats/useSeatAvailability';
 
 export function EventDetailsPage() {
   const { eventId } = useParams<{ eventId: string }>();
@@ -19,7 +20,7 @@ export function EventDetailsPage() {
     eventId!,
   );
   const { mutate: recordView } = useEventsControllerRecordView();
-
+  
   const [selectedSeatIds, setSelectedSeatIds] = useState<Set<string>>(
     new Set(),
   );
@@ -34,7 +35,9 @@ export function EventDetailsPage() {
       return next;
     });
   }, []);
-
+  
+  useSeatAvailability(eventId!);
+  
   useEffect(() => {
     if (eventId) recordView({ id: eventId });
   }, [eventId, recordView]);

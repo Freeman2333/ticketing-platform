@@ -84,7 +84,10 @@ export class OrdersService {
       throw new ConflictException('Only a reserved order can be cancelled');
     }
 
-    await this.eventsApi.releaseSeats(order.items.map((item) => item.seatId));
+    await this.eventsApi.releaseSeats(
+      order.eventId,
+      order.items.map((item) => item.seatId),
+    );
     return this.ordersRepository.markCancelled(orderId);
   }
 }

@@ -6,6 +6,7 @@ import { RecentlyViewedDto } from '../public/dto/recently-viewed.dto';
 import { SeatDto } from '../public/dto/seat.dto';
 import { EventsApi } from '../public/events-api.interface';
 import { EventViewsRepository } from './event-views.repository';
+import { EventsGateway } from './events.gateway';
 import { EventsRepository } from './events.repository';
 import { SeatsRepository } from './seats.repository';
 
@@ -19,6 +20,7 @@ export class EventsService implements EventsApi {
     private readonly eventsRepository: EventsRepository,
     private readonly seatsRepository: SeatsRepository,
     private readonly eventViewsRepository: EventViewsRepository,
+    private readonly eventsGateway: EventsGateway,
   ) {}
 
   async getEvent(id: string): Promise<EventDto | null> {
@@ -50,10 +52,14 @@ export class EventsService implements EventsApi {
 
   async reserveSeats(eventId: string, seatIds: string[]): Promise<void> {
     await this.seatsRepository.holdIfAvailable(eventId, seatIds);
+    const seats = await this.getSeatAvailability(eventId);
+    this.eventsGateway.broadcastSeatsUpdated(eventId, seats);
   }
 
-  async releaseSeats(seatIds: string[]): Promise<void> {
+  async releaseSeats(eventId: string, seatIds: string[]): Promise<void> {
     await this.seatsRepository.updateStatus(seatIds, 'available');
+    const seats = await this.getSeatAvailability(eventId);
+    this.eventsGateway.broadcastSeatsUpdated(eventId, seats);
   }
 
   async createSeats(
