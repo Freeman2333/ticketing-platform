@@ -9,6 +9,7 @@ export * from './components/ui/label';
 export * from './components/ui/select';
 export * from './components/ui/skeleton';
 export * from './components/ui/spinner';
+export * from './components/ui/tooltip';
 export * from './hooks/use-debounce';
 export * from './hooks/use-debounced-state';
 export * from './hooks/use-infinite-scroll-trigger';
