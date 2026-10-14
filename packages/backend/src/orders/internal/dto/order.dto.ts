@@ -12,6 +12,12 @@ export class OrderDto {
   @ApiProperty()
   eventId!: string;
 
+  @ApiProperty()
+  eventTitle!: string;
+
+  @ApiProperty()
+  eventStartsAt!: Date;
+
   @ApiProperty({ enum: OrderStatus })
   status!: OrderStatus;
 

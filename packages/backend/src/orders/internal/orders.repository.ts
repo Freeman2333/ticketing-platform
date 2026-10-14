@@ -8,12 +8,16 @@ export class OrdersRepository {
   create(
     userId: string,
     eventId: string,
-    items: { seatId: string; price: number }[],
+    eventTitle: string,
+    eventStartsAt: Date,
+    items: { seatId: string; seatLabel: string; price: number }[],
   ) {
     return this.prisma.order.create({
       data: {
         userId,
         eventId,
+        eventTitle,
+        eventStartsAt,
         items: { create: items },
       },
       include: { items: true },

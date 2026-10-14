@@ -125,6 +125,8 @@ model Order {
   id            String      @id @default(uuid())
   userId        String      @map("user_id")
   eventId       String      @map("event_id")
+  eventTitle    String      @map("event_title")
+  eventStartsAt DateTime    @map("event_starts_at")
   status        OrderStatus @default(draft)
   reservedUntil DateTime?   @map("reserved_until")
   createdAt     DateTime    @default(now()) @map("created_at")
@@ -137,10 +139,11 @@ model Order {
 }
 
 model OrderItem {
-  id      String @id @default(uuid())
-  orderId String @map("order_id")
-  seatId  String @map("seat_id")
-  price   Int
+  id        String @id @default(uuid())
+  orderId   String @map("order_id")
+  seatId    String @map("seat_id")
+  seatLabel String @map("seat_label")
+  price     Int
 
   order Order @relation(fields: [orderId], references: [id])
 

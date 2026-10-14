@@ -21,6 +21,11 @@ export class OrdersService {
   ) {}
 
   async createOrder(userId: string, eventId: string, seatIds: string[]) {
+    const event = await this.eventsApi.getEvent(eventId);
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+
     const seats = await this.eventsApi.getSeatAvailability(eventId);
     const selectedSeats = seats.filter((seat) => seatIds.includes(seat.id));
     if (selectedSeats.length !== seatIds.length) {
@@ -32,7 +37,13 @@ export class OrdersService {
     const order = await this.ordersRepository.create(
       userId,
       eventId,
-      selectedSeats.map((seat) => ({ seatId: seat.id, price: seat.price })),
+      event.title,
+      event.startsAt,
+      selectedSeats.map((seat) => ({
+        seatId: seat.id,
+        seatLabel: seat.label,
+        price: seat.price,
+      })),
     );
 
     try {

@@ -8,5 +8,8 @@ export class OrderItemDto {
   seatId!: string;
 
   @ApiProperty()
+  seatLabel!: string;
+
+  @ApiProperty()
   price!: number;
 }
