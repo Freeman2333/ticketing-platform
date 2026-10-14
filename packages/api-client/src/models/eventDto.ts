@@ -9,6 +9,8 @@ export interface EventDto {
   id: string;
   venueId: string;
   title: string;
+  /** @nullable */
+  description: string | null;
   startsAt: string;
   /** @nullable */
   posterUrl: string | null;

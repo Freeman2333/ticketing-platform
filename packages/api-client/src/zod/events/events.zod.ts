@@ -18,6 +18,7 @@ export const EventsControllerListEventsResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),
+  "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
   "posterUrl": zod.string().nullable()
 })),
@@ -34,6 +35,7 @@ export const EventsControllerCreateResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),
+  "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
   "posterUrl": zod.string().nullable()
 })
@@ -43,6 +45,7 @@ export const EventsControllerGetRecentlyViewedResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),
+  "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
   "posterUrl": zod.string().nullable()
 })),
@@ -50,6 +53,7 @@ export const EventsControllerGetRecentlyViewedResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),
+  "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
   "posterUrl": zod.string().nullable()
 }))
@@ -63,6 +67,7 @@ export const EventsControllerGetEventResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),
+  "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
   "posterUrl": zod.string().nullable()
 })
@@ -80,6 +85,7 @@ export const EventsControllerUpdateResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),
+  "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
   "posterUrl": zod.string().nullable()
 })
@@ -136,6 +142,7 @@ export const EventsControllerUploadPosterResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),
+  "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
   "posterUrl": zod.string().nullable()
 })

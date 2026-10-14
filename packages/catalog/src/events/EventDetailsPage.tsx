@@ -57,6 +57,7 @@ export function EventDetailsPage() {
           timeStyle: 'short',
         })}
       </p>
+      {event.description && <p className="mt-4">{event.description}</p>}
 
       <h2 className="mt-6 text-lg font-semibold">Seats</h2>
       {isSeatsLoading ? (

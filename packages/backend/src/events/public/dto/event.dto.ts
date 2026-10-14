@@ -10,6 +10,9 @@ export class EventDto {
   @ApiProperty()
   title!: string;
 
+  @ApiProperty({ type: String, nullable: true })
+  description!: string | null;
+
   @ApiProperty()
   startsAt!: Date;
 

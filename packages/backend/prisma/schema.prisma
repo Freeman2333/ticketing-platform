@@ -60,11 +60,12 @@ model Venue {
 }
 
 model Event {
-  id        String   @id @default(uuid())
-  venueId   String   @map("venue_id")
-  title     String
-  startsAt  DateTime @map("starts_at")
-  posterUrl String?  @map("poster_url")
+  id          String   @id @default(uuid())
+  venueId     String   @map("venue_id")
+  title       String
+  description String?
+  startsAt    DateTime @map("starts_at")
+  posterUrl   String?  @map("poster_url")
 
   venue Venue  @relation(fields: [venueId], references: [id])
   seats Seat[]

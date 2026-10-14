@@ -144,6 +144,7 @@ export class EventsService implements EventsApi {
       id: event.id,
       venueId: event.venueId,
       title: event.title,
+      description: event.description,
       startsAt: event.startsAt,
       posterUrl: event.posterUrl,
     };
