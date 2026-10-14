@@ -12,9 +12,11 @@
     "@ticketing/api-client": "workspace:*",
     "@ticketing/auth-client": "workspace:*",
     "@ticketing/ui": "workspace:*",
+    "axios": "^1.18.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.18.4"
+    "react-router-dom": "^7.18.4",
+    "sonner": "^2.0.8"
   },
   "devDependencies": {
     "@rspack/cli": "^2.0.3",

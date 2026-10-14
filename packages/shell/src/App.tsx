@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import { Spinner } from '@ticketing/ui';
+import { Spinner, Toaster } from '@ticketing/ui';
 import { lazyProvider } from './mf';
 import { ProviderBoundary } from './ProviderBoundary';
 import { Header } from './Header';
@@ -28,6 +28,7 @@ function HomePage() {
 export function App() {
   return (
     <div className="flex h-full flex-col">
+      <Toaster />
       <Header />
       <div className="flex flex-1 flex-col overflow-y-auto">
         <Routes>

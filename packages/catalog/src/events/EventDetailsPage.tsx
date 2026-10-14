@@ -74,6 +74,7 @@ export function EventDetailsPage() {
         eventId={eventId!}
         seats={seats ?? []}
         selectedSeatIds={selectedSeatIds}
+        onSelectionChange={setSelectedSeatIds}
       />
     </div>
   );
