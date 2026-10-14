@@ -7,6 +7,7 @@
 
 export * from './authResponseDto.js';
 export * from './createEventDto.js';
+export * from './createOrderDto.js';
 export * from './createSeatRowDto.js';
 export * from './createSeatsDto.js';
 export * from './createVenueDto.js';
@@ -16,6 +17,9 @@ export * from './eventListDto.js';
 export * from './eventsControllerListEventsParams.js';
 export * from './eventsControllerUploadPosterBody.js';
 export * from './loginDto.js';
+export * from './orderDto.js';
+export * from './orderDtoStatus.js';
+export * from './orderItemDto.js';
 export * from './recentlyViewedDto.js';
 export * from './refreshResponseDto.js';
 export * from './registerDto.js';

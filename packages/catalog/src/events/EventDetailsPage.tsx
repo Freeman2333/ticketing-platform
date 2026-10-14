@@ -5,6 +5,7 @@ import {
   useEventsControllerGetSeats,
   useEventsControllerRecordView,
 } from '@ticketing/api-client';
+import { ReservationPanel } from './ReservationPanel';
 import { SeatMap } from './seats/SeatMap';
 import { SeatMapSkeleton } from './seats/SeatMapSkeleton';
 
@@ -41,12 +42,12 @@ export function EventDetailsPage() {
   if (!event) return <p>Event not found.</p>;
 
   return (
-    <div>
+    <div className="mx-auto max-w-5xl pb-20">
       {event.posterUrl && (
         <img
           src={event.posterUrl as unknown as string}
           alt={event.title}
-          className="aspect-video w-full rounded-lg object-cover"
+          className="aspect-21/9 w-full rounded-lg object-cover"
         />
       )}
       <h1 className="mt-4 text-2xl font-semibold">{event.title}</h1>
@@ -67,6 +68,12 @@ export function EventDetailsPage() {
           onToggleSeat={toggleSeat}
         />
       )}
+
+      <ReservationPanel
+        eventId={eventId!}
+        seats={seats ?? []}
+        selectedSeatIds={selectedSeatIds}
+      />
     </div>
   );
 }

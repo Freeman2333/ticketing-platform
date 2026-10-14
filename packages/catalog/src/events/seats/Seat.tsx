@@ -18,8 +18,8 @@ export const Seat = memo(function Seat({
   const statusClasses = !isAvailable
     ? 'bg-muted text-muted-foreground border-transparent cursor-not-allowed'
     : selected
-      ? 'bg-primary text-primary-foreground border-primary'
-      : 'hover:bg-accent';
+      ? 'bg-primary text-primary-foreground border-primary cursor-pointer'
+      : 'cursor-pointer hover:bg-accent';
 
   return (
     <button
