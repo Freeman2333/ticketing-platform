@@ -50,4 +50,11 @@ export class OrdersRepository {
       include: { items: true },
     });
   }
+
+  findExpiredReserved() {
+    return this.prisma.order.findMany({
+      where: { status: 'reserved', reservedUntil: { lt: new Date() } },
+      include: { items: true },
+    });
+  }
 }

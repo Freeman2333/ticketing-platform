@@ -1,5 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from '../auth/auth.module';
 import { EventsModule } from '../events/events.module';
 import { OrdersModule } from '../orders/orders.module';
@@ -11,7 +13,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
-  imports: [PrismaModule, AuthModule, EventsModule, OrdersModule],
+  imports: [
+    PrismaModule,
+    EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
+    AuthModule,
+    EventsModule,
+    OrdersModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,

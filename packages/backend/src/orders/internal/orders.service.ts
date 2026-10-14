@@ -4,8 +4,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EVENTS_API } from '../../events/public/events-api.interface';
 import type { EventsApi } from '../../events/public/events-api.interface';
+import { OrderCreatedEvent } from './domain-events/order-created.event';
 import { OrdersRepository } from './orders.repository';
 
 const HOLD_DURATION_MS = 5 * 60 * 1000;
@@ -15,6 +17,7 @@ export class OrdersService {
   constructor(
     private readonly ordersRepository: OrdersRepository,
     @Inject(EVENTS_API) private readonly eventsApi: EventsApi,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createOrder(userId: string, eventId: string, seatIds: string[]) {
@@ -40,7 +43,17 @@ export class OrdersService {
     }
 
     const reservedUntil = new Date(Date.now() + HOLD_DURATION_MS);
-    return this.ordersRepository.markReserved(order.id, reservedUntil);
+    const reservedOrder = await this.ordersRepository.markReserved(
+      order.id,
+      reservedUntil,
+    );
+
+    this.eventEmitter.emit(
+      'order.created',
+      new OrderCreatedEvent(order.id, userId, eventId, seatIds),
+    );
+
+    return reservedOrder;
   }
 
   listOrders(userId: string) {
