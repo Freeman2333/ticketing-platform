@@ -5,6 +5,7 @@ import {
   useEventsControllerGetSeats,
   useEventsControllerRecordView,
 } from '@ticketing/api-client';
+import { formatDateTime } from '@ticketing/ui';
 import { ReservationPanel } from './ReservationPanel';
 import { SeatMap } from './seats/SeatMap';
 import { SeatMapSkeleton } from './seats/SeatMapSkeleton';
@@ -52,10 +53,7 @@ export function EventDetailsPage() {
       )}
       <h1 className="mt-4 text-2xl font-semibold">{event.title}</h1>
       <p className="text-muted-foreground">
-        {new Date(event.startsAt).toLocaleString(undefined, {
-          dateStyle: 'full',
-          timeStyle: 'short',
-        })}
+        {formatDateTime(event.startsAt)}
       </p>
       {event.description && <p className="mt-4">{event.description}</p>}
 
