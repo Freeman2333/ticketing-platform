@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import { Spinner, Toaster } from '@ticketing/ui';
 import { lazyProvider } from './mf';
 import { ProviderBoundary } from './ProviderBoundary';
@@ -25,20 +25,31 @@ function HomePage() {
   );
 }
 
-export function App() {
+function Layout() {
   return (
     <div className="flex h-full flex-col">
       <Toaster />
       <Header />
       <div className="flex flex-1 flex-col overflow-y-auto">
-        <Routes>
-          <Route path="/*" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-        </Routes>
+        <Outlet />
       </div>
     </div>
   );
+}
+
+const router = createBrowserRouter([
+  {
+    element: <Layout />,
+    children: [
+      { path: '/*', element: <HomePage /> },
+      { path: '/login', element: <LoginPage /> },
+      { path: '/register', element: <RegisterPage /> },
+    ],
+  },
+]);
+
+export function App() {
+  return <RouterProvider router={router} />;
 }
 
 export default App;

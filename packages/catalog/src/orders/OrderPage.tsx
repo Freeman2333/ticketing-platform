@@ -5,6 +5,7 @@ import {
 } from '@ticketing/api-client';
 import { Button, formatCountdown, formatDateTime } from '@ticketing/ui';
 import { CancelReservationButton } from './components/CancelReservationButton';
+import { LeaveOrderGuard } from './components/LeaveOrderGuard';
 import { OrderItemsList } from './components/OrderItemsList';
 import { useAutoCancelOnExpiry } from './hooks/use-auto-cancel-on-expiry';
 
@@ -23,10 +24,10 @@ export function OrderPage() {
     : null;
   const remainingMs = useAutoCancelOnExpiry(reservedUntil, orderId!, refetch);
 
+  const isReserved = order?.status === OrderDtoStatus.reserved;
+
   if (isLoading) return <p>Loading...</p>;
   if (isError || !order) return <p>Order not found.</p>;
-
-  const isReserved = order.status === OrderDtoStatus.reserved;
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -58,6 +59,8 @@ export function OrderPage() {
           </Button>
         </div>
       )}
+
+      <LeaveOrderGuard orderId={orderId!} isReserved={isReserved} />
     </div>
   );
 }
