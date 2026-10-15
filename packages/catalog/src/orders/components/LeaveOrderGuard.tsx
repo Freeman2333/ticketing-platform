@@ -29,6 +29,7 @@ export function LeaveOrderGuard({
       cancelLabel="Stay on this page"
       variant="destructive"
       isLoading={isCancellingOnLeave}
+      closeOnConfirm={false}
       onConfirm={() => {
         cancelOnLeave(
           { id: orderId },

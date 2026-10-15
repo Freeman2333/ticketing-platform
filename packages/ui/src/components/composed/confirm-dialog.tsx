@@ -25,6 +25,7 @@ interface ConfirmDialogProps {
   onConfirm: () => void
   isLoading?: boolean
   variant?: "default" | "destructive"
+  closeOnConfirm?: boolean
 }
 
 function ConfirmDialog({
@@ -38,6 +39,7 @@ function ConfirmDialog({
   onConfirm,
   isLoading = false,
   variant = "default",
+  closeOnConfirm = true,
 }: ConfirmDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -50,7 +52,10 @@ function ConfirmDialog({
         <AlertDialogFooter>
           <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
           <AlertDialogAction
-            onClick={onConfirm}
+            onClick={(event) => {
+              if (!closeOnConfirm) event.preventDefault()
+              onConfirm()
+            }}
             disabled={isLoading}
             className={cn(variant === "destructive" && buttonVariants({ variant: "destructive" }))}
           >
