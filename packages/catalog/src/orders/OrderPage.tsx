@@ -60,7 +60,7 @@ export function OrderPage() {
         </div>
       )}
 
-      <LeaveOrderGuard orderId={orderId!} isReserved={isReserved} />
+      <LeaveOrderGuard orderId={orderId!} />
     </div>
   );
 }

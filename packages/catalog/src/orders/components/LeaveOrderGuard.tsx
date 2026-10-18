@@ -1,21 +1,27 @@
 import { useBlocker } from 'react-router-dom';
-import { useOrdersControllerCancelOrder } from '@ticketing/api-client';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+  getOrdersControllerGetOrderQueryKey,
+  OrderDtoStatus,
+  useOrdersControllerCancelOrder,
+  type OrderDto,
+} from '@ticketing/api-client';
 import { ConfirmDialog } from '@ticketing/ui';
 
-export function LeaveOrderGuard({
-  orderId,
-  isReserved,
-}: {
-  orderId: string;
-  isReserved: boolean;
-}) {
+export function LeaveOrderGuard({ orderId }: { orderId: string }) {
+  const queryClient = useQueryClient();
   const { mutate: cancelOnLeave, isPending: isCancellingOnLeave } =
     useOrdersControllerCancelOrder();
 
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      isReserved && currentLocation.pathname !== nextLocation.pathname,
-  );
+  const blocker = useBlocker(({ currentLocation, nextLocation }) => {
+    const order = queryClient.getQueryData<OrderDto>(
+      getOrdersControllerGetOrderQueryKey(orderId),
+    );
+    return (
+      order?.status === OrderDtoStatus.reserved &&
+      currentLocation.pathname !== nextLocation.pathname
+    );
+  });
 
   return (
     <ConfirmDialog
