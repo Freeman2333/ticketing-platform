@@ -52,6 +52,7 @@ export function EventDetailsPage() {
           src={event.posterUrl as unknown as string}
           alt={event.title}
           className="aspect-21/9 w-full rounded-lg object-cover"
+          fetchPriority="high"
         />
       )}
       <h1 className="mt-4 text-2xl font-semibold">{event.title}</h1>

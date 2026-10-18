@@ -1,10 +1,18 @@
 import { Link } from 'react-router-dom';
-import { Card, CardContent, Skeleton } from '@ticketing/ui';
-import type { EventDto } from '@ticketing/api-client';
+import {
+  getEventsControllerGetEventQueryOptions,
+  type EventDto,
+} from '@ticketing/api-client';
+import { Card, CardContent, formatDateTime, Skeleton } from '@ticketing/ui';
+import { usePrefetchOnHover } from './hooks/usePrefetchOnHover';
 
 export function EventCard({ event }: { event: EventDto }) {
+  const prefetchHandlers = usePrefetchOnHover(
+    getEventsControllerGetEventQueryOptions(event.id),
+  );
+
   return (
-    <Link to={event.id}>
+    <Link to={event.id} {...prefetchHandlers}>
       <Card className="overflow-hidden transition-shadow hover:shadow-md">
         <div className="bg-muted aspect-video">
           {event.posterUrl && (
@@ -18,9 +26,7 @@ export function EventCard({ event }: { event: EventDto }) {
         <CardContent className="flex flex-col gap-1">
           <h3 className="font-semibold">{event.title}</h3>
           <p className="text-muted-foreground text-sm">
-            {new Date(event.startsAt).toLocaleDateString(undefined, {
-              dateStyle: 'medium',
-            })}
+            {formatDateTime(event.startsAt, 'medium')}
           </p>
         </CardContent>
       </Card>
