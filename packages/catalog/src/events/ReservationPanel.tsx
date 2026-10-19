@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import { useIsAuthenticated } from '@ticketing/auth-client';
@@ -22,6 +22,7 @@ export function ReservationPanel({
   onSelectionChange: (next: Set<string>) => void;
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const isAuthenticated = useIsAuthenticated();
   const seatsQueryKey = getEventsControllerGetSeatsQueryKey(eventId);
@@ -33,7 +34,7 @@ export function ReservationPanel({
 
   const handleReserve = () => {
     if (!isAuthenticated) {
-      navigate('/login');
+      navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
       return;
     }
 

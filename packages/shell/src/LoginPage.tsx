@@ -1,8 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { setAccessToken } from '@ticketing/auth-client';
+import { getSafeRedirect } from './lib/safe-redirect';
 import {
   AuthControllerLoginBody,
   useAuthControllerLogin,
@@ -27,6 +28,8 @@ type LoginFormValues = z.infer<typeof AuthControllerLoginBody>;
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = getSafeRedirect(searchParams.get('redirect'));
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(AuthControllerLoginBody),
   });
@@ -36,7 +39,7 @@ export function LoginPage() {
     try {
       const response = await loginMutation.mutateAsync({ data: values });
       setAccessToken(response.accessToken);
-      navigate('/');
+      navigate(redirectTo);
     } catch {
       form.setError('root.serverError', {
         message: 'Invalid email or password',
