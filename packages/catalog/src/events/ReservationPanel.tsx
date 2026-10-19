@@ -2,6 +2,7 @@ import { isAxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
+import { useIsAuthenticated } from '@ticketing/auth-client';
 import type { SeatDto } from '@ticketing/api-client';
 import {
   getEventsControllerGetSeatsQueryKey,
@@ -22,6 +23,7 @@ export function ReservationPanel({
 }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const isAuthenticated = useIsAuthenticated();
   const seatsQueryKey = getEventsControllerGetSeatsQueryKey(eventId);
   const { mutate, isPending } = useOrdersControllerCreateOrder();
 
@@ -30,6 +32,11 @@ export function ReservationPanel({
   const count = selectedSeats.length;
 
   const handleReserve = () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
     const seatIds = [...selectedSeatIds];
     const previousSeats = queryClient.getQueryData<SeatDto[]>(seatsQueryKey);
 

@@ -45,7 +45,7 @@ Preceded by a backend-only prerequisite, decided 2026-10-14: denormalize `seatLa
   - Event title/date and the list of reserved seats with their prices.
   - A hold countdown (mm:ss) counting down to `reservedUntil`, positioned `fixed`/`absolute` per the CLS guidance (`frontend-design.md` §9). When it reaches `00:00`, refetches `GET /orders/:id` (React Query refetch) rather than just freezing at zero - picks up whatever the cron actually did, since the cron's own 1-minute tick means the hold may already be gone, or may need up to another minute to clear.
   - A "Cancel" action (confirmed via `AlertDialog`) calling `PATCH /orders/:id/cancel`.
-- [ ] The WebSocket broadcast already fires from inside `EventsApi.reserveSeats()`, implemented for real in Part B — Step 2 Part C's gateway/room mechanics are already verified in isolation; this is just the first real caller exercising them end-to-end.
+- [x] The WebSocket broadcast already fires from inside `EventsApi.reserveSeats()`, implemented for real in Part B — Step 2 Part C's gateway/room mechanics are already verified in isolation; this is just the first real caller exercising them end-to-end.
 
 ## Not in this step
 
