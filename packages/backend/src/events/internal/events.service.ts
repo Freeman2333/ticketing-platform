@@ -8,6 +8,7 @@ import { EventsApi } from '../public/events-api.interface';
 import { EventViewsRepository } from './event-views.repository';
 import { EventsGateway } from './events.gateway';
 import { EventsRepository } from './events.repository';
+import { SeatLockService } from './seat-lock.service';
 import { SeatsRepository } from './seats.repository';
 
 const DEFAULT_PAGE = 1;
@@ -21,6 +22,7 @@ export class EventsService implements EventsApi {
     private readonly seatsRepository: SeatsRepository,
     private readonly eventViewsRepository: EventViewsRepository,
     private readonly eventsGateway: EventsGateway,
+    private readonly seatLockService: SeatLockService,
   ) {}
 
   async getEvent(id: string): Promise<EventDto | null> {
@@ -51,7 +53,19 @@ export class EventsService implements EventsApi {
   }
 
   async reserveSeats(eventId: string, seatIds: string[]): Promise<void> {
-    await this.seatsRepository.holdIfAvailable(eventId, seatIds);
+    const token = await this.seatLockService.acquireAll(eventId, seatIds);
+    if (!token) {
+      throw new ConflictException(
+        'One or more selected seats are no longer available',
+      );
+    }
+
+    try {
+      await this.seatsRepository.holdIfAvailable(eventId, seatIds);
+    } finally {
+      await this.seatLockService.releaseAll(eventId, seatIds, token);
+    }
+
     const seats = await this.getSeatAvailability(eventId);
     this.eventsGateway.broadcastSeatsUpdated(eventId, seats);
   }

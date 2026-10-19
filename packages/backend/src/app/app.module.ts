@@ -9,12 +9,14 @@ import { anonIdMiddleware } from '../common/middleware/anon-id.middleware';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { PrismaModule } from '../prisma/prisma.module';
+import { RedisModule } from '../redis/redis.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
   imports: [
     PrismaModule,
+    RedisModule,
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot(),
     AuthModule,
