@@ -10,10 +10,12 @@ import { EventsGateway } from './events.gateway';
 import { EventsRepository } from './events.repository';
 import { SeatLockService } from './seat-lock.service';
 import { SeatsRepository } from './seats.repository';
+import { RedisService } from '../../redis/redis.service';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 20;
 const RECENTLY_VIEWED_TOTAL = 4;
+const CACHE_TTL_SECONDS = 30;
 
 @Injectable()
 export class EventsService implements EventsApi {
@@ -23,11 +25,20 @@ export class EventsService implements EventsApi {
     private readonly eventViewsRepository: EventViewsRepository,
     private readonly eventsGateway: EventsGateway,
     private readonly seatLockService: SeatLockService,
+    private readonly redis: RedisService,
   ) {}
 
   async getEvent(id: string): Promise<EventDto | null> {
+    const cacheKey = `cache:event:${id}`;
+    const cached = await this.redis.get(cacheKey);
+    if (cached) return JSON.parse(cached);
+
     const event = await this.eventsRepository.findById(id);
-    return event ? this.toEventDto(event) : null;
+    const dto = event ? this.toEventDto(event) : null;
+    if (dto) {
+      await this.redis.set(cacheKey, JSON.stringify(dto), 'EX', CACHE_TTL_SECONDS);
+    }
+    return dto;
   }
 
   async listEvents(filter?: {
@@ -37,6 +48,10 @@ export class EventsService implements EventsApi {
   }): Promise<EventListDto> {
     const limit = filter?.limit ?? DEFAULT_LIMIT;
     const page = filter?.page ?? DEFAULT_PAGE;
+    const cacheKey = `cache:events:list:${filter?.title ?? ''}:${page}:${limit}`;
+    const cached = await this.redis.get(cacheKey);
+    if (cached) return JSON.parse(cached);
+
     const events = await this.eventsRepository.findMany(
       filter?.title,
       (page - 1) * limit,
@@ -44,7 +59,9 @@ export class EventsService implements EventsApi {
     );
     const hasMore = events.length > limit;
     const items = hasMore ? events.slice(0, limit) : events;
-    return { items: items.map((event) => this.toEventDto(event)), hasMore };
+    const result = { items: items.map((event) => this.toEventDto(event)), hasMore };
+    await this.redis.set(cacheKey, JSON.stringify(result), 'EX', CACHE_TTL_SECONDS);
+    return result;
   }
 
   async getSeatAvailability(eventId: string): Promise<SeatDto[]> {
@@ -151,11 +168,13 @@ export class EventsService implements EventsApi {
     data: { title?: string; startsAt?: Date },
   ): Promise<EventDto> {
     const event = await this.eventsRepository.update(id, data);
+    await this.redis.del(`cache:event:${id}`);
     return this.toEventDto(event);
   }
 
   async setPosterUrl(id: string, posterUrl: string): Promise<EventDto> {
     const event = await this.eventsRepository.update(id, { posterUrl });
+    await this.redis.del(`cache:event:${id}`);
     return this.toEventDto(event);
   }
 

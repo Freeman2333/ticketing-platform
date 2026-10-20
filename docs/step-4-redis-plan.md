@@ -37,7 +37,15 @@ Per `redis-design.md` §7.
 - [x] `ThrottlerGuard` applied via `@UseGuards(ThrottlerGuard)` directly on `OrdersController.createOrder()` only — not registered as a global `APP_GUARD`, since only the reservation endpoint is in scope here (`redis-design.md` §1).
 - [x] Verification: fired 11 sequential `POST /orders` from one user — 1st succeeded (`201`), 2nd-10th got `409` (seat already held, a normal business conflict that still counts as a hit), 11th got `429`. A second user's own first attempt immediately after still succeeded (`201`) — confirms the tracker is genuinely per-`userId`, not shared or IP-based.
 
+## Part E — Response caching for `GET /events`/`GET /events/:id`
+
+Per `redis-design.md` §8.
+
+- [x] `EventsService.getEvent(id)`: check `cache:event:{id}` first; on a hit, parse and return the cached JSON without touching Postgres; on a miss, query via `eventsRepository.findById` as today, store the result under that key with a 30s TTL, then return it.
+- [x] `EventsService.listEvents(filter)`: same cache-aside shape, key `cache:events:list:{title}:{page}:{limit}` (filters baked into the key so different query combinations don't collide), 30s TTL.
+- [x] `EventsService.updateEvent` and `setPosterUrl`: after the Postgres write succeeds, explicitly delete `cache:event:{id}` — an organizer must see their own edit immediately, not wait out the TTL. The list cache is **not** explicitly busted here, by design (`redis-design.md` §8) — it only relies on its own short TTL.
+- [x] Verification: `GET /events/:id` twice — `cache:event:{id}` appears with `TTL` ~30s after the first request. Created a test event owned by a fresh organizer account (the seeded event belonged to someone else, giving a 404 ownership check), `PATCH`ed its title, confirmed the cache key was gone immediately (`EXISTS` → `0`) and a follow-up `GET` returned the new title instantly rather than stale cached data.
+
 ## Not in this step
 
-- Response caching for `GET /events`/`GET /events/:id` — separate concern (`backend-design.md` §11).
 - Redlock / multi-node Redis — explicitly rejected in `redis-design.md` §3; single-node lock only.

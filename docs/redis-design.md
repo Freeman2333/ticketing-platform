@@ -1,8 +1,8 @@
-# Redis Design — Phase 2 (Seat-Hold Locking)
+# Redis Design — Phase 2
 
 ## 1. Scope
 
-Phase 2 per `project-plan.md` §5: Redis-backed seat-hold locking (§2-§6) and rate limiting on the booking endpoint (§7).
+Phase 2 per `project-plan.md` §5: Redis-backed seat-hold locking (§2-§6), rate limiting on the booking endpoint (§7), and response caching for `GET /events`/`GET /events/:id` (§8).
 
 Redis is already provisioned in `docker-compose.yml` (added ahead of time during Phase 1 infra setup) but not yet wired into any backend code.
 
@@ -64,6 +64,14 @@ Two separate concerns, two different levels of reuse:
 Tracked **per `userId`**, not per IP — `POST /orders` already requires a valid JWT (`JwtAuthGuard`), so the real threat is one account hammering the endpoint, not one IP. `@nestjs/throttler`'s default tracker is IP-based, but `getTracker` is a plain option on `ThrottlerModule`'s config (confirmed by reading the package's own type definitions before implementing) — no custom `Guard` subclass needed, just `getTracker: (req) => req.user.sub` passed straight into `ThrottlerModule.forRootAsync()`.
 
 Limit: 10 reservation attempts per 60 seconds per user — loose enough not to punish a normal user retrying after a 409 (seat taken), tight enough to stop a scripted burst against a single account.
+
+## 8. Response caching for `GET /events`/`GET /events/:id`
+
+Manual cache-aside against the existing `RedisService` directly — not `@nestjs/cache-manager`'s `CacheInterceptor`. Researched before deciding: the interceptor's default cache key is just the request URL, which makes it hard to target a specific entry for deletion on write; a hand-rolled key format makes invalidation trivial instead. It would also pull in NestJS 11's newer Keyv-backed cache store as a second, parallel way of touching Redis, on top of the `RedisService` already used everywhere else in this doc — not worth it for two read endpoints.
+
+Keys: `cache:event:{id}` for a single event, `cache:events:list:{title}:{page}:{limit}` for the list (filters baked into the key so different query combinations don't collide). Short TTL (30s). On a cache hit, parse and return the stored JSON; on a miss, query Postgres as today, store the result with the TTL, then return it.
+
+Invalidation: `updateEvent`/`setPosterUrl` explicitly delete `cache:event:{id}` so an organizer sees their own edit immediately (`backend-design.md` §11) — the list cache is **not** explicitly busted on write, it only relies on its own short TTL, matching what `backend-design.md` §11 already specified before this doc existed.
 
 ## Not in this doc yet
 
