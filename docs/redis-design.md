@@ -2,7 +2,7 @@
 
 ## 1. Scope
 
-Phase 2 per `project-plan.md` §5: Redis-backed seat-hold locking (this doc) and rate limiting on the booking endpoint (not yet discussed — added as its own section once designed, not bundled in here).
+Phase 2 per `project-plan.md` §5: Redis-backed seat-hold locking (§2-§6) and rate limiting on the booking endpoint (§7).
 
 Redis is already provisioned in `docker-compose.yml` (added ahead of time during Phase 1 infra setup) but not yet wired into any backend code.
 
@@ -57,7 +57,14 @@ Two separate concerns, two different levels of reuse:
 - **Redis connection**: one shared provider at the app level (a `RedisModule`, analogous to the existing shared `PrismaService`/connection pool reused across the `auth`/`events`/`orders` schemas) — needed again for Phase 2 rate limiting and Phase 3 BullMQ, so it shouldn't be reinvented per module.
 - **Lock logic** (key format, the Lua compare-and-delete release script): internal to the `events` module, not a generic reusable `DistributedLockService` — there's only one consumer today (seat holds); a general abstraction is premature until a second, genuinely different use case exists to validate its shape.
 
+## 7. Rate limiting on the reservation endpoint
+
+`@nestjs/throttler` — the standard NestJS rate-limiting module (`Guard` + `@Throttle()` decorator). Its default storage is in-process memory, which has the same problem the seat lock would have had: with multiple backend instances, each instance counts independently, so the real per-user limit silently multiplies by instance count. Storage is backed by Redis instead, via `@nest-lab/throttler-storage-redis` (the actively maintained successor to the earlier standalone `nestjs-throttler-storage-redis` package) — it already implements atomic increment-check-block as a single Lua script against `ioredis`, the same client we already use, so there's nothing to hand-roll here.
+
+Tracked **per `userId`**, not per IP — `POST /orders` already requires a valid JWT (`JwtAuthGuard`), so the real threat is one account hammering the endpoint, not one IP. `@nestjs/throttler`'s default tracker is IP-based, but `getTracker` is a plain option on `ThrottlerModule`'s config (confirmed by reading the package's own type definitions before implementing) — no custom `Guard` subclass needed, just `getTracker: (req) => req.user.sub` passed straight into `ThrottlerModule.forRootAsync()`.
+
+Limit: 10 reservation attempts per 60 seconds per user — loose enough not to punish a normal user retrying after a 409 (seat taken), tight enough to stop a scripted burst against a single account.
+
 ## Not in this doc yet
 
-- Rate limiting on the reservation endpoint (`project-plan.md` §5) — separate design discussion, to be added as its own section.
-- Response caching (`backend-design.md` §11, cache-aside for `GET /events`/`GET /events/:id`) — separate concern, not part of seat-hold locking.
+- Response caching (`backend-design.md` §11, cache-aside for `GET /events`/`GET /events/:id`) — separate concern, not part of seat-hold locking or rate limiting.

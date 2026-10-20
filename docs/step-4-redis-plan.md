@@ -28,8 +28,16 @@ Superseded 2026-10-19: the first pass (checked off below, then reverted) used a 
 - [x] Manual concurrency test: fired 8 parallel `POST /orders` for the same seat — exactly one `201`, the other seven `409`, confirmed via `docker exec ... redis-cli KEYS "lock:seat:*"` returning empty immediately after (the lock released itself within the same request, as designed).
 - [x] Confirm `HoldExpiryCron`/`cancelOrder` still correctly release seats — verified via manual cancel: seat flipped back to `available` immediately, and the same seat could be re-reserved (`201`) right after with zero leftover Redis lock blocking it.
 
+## Part D — Rate limiting on the reservation endpoint
+
+Per `redis-design.md` §7.
+
+- [x] `@nestjs/throttler` and `@nest-lab/throttler-storage-redis` added as backend dependencies.
+- [x] `ThrottlerModule.forRootAsync()` registered in `AppModule`, injecting the existing `RedisService` (not a second connection): `throttlers: [{ limit: 10, ttl: seconds(60) }]`, `storage: new ThrottlerStorageRedisService(redis)`, `getTracker: (req) => req.user.sub`. No custom `Guard` subclass needed — confirmed by reading `@nestjs/throttler`'s own type definitions before implementing that `getTracker` is a plain config option, not something that requires subclassing `ThrottlerGuard` (the plan originally assumed it would).
+- [x] `ThrottlerGuard` applied via `@UseGuards(ThrottlerGuard)` directly on `OrdersController.createOrder()` only — not registered as a global `APP_GUARD`, since only the reservation endpoint is in scope here (`redis-design.md` §1).
+- [x] Verification: fired 11 sequential `POST /orders` from one user — 1st succeeded (`201`), 2nd-10th got `409` (seat already held, a normal business conflict that still counts as a hit), 11th got `429`. A second user's own first attempt immediately after still succeeded (`201`) — confirms the tracker is genuinely per-`userId`, not shared or IP-based.
+
 ## Not in this step
 
-- Rate limiting on the reservation endpoint — separate design discussion (`redis-design.md`'s "Not in this doc yet").
 - Response caching for `GET /events`/`GET /events/:id` — separate concern (`backend-design.md` §11).
 - Redlock / multi-node Redis — explicitly rejected in `redis-design.md` §3; single-node lock only.

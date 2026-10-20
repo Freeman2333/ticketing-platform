@@ -7,8 +7,10 @@ import {
   Patch,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import type { Request } from 'express';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderDto } from './dto/order.dto';
@@ -19,6 +21,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
+  @UseGuards(ThrottlerGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: OrderDto })
   createOrder(
