@@ -79,7 +79,7 @@
     "@nestjs/core": "^11.0.0",
     "@nestjs/event-emitter": "^12.0.1",
     "@nestjs/jwt": "^12.0.2",
-    "@nestjs/microservices": "^12.2.0",
+    "@nestjs/microservices": "^11.2.7",
     "@nestjs/platform-express": "^11.0.0",
     "@nestjs/platform-socket.io": "^11.2.7",
     "@nestjs/schedule": "^12.0.2",

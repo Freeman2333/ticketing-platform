@@ -4,8 +4,10 @@ const { IgnorePlugin } = require('webpack');
 
 const UNUSED_MICROSERVICES_TRANSPORTS = [
   '@grpc/grpc-js',
+  '@grpc/proto-loader',
   'kafkajs',
   'mqtt',
+  'nats',
   '@nats-io/transport-node',
 ];
 
