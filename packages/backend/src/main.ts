@@ -16,7 +16,7 @@ config({ path: resolve(__dirname, '../../../.env') });
 
 async function bootstrap() {
   const { AppModule } = await import('./app/app.module');
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
   app.use(helmet());
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));

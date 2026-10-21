@@ -26,4 +26,12 @@ export class StripeService {
       cancel_url: params.cancelUrl,
     });
   }
+
+  constructWebhookEvent(rawBody: Buffer, signature: string): Stripe.Event {
+    return this.client.webhooks.constructEvent(
+      rawBody,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET as string,
+    );
+  }
 }

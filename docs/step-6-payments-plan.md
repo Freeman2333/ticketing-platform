@@ -16,19 +16,19 @@ Not started. Breaks `project-plan.md` §5 Phase 4 into concrete, ordered tasks p
 
 ## Part B — New `payments` module scaffolding
 
-- [ ] `payments.module.ts`, `PaymentsService`, `PaymentsRepository` — mirrors the existing `auth`/`events`/`orders` module shape.
-- [ ] `PaymentsApi`/`PAYMENTS_API` DI interface in `payments/public/`, wired the same way `AuthApi`/`EventsApi` are (`payments-design.md` §3).
-- [ ] Check what `OrdersApi` needs to expose for `PaymentsService` to call (fetch an order + its ownership check, mark it `paid`) — extend the interface if something's missing, following the existing pattern rather than reaching into `orders` internals.
+- [x] `payments.module.ts`, `PaymentsService`, `PaymentsRepository` — mirrors the existing `auth`/`events`/`orders` module shape. Also added `StripeService` (wraps the Stripe SDK client, same shape as `PosterStorageService` wrapping S3).
+- [ ] `PaymentsApi`/`PAYMENTS_API` DI interface — skipped. No other module needs to call into `payments` yet (it's always the caller, never the callee), so a DI token with no consumer would be a speculative abstraction. Add it if Part F ends up needing one.
+- [x] `OrdersApi` extended with `getOrder` (exposed via `orders/public/orders-api.interface.ts`, `ORDERS_API` wired into DI). Also moved `OrderDto`/`OrderItemDto` from `orders/internal/dto` to `orders/public/dto` to match the `events` module's convention.
 
 ## Part C — Checkout endpoint
 
-- [ ] `POST /payments/checkout-session` (`{ orderId }`): verify the order is `reserved` and owned by the caller, create a `Payment` row (`pending`), call `stripe.checkout.sessions.create()`, return `{ url }` (`payments-design.md` §2).
-- [ ] `success_url`/`cancel_url` point back to the order page.
+- [x] `POST /payments/checkout-session` (`{ orderId }`): verify the order is `reserved` and owned by the caller, sum its items for the amount, call Stripe, **then** create the `Payment` row (`pending`) with the real `stripeSessionId` — reordered from this doc's original sketch (`Payment` first, then Stripe) since `stripeSessionId` is a required unique column; creating it after the Stripe call avoids a nullable-then-updated field.
+- [x] `success_url`/`cancel_url` both point back to the order page (`FRONTEND_ORIGIN`/orders/:orderId) — no separate success/cancel pages built, the order page itself reflects whatever status ends up being true.
 
 ## Part D — Webhook endpoint
 
-- [ ] `POST /payments/webhook`: needs Stripe's **raw**, unparsed request body for signature verification — NestJS's global body parser must be bypassed for this one route (check the documented way to do this, don't assume).
-- [ ] Verify the signature against `STRIPE_WEBHOOK_SECRET` before touching any business logic.
+- [x] `POST /payments/webhook`: needs Stripe's **raw**, unparsed request body for signature verification. Used NestJS's built-in `rawBody: true` option (`NestFactory.create(AppModule, { rawBody: true })`) rather than disabling the global body parser — this makes `req.rawBody` available on every route alongside the normal parsed JSON, without touching any other route's behavior. The route itself is `@Public()` (bypasses the global JWT guard — Stripe has no JWT).
+- [x] Verify the signature against `STRIPE_WEBHOOK_SECRET` before touching any business logic (`StripeService.constructWebhookEvent`). Verified end-to-end: installed the Stripe CLI (`winget install Stripe.StripeCli`), ran `stripe listen --forward-to localhost:3000/api/payments/webhook` to get a real local `STRIPE_WEBHOOK_SECRET`, then `stripe trigger checkout.session.completed` — backend logged the verified event type, confirming the signature check actually passes for a real Stripe-signed request.
 - [ ] Idempotency check: if the matched `Payment.status` is already `succeeded`, log and return — no further writes (`payments-design.md` §4).
 - [ ] On a fresh `checkout.session.completed`: in one Postgres transaction, mark `Payment.succeeded`, move `Order` to `paid`, and insert the matching `outbox_events` row (`payments-design.md` §5).
 

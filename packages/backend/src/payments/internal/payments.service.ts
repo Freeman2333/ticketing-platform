@@ -33,8 +33,11 @@ export class PaymentsService {
     const amount = order.items.reduce((sum, item) => sum + item.price, 0);
     const orderUrl = `${process.env.FRONTEND_ORIGIN}/orders/${orderId}`;
 
+    // OrderItem.price is in whole dollars; Stripe's unit_amount is in cents.
+    const amountInCents = amount * 100;
+
     const session = await this.stripeService.createCheckoutSession({
-      amount,
+      amount: amountInCents,
       successUrl: orderUrl,
       cancelUrl: orderUrl,
     });
@@ -45,5 +48,10 @@ export class PaymentsService {
     await this.paymentsRepository.create(orderId, session.id, amount);
 
     return { url: session.url };
+  }
+
+  handleWebhookEvent(rawBody: Buffer, signature: string): void {
+    const event = this.stripeService.constructWebhookEvent(rawBody, signature);
+    console.log('Stripe webhook received:', event.type);
   }
 }
