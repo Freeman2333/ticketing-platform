@@ -11,7 +11,7 @@ generator client {
 // Each backend module owns its own schema (backend-design.md §3).
 datasource db {
   provider = "postgresql"
-  schemas  = ["auth", "events", "orders"]
+  schemas  = ["auth", "events", "orders", "payments"]
 }
 
 enum Role {
@@ -117,6 +117,8 @@ model EventView {
 enum OrderStatus {
   draft
   reserved
+  paid
+  issued
   cancelled
 
   @@schema("orders")
@@ -151,4 +153,47 @@ model OrderItem {
   @@index([orderId])
   @@map("order_items")
   @@schema("orders")
+}
+
+enum PaymentStatus {
+  pending
+  succeeded
+  failed
+
+  @@schema("payments")
+}
+
+model Payment {
+  id              String        @id @default(uuid())
+  orderId         String        @map("order_id")
+  stripeSessionId String        @unique @map("stripe_session_id")
+  amount          Int
+  status          PaymentStatus @default(pending)
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  @@index([orderId])
+  @@map("payments")
+  @@schema("payments")
+}
+
+model Ticket {
+  id          String   @id @default(uuid())
+  orderItemId String   @unique @map("order_item_id")
+  issuedAt    DateTime @default(now()) @map("issued_at")
+  qrCodeRef   String?  @map("qr_code_ref")
+
+  @@map("tickets")
+  @@schema("payments")
+}
+
+model OutboxEvent {
+  id          String    @id @default(uuid())
+  eventType   String    @map("event_type")
+  payload     Json
+  createdAt   DateTime  @default(now()) @map("created_at")
+  publishedAt DateTime? @map("published_at")
+
+  @@index([publishedAt])
+  @@map("outbox_events")
+  @@schema("payments")
 }

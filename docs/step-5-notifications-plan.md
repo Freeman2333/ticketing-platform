@@ -31,9 +31,9 @@ Paused — decided 2026-10-21. Reasoning: `OrderStatus` has no `paid` state yet 
 ## Part D — Verification
 
 - [x] `notifications` running standalone (no `backend` wiring yet): a hand-crafted `order.created` message published directly onto `notifications_queue` was received, logged, and a real email arrived at the Resend account's registered address.
-- [ ] End-to-end from a real `backend` action — deferred to Phase 4 along with Part C.
-- [ ] Create a reservation with a *different* test user's email and confirm the sandbox-restriction rejection is logged clearly, without crashing the consumer or leaving the message unacknowledged.
-- [ ] Confirm the manual-ack wiring actually matters: inspect RabbitMQ's management UI (or deliberately slow the handler) to see a message sit as "unacked" while `notifications` is mid-processing, rather than being marked delivered the instant it's received.
+- [ ] End-to-end from a real `backend` action — deferred to Phase 4 along with Part C (no handler currently exists to receive it — see Part B).
+- [ ] Create a reservation with a *different* test user's email and confirm the sandbox-restriction rejection is logged clearly, without crashing the consumer or leaving the message unacknowledged — deferred to Phase 4, same reason.
+- [ ] Confirm the manual-ack wiring actually matters: inspect RabbitMQ's management UI (or deliberately slow the handler) to see a message sit as "unacked" while `notifications` is mid-processing, rather than being marked delivered the instant it's received — deferred to Phase 4, same reason.
 
 ## Not in this step
 
