@@ -11,11 +11,12 @@ import { EVENTS_API } from '../../events/public/events-api.interface';
 import type { EventsApi } from '../../events/public/events-api.interface';
 import { OrderCreatedEvent } from './domain-events/order-created.event';
 import { OrdersRepository } from './orders.repository';
+import type { OrdersApi } from '../public/orders-api.interface';
 
 const HOLD_DURATION_MS = 5 * 60 * 1000;
 
 @Injectable()
-export class OrdersService {
+export class OrdersService implements OrdersApi {
   constructor(
     private readonly ordersRepository: OrdersRepository,
     @Inject(EVENTS_API) private readonly eventsApi: EventsApi,

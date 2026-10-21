@@ -6,13 +6,13 @@ Not started. Breaks `project-plan.md` §5 Phase 4 into concrete, ordered tasks p
 
 ## Part A — Infra
 
-- [ ] Stripe account (test mode) — API key and webhook signing secret obtained, kept in `.env`/`.env.example` as `STRIPE_SECRET_KEY`/`STRIPE_WEBHOOK_SECRET` (never committed as real values).
-- [ ] `stripe` (official Node SDK) added to `backend`.
-- [ ] Prisma: `OrderStatus` extended with `paid`, `issued` (`payments-design.md` §1).
-- [ ] Prisma: `Payment` model — `id`, `orderId`, Stripe session/payment-intent reference, `amount`, `status` (`pending`/`succeeded`/`failed`), timestamps (`payments-design.md` §4).
-- [ ] Prisma: `Ticket` model — `id`, `orderItemId`, `issuedAt`, `qrCodeRef` (nullable; format decided later, `payments-design.md` "Not in this doc yet").
-- [ ] Prisma: `outbox_events` table — `id`, `eventType`, `payload` (JSON), `createdAt`, `publishedAt` (nullable). Partial index on `publishedAt IS NULL` (`payments-design.md` §5).
-- [ ] Migration applied; confirm `prisma migrate dev` output matches the sketch above before moving on.
+- [x] Stripe account (test mode) — secret key obtained, kept in `.env` as `STRIPE_SECRET_KEY` (real value, not committed; `.env.example` keeps the `change-me` placeholder). Only the secret key is needed — this flow never touches Stripe.js/the publishable key on the frontend, since Checkout Sessions return a ready `url` to redirect to. `STRIPE_WEBHOOK_SECRET` placeholder added too, real value pending Part D (Stripe CLI).
+- [x] `stripe` (official Node SDK, `^23.0.0`) added to `backend`.
+- [x] Prisma: `OrderStatus` extended with `paid`, `issued` (`payments-design.md` §1).
+- [x] Prisma: `Payment` model (`payments` schema) — `id`, `orderId` (opaque, no cross-schema FK per `backend-design.md` §8), `stripeSessionId` (unique), `amount`, `status` (`pending`/`succeeded`/`failed`), `createdAt`.
+- [x] Prisma: `Ticket` model (`payments` schema) — `id`, `orderItemId` (unique — at most one ticket per seat), `issuedAt`, `qrCodeRef` (nullable; format decided later).
+- [x] Prisma: `outbox_events` table (`payments` schema) — `id`, `eventType`, `payload` (JSON), `createdAt`, `publishedAt` (nullable). Index on `publishedAt` is a **plain** index, not the partial (`WHERE published_at IS NULL`) index `payments-design.md` §5 describes — Prisma's schema DSL has no partial-index syntax, and fixing it now would need a destructive `migrate reset` (wipes local data) since the migration's already applied. Deferred; revisit if query performance ever actually matters here.
+- [x] Migration applied (`20261021123336_add_payments_and_tickets`).
 
 ## Part B — New `payments` module scaffolding
 

@@ -13,7 +13,7 @@ import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagge
 import { ThrottlerGuard } from '@nestjs/throttler';
 import type { Request } from 'express';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { OrderDto } from './dto/order.dto';
+import { OrderDto } from '../public/dto/order.dto';
 import { OrdersService } from './orders.service';
 
 @Controller('orders')
