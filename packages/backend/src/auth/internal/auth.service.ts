@@ -1,6 +1,7 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Prisma, Role, User } from '../../generated/prisma/client';
+import { AuthApi } from '../public/auth-api.interface';
 import { TokensDto } from '../public/dto/tokens.dto';
 import { UserDto } from '../public/dto/user.dto';
 import { generateRefreshToken, hashRefreshToken } from './hash-refresh-token.util';
@@ -11,7 +12,7 @@ import { UsersRepository } from './users.repository';
 const REFRESH_TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 @Injectable()
-export class AuthService {
+export class AuthService implements AuthApi {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly refreshTokensRepository: RefreshTokensRepository,

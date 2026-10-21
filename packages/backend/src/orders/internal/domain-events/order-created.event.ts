@@ -2,7 +2,9 @@ export class OrderCreatedEvent {
   constructor(
     public readonly orderId: string,
     public readonly userId: string,
+    public readonly email: string,
     public readonly eventId: string,
-    public readonly seatIds: string[],
+    public readonly eventTitle: string,
+    public readonly seatLabels: string[],
   ) {}
 }

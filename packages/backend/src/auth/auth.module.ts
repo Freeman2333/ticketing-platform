@@ -6,6 +6,7 @@ import { AuthService } from './internal/auth.service';
 import { PasswordHasherService } from './internal/password-hasher.service';
 import { RefreshTokensRepository } from './internal/refresh-tokens.repository';
 import { UsersRepository } from './internal/users.repository';
+import { AUTH_API } from './public/auth-api.interface';
 
 @Module({
   imports: [
@@ -24,6 +25,8 @@ import { UsersRepository } from './internal/users.repository';
     UsersRepository,
     RefreshTokensRepository,
     PasswordHasherService,
+    { provide: AUTH_API, useExisting: AuthService },
   ],
+  exports: [AUTH_API],
 })
 export class AuthModule {}
