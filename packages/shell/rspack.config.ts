@@ -33,7 +33,7 @@ export default defineConfig((_env, argv) => {
     entry: { main: './src/index.ts' },
     output: {
       path: path.resolve(__dirname, 'dist'),
-      publicPath: 'auto',
+      publicPath: '/',
       uniqueName: NAME,
       clean: true,
     },

@@ -15,7 +15,7 @@ export function CancelReservationButton({ orderId }: { orderId: string }) {
   return (
     <ConfirmDialog
       trigger={
-        <Button variant="outline" className="mt-6" disabled={isCancelling}>
+        <Button variant="outline" disabled={isCancelling}>
           Cancel reservation
         </Button>
       }

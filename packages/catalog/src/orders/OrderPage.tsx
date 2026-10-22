@@ -7,24 +7,33 @@ import { Button, formatCountdown, formatDateTime } from '@ticketing/ui';
 import { CancelReservationButton } from './components/CancelReservationButton';
 import { LeaveOrderGuard } from './components/LeaveOrderGuard';
 import { OrderItemsList } from './components/OrderItemsList';
+import { PaidConfirmation } from './components/PaidConfirmation';
+import { PayButton } from './components/PayButton';
 import { useAutoCancelOnExpiry } from './hooks/use-auto-cancel-on-expiry';
+import { useIsReturningFromCheckout } from './hooks/use-is-returning-from-checkout';
 
 export function OrderPage() {
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
+  const isReturningFromCheckout = useIsReturningFromCheckout();
+
   const {
     data: order,
     isLoading,
     isError,
     refetch,
-  } = useOrdersControllerGetOrder(orderId!);
+  } = useOrdersControllerGetOrder(orderId!, {
+    query: { refetchInterval: isReturningFromCheckout ? 1500 : false },
+  });
 
-  const reservedUntil = order?.reservedUntil
-    ? new Date(order.reservedUntil)
-    : null;
-  const remainingMs = useAutoCancelOnExpiry(reservedUntil, orderId!, refetch);
+  const remainingMs = useAutoCancelOnExpiry({
+    reservedUntil: order?.reservedUntil,
+    orderId: orderId!,
+    onSettled: refetch,
+  });
 
   const isReserved = order?.status === OrderDtoStatus.reserved;
+  const isAwaitingPayment = isReturningFromCheckout && isReserved;
 
   if (isLoading) return <p>Loading...</p>;
   if (isError || !order) return <p>Order not found.</p>;
@@ -44,7 +53,23 @@ export function OrderPage() {
 
       <OrderItemsList items={order.items} />
 
-      {isReserved && <CancelReservationButton orderId={orderId!} />}
+      {isAwaitingPayment && (
+        <div className="mt-6 text-center">
+          <p className="text-muted-foreground">Confirming your payment...</p>
+        </div>
+      )}
+
+      {isReserved && !isAwaitingPayment && (
+        <div className="mt-6 flex gap-3 justify-end">
+          <PayButton orderId={orderId!} />
+          <CancelReservationButton orderId={orderId!} />
+        </div>
+      )}
+
+      {(order.status === OrderDtoStatus.paid ||
+        order.status === OrderDtoStatus.issued) && (
+        <PaidConfirmation eventId={order.eventId} />
+      )}
 
       {order.status === OrderDtoStatus.cancelled && (
         <div className="mt-6">

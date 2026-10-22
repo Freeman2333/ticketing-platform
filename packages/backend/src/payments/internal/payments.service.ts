@@ -39,7 +39,7 @@ export class PaymentsService {
 
     const session = await this.stripeService.createCheckoutSession({
       amount: amountInCents,
-      successUrl: orderUrl,
+      successUrl: `${orderUrl}?session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: orderUrl,
     });
     if (!session.url) {
