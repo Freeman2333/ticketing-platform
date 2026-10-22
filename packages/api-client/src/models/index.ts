@@ -6,6 +6,8 @@
  */
 
 export * from './authResponseDto.js';
+export * from './checkoutSessionDto.js';
+export * from './createCheckoutSessionDto.js';
 export * from './createEventDto.js';
 export * from './createOrderDto.js';
 export * from './createSeatRowDto.js';

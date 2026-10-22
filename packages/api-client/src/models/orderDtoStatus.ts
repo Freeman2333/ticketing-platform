@@ -11,5 +11,7 @@ export type OrderDtoStatus = typeof OrderDtoStatus[keyof typeof OrderDtoStatus];
 export const OrderDtoStatus = {
   draft: 'draft',
   reserved: 'reserved',
+  paid: 'paid',
+  issued: 'issued',
   cancelled: 'cancelled',
 } as const;

@@ -18,7 +18,7 @@ export const OrdersControllerCreateOrderResponse = zod.object({
   "eventId": zod.string(),
   "eventTitle": zod.string(),
   "eventStartsAt": zod.iso.datetime({"offset":true}),
-  "status": zod.enum(['draft', 'reserved', 'cancelled']),
+  "status": zod.enum(['draft', 'reserved', 'paid', 'issued', 'cancelled']),
   "reservedUntil": zod.iso.datetime({"offset":true}).nullable(),
   "createdAt": zod.iso.datetime({"offset":true}),
   "items": zod.array(zod.object({
@@ -35,7 +35,7 @@ export const OrdersControllerListOrdersResponseItem = zod.object({
   "eventId": zod.string(),
   "eventTitle": zod.string(),
   "eventStartsAt": zod.iso.datetime({"offset":true}),
-  "status": zod.enum(['draft', 'reserved', 'cancelled']),
+  "status": zod.enum(['draft', 'reserved', 'paid', 'issued', 'cancelled']),
   "reservedUntil": zod.iso.datetime({"offset":true}).nullable(),
   "createdAt": zod.iso.datetime({"offset":true}),
   "items": zod.array(zod.object({
@@ -57,7 +57,7 @@ export const OrdersControllerGetOrderResponse = zod.object({
   "eventId": zod.string(),
   "eventTitle": zod.string(),
   "eventStartsAt": zod.iso.datetime({"offset":true}),
-  "status": zod.enum(['draft', 'reserved', 'cancelled']),
+  "status": zod.enum(['draft', 'reserved', 'paid', 'issued', 'cancelled']),
   "reservedUntil": zod.iso.datetime({"offset":true}).nullable(),
   "createdAt": zod.iso.datetime({"offset":true}),
   "items": zod.array(zod.object({
@@ -78,7 +78,7 @@ export const OrdersControllerCancelOrderResponse = zod.object({
   "eventId": zod.string(),
   "eventTitle": zod.string(),
   "eventStartsAt": zod.iso.datetime({"offset":true}),
-  "status": zod.enum(['draft', 'reserved', 'cancelled']),
+  "status": zod.enum(['draft', 'reserved', 'paid', 'issued', 'cancelled']),
   "reservedUntil": zod.iso.datetime({"offset":true}).nullable(),
   "createdAt": zod.iso.datetime({"offset":true}),
   "items": zod.array(zod.object({
