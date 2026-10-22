@@ -93,6 +93,12 @@ export class EventsService implements EventsApi {
     this.eventsGateway.broadcastSeatsUpdated(eventId, seats);
   }
 
+  async markSeatsBooked(eventId: string, seatIds: string[]): Promise<void> {
+    await this.seatsRepository.updateStatus(seatIds, 'booked');
+    const seats = await this.getSeatAvailability(eventId);
+    this.eventsGateway.broadcastSeatsUpdated(eventId, seats);
+  }
+
   async createSeats(
     eventId: string,
     rows: { label: string; count: number; price: number }[],

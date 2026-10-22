@@ -91,6 +91,11 @@ export class OrdersService implements OrdersApi {
       return;
     }
 
+    await this.eventsApi.markSeatsBooked(
+      order.eventId,
+      order.items.map((item) => item.seatId),
+    );
+
     await this.ordersRepository.markPaidAndCreateOutboxEvent(
       orderId,
       'order.paid',
