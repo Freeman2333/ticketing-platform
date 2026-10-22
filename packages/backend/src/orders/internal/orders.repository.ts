@@ -40,6 +40,14 @@ export class OrdersRepository {
     });
   }
 
+  markPaid(orderId: string) {
+    return this.prisma.order.update({
+      where: { id: orderId },
+      data: { status: 'paid' },
+      include: { items: true },
+    });
+  }
+
   findByUserId(userId: string) {
     return this.prisma.order.findMany({
       where: { userId },

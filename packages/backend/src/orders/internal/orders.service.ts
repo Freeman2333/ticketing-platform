@@ -104,4 +104,8 @@ export class OrdersService implements OrdersApi {
     );
     return this.ordersRepository.markCancelled(orderId);
   }
+
+  markPaid(orderId: string) {
+    return this.ordersRepository.markPaid(orderId);
+  }
 }

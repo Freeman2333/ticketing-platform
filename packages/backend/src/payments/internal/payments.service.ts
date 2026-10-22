@@ -9,6 +9,7 @@ import { ORDERS_API } from '../../orders/public/orders-api.interface';
 import type { OrdersApi } from '../../orders/public/orders-api.interface';
 import { PaymentsRepository } from './payments.repository';
 import { StripeService } from './stripe.service';
+import type Stripe from 'stripe';
 
 @Injectable()
 export class PaymentsService {
@@ -50,8 +51,21 @@ export class PaymentsService {
     return { url: session.url };
   }
 
-  handleWebhookEvent(rawBody: Buffer, signature: string): void {
+  async handleWebhookEvent(rawBody: Buffer, signature: string): Promise<void> {
     const event = this.stripeService.constructWebhookEvent(rawBody, signature);
     console.log('Stripe webhook received:', event.type);
+
+    const session = event.data.object as Stripe.Checkout.Session;
+    const payment = await this.paymentsRepository.findByStripeSessionId(session.id);
+    if (!payment || payment.status === 'succeeded') {
+      console.log('Webhook already processed or payment not found, skipping.');
+      return;
+    }
+
+    await this.paymentsRepository.markSucceededAndCreateOutboxEvent(
+      payment.id,
+      'payment.succeeded',
+      { orderId: payment.orderId },
+    );
   }
 }

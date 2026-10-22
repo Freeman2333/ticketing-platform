@@ -5,6 +5,8 @@
 
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { Transport } from '@nestjs/microservices';
+import type { MicroserviceOptions } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { config } from 'dotenv';
@@ -25,6 +27,17 @@ async function bootstrap() {
     credentials: true,
   });
   app.useGlobalFilters(new AllExceptionsFilter());
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [process.env.RABBITMQ_URL as string],
+      queue: 'orders_queue',
+      queueOptions: { durable: true },
+      noAck: false,
+    },
+  });
+
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 
@@ -37,6 +50,8 @@ async function bootstrap() {
       .build(),
   );
   SwaggerModule.setup(`${globalPrefix}/docs`, app, swaggerDocument);
+
+  await app.startAllMicroservices();
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
