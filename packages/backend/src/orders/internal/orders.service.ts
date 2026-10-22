@@ -105,7 +105,17 @@ export class OrdersService implements OrdersApi {
     return this.ordersRepository.markCancelled(orderId);
   }
 
-  markPaid(orderId: string) {
-    return this.ordersRepository.markPaid(orderId);
+  async handlePaymentSucceeded(orderId: string): Promise<void> {
+    const order = await this.ordersRepository.findById(orderId);
+    if (!order || order.status !== 'reserved') {
+      console.log('Order already processed or not found, skipping.');
+      return;
+    }
+
+    await this.ordersRepository.markPaidAndCreateOutboxEvent(
+      orderId,
+      'order.paid',
+      { orderId, orderItemIds: order.items.map((item) => item.id) },
+    );
   }
 }

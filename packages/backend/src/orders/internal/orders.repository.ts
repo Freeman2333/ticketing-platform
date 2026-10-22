@@ -40,11 +40,17 @@ export class OrdersRepository {
     });
   }
 
-  markPaid(orderId: string) {
-    return this.prisma.order.update({
-      where: { id: orderId },
-      data: { status: 'paid' },
-      include: { items: true },
+  markPaidAndCreateOutboxEvent(
+    orderId: string,
+    eventType: string,
+    payload: object,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      await tx.order.update({
+        where: { id: orderId },
+        data: { status: 'paid' },
+      });
+      await tx.ordersOutboxEvent.create({ data: { eventType, payload } });
     });
   }
 
@@ -67,6 +73,19 @@ export class OrdersRepository {
     return this.prisma.order.findMany({
       where: { status: 'reserved', reservedUntil: { lt: new Date() } },
       include: { items: true },
+    });
+  }
+
+  findUnpublishedOutboxEvents() {
+    return this.prisma.ordersOutboxEvent.findMany({
+      where: { publishedAt: null },
+    });
+  }
+
+  markOutboxEventPublished(outboxEventId: string) {
+    return this.prisma.ordersOutboxEvent.update({
+      where: { id: outboxEventId },
+      data: { publishedAt: new Date() },
     });
   }
 }

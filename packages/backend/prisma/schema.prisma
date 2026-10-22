@@ -155,6 +155,18 @@ model OrderItem {
   @@schema("orders")
 }
 
+model OrdersOutboxEvent {
+  id          String    @id @default(uuid())
+  eventType   String    @map("event_type")
+  payload     Json
+  createdAt   DateTime  @default(now()) @map("created_at")
+  publishedAt DateTime? @map("published_at")
+
+  @@index([publishedAt])
+  @@map("outbox_events")
+  @@schema("orders")
+}
+
 enum PaymentStatus {
   pending
   succeeded

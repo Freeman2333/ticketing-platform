@@ -1,5 +1,14 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
 const { join } = require('path');
+const { IgnorePlugin } = require('webpack');
+
+const UNUSED_MICROSERVICES_TRANSPORTS = [
+  '@grpc/grpc-js',
+  '@grpc/proto-loader',
+  'kafkajs',
+  'mqtt',
+  'nats',
+];
 
 module.exports = {
   output: {
@@ -10,6 +19,10 @@ module.exports = {
     }),
   },
   plugins: [
+    new IgnorePlugin({
+      checkResource: (resource) =>
+        UNUSED_MICROSERVICES_TRANSPORTS.includes(resource),
+    }),
     new NxAppWebpackPlugin({
       target: 'node',
       compiler: 'tsc',
