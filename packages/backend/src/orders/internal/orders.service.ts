@@ -4,12 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { AUTH_API } from '../../auth/public/auth-api.interface';
-import type { AuthApi } from '../../auth/public/auth-api.interface';
 import { EVENTS_API } from '../../events/public/events-api.interface';
 import type { EventsApi } from '../../events/public/events-api.interface';
-import { OrderCreatedEvent } from './domain-events/order-created.event';
 import { OrdersRepository } from './orders.repository';
 import type { OrdersApi } from '../public/orders-api.interface';
 
@@ -20,8 +16,6 @@ export class OrdersService implements OrdersApi {
   constructor(
     private readonly ordersRepository: OrdersRepository,
     @Inject(EVENTS_API) private readonly eventsApi: EventsApi,
-    @Inject(AUTH_API) private readonly authApi: AuthApi,
-    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createOrder(userId: string, eventId: string, seatIds: string[]) {
@@ -62,21 +56,6 @@ export class OrdersService implements OrdersApi {
       order.id,
       reservedUntil,
     );
-
-    const user = await this.authApi.getUserById(userId);
-    if (user) {
-      this.eventEmitter.emit(
-        'order.created',
-        new OrderCreatedEvent(
-          order.id,
-          userId,
-          user.email,
-          eventId,
-          event.title,
-          selectedSeats.map((seat) => seat.label),
-        ),
-      );
-    }
 
     return reservedOrder;
   }
