@@ -62,5 +62,5 @@ Not now (§1). Revisit once §4 works end-to-end by hand, then describe the same
 
 - `shell`/`catalog`: Vercel vs. Netlify — not chosen yet, treated as interchangeable until one is actually tried.
 - Whether a GitHub Actions test/lint gate gets added in this same pass, or stays deferred past the first working deploy.
-- R2's S3-compatible endpoint hasn't actually been tried against `PosterStorageService` yet — unverified whether any client config beyond the endpoint URL (e.g. `forcePathStyle`) is needed.
+- ~~R2's S3-compatible endpoint hasn't actually been tried...~~ — verified 2026-10-23: `PosterStorageService`'s exact client config (`region: 'us-east-1'`, `forcePathStyle: true`) works against a real R2 bucket as-is, no code change needed.
 - Custom domain, secrets manager, staging environment — explicitly out of scope (§1), not forgotten.
