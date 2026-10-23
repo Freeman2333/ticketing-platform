@@ -9,6 +9,8 @@
     "@hookform/resolvers": "^5.9.1",
     "@module-federation/enhanced": "^2.4.0",
     "@module-federation/runtime": "^2.4.0",
+    "@neon/config": "^1.9.3",
+    "@neon/env": "^1.6.4",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/jwt": "^12.0.2",
