@@ -26,10 +26,12 @@ import { EVENTS_API } from '../../events/public/events-api.interface';
 import type { EventsApi } from '../../events/public/events-api.interface';
 import { UserDto } from '../public/dto/user.dto';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const REFRESH_COOKIE_OPTIONS: CookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax',
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax',
   path: '/api/auth',
 };
 
