@@ -20,7 +20,7 @@ export class OrdersRepository {
         eventStartsAt,
         items: { create: items },
       },
-      include: { items: true },
+      include: { items: { include: { ticket: true } } },
     });
   }
 
@@ -28,7 +28,7 @@ export class OrdersRepository {
     return this.prisma.order.update({
       where: { id: orderId },
       data: { status: 'reserved', reservedUntil },
-      include: { items: true },
+      include: { items: { include: { ticket: true } } },
     });
   }
 
@@ -36,7 +36,7 @@ export class OrdersRepository {
     return this.prisma.order.update({
       where: { id: orderId },
       data: { status: 'cancelled' },
-      include: { items: true },
+      include: { items: { include: { ticket: true } } },
     });
   }
 
@@ -70,7 +70,7 @@ export class OrdersRepository {
   findByUserId(userId: string) {
     return this.prisma.order.findMany({
       where: { userId },
-      include: { items: true },
+      include: { items: { include: { ticket: true } } },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -78,14 +78,14 @@ export class OrdersRepository {
   findById(orderId: string) {
     return this.prisma.order.findUnique({
       where: { id: orderId },
-      include: { items: true },
+      include: { items: { include: { ticket: true } } },
     });
   }
 
   findExpiredReserved() {
     return this.prisma.order.findMany({
       where: { status: 'reserved', reservedUntil: { lt: new Date() } },
-      include: { items: true },
+      include: { items: { include: { ticket: true } } },
     });
   }
 

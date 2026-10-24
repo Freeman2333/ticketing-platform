@@ -13,6 +13,10 @@ import type { OrdersApi } from '../public/orders-api.interface';
 
 const HOLD_DURATION_MS = 5 * 60 * 1000;
 
+type OrderWithItemsAndTickets = NonNullable<
+  Awaited<ReturnType<OrdersRepository['findById']>>
+>;
+
 @Injectable()
 export class OrdersService implements OrdersApi {
   constructor(
@@ -60,15 +64,17 @@ export class OrdersService implements OrdersApi {
       reservedUntil,
     );
 
-    return reservedOrder;
+    return this.toOrderDto(reservedOrder);
   }
 
-  listOrders(userId: string) {
-    return this.ordersRepository.findByUserId(userId);
+  async listOrders(userId: string) {
+    const orders = await this.ordersRepository.findByUserId(userId);
+    return orders.map((order) => this.toOrderDto(order));
   }
 
-  getOrder(orderId: string) {
-    return this.ordersRepository.findById(orderId);
+  async getOrder(orderId: string) {
+    const order = await this.ordersRepository.findById(orderId);
+    return order ? this.toOrderDto(order) : null;
   }
 
   async cancelOrder(orderId: string) {
@@ -84,7 +90,7 @@ export class OrdersService implements OrdersApi {
       order.eventId,
       order.items.map((item) => item.seatId),
     );
-    return this.ordersRepository.markCancelled(orderId);
+    return this.toOrderDto(await this.ordersRepository.markCancelled(orderId));
   }
 
   async handlePaymentSucceeded(orderId: string): Promise<void> {
@@ -104,6 +110,19 @@ export class OrdersService implements OrdersApi {
       'order.paid',
       { orderId, orderItemIds: order.items.map((item) => item.id) },
     );
+  }
+
+  private toOrderDto(order: OrderWithItemsAndTickets) {
+    return {
+      ...order,
+      tickets: order.items
+        .filter((item) => item.ticket)
+        .map((item) => ({
+          id: item.ticket!.id,
+          seatLabel: item.seatLabel,
+          qrCodeUrl: item.ticket!.qrCodeRef!,
+        })),
+    };
   }
 
   async issueTickets(orderId: string): Promise<void> {

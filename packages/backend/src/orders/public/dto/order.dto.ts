@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OrderStatus } from '../../../generated/prisma/client';
 import { OrderItemDto } from './order-item.dto';
+import { OrderTicketDto } from './order-ticket.dto';
 
 export class OrderDto {
   @ApiProperty()
@@ -29,4 +30,7 @@ export class OrderDto {
 
   @ApiProperty({ type: OrderItemDto, isArray: true })
   items!: OrderItemDto[];
+
+  @ApiProperty({ type: OrderTicketDto, isArray: true })
+  tickets!: OrderTicketDto[];
 }
