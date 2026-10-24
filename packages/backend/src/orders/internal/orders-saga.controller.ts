@@ -17,4 +17,16 @@ export class OrdersSagaController {
     const originalMsg = context.getMessage();
     channel.ack(originalMsg);
   }
+
+  @EventPattern('order.paid')
+  async handleOrderPaid(@Payload() rawPayload: any, @Ctx() rawContext: any) {
+    const payload = rawPayload as { orderId: string };
+    const context = rawContext as RmqContext;
+
+    await this.ordersService.issueTickets(payload.orderId);
+
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
+    channel.ack(originalMsg);
+  }
 }

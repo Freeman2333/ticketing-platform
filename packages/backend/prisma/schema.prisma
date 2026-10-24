@@ -148,7 +148,8 @@ model OrderItem {
   seatLabel String @map("seat_label")
   price     Int
 
-  order Order @relation(fields: [orderId], references: [id])
+  order  Order   @relation(fields: [orderId], references: [id])
+  ticket Ticket?
 
   @@index([orderId])
   @@map("order_items")
@@ -194,8 +195,10 @@ model Ticket {
   issuedAt    DateTime @default(now()) @map("issued_at")
   qrCodeRef   String?  @map("qr_code_ref")
 
+  orderItem OrderItem @relation(fields: [orderItemId], references: [id])
+
   @@map("tickets")
-  @@schema("payments")
+  @@schema("orders")
 }
 
 model OutboxEvent {

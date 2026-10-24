@@ -54,6 +54,19 @@ export class OrdersRepository {
     });
   }
 
+  markIssuedAndCreateTickets(
+    orderId: string,
+    tickets: { id: string; orderItemId: string; qrCodeRef: string }[],
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      await tx.order.update({
+        where: { id: orderId },
+        data: { status: 'issued' },
+      });
+      await tx.ticket.createMany({ data: tickets });
+    });
+  }
+
   findByUserId(userId: string) {
     return this.prisma.order.findMany({
       where: { userId },

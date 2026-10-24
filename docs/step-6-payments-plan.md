@@ -4,7 +4,7 @@
 
 In progress. Breaks `project-plan.md` §5 Phase 4 into concrete, ordered tasks per the decisions locked in `payments-design.md`. Depends on Step 3 (Orders) for the `reserved` state this builds on.
 
-Parts A-D done; Part E (payments→orders outbox hop) done; Part E.5 (orders reacting to `payment.succeeded`, a saga hop not in the original design) done. Paused before Part F (ticket issuance) — decided 2026-10-22, no real consumer exists yet. Frontend integration (a "Pay" button) also not started — everything verified so far was via `curl`/a manually-opened Stripe URL.
+Parts A-D done; Part E (payments→orders outbox hop) done; Part E.5 (orders reacting to `payment.succeeded`, a saga hop not in the original design) done; frontend payment flow done, deployed, and verified end to end (`docs/deployment-plan.md`). Part F (ticket issuance) design agreed 2026-10-23 (`payments-design.md` §6), broken into tasks below — in progress.
 
 ## Part A — Infra
 
@@ -48,13 +48,32 @@ Added because the webhook can no longer call `OrdersApi.markPaid` directly (see 
 - [x] `markPaid` removed from the public `OrdersApi` interface again — nothing outside `orders` calls it; the new in-module consumer calls `OrdersRepository` directly.
 - [ ] A second `OutboxPublisherService`-equivalent for `orders.outbox_events` (to actually publish `order.paid` somewhere) — **deliberately not built yet**. Discussed 2026-10-22: there's no consumer for `order.paid` until Part F (ticket issuance) exists, so a publisher with nothing on the other end is plumbing with no destination. `orders.outbox_events` rows sit unpublished (harmless) until Part F is picked up.
 
-## Part F — Ticket issuance (saga step 3) — deferred
+## Part F — Ticket issuance (saga step 3)
 
-Paused — decided 2026-10-22, same reasoning as `step-5-notifications-plan.md`'s Part C pause: no real consumer exists yet, and QR code format (`payments-design.md` "Not in this doc yet") was never settled. Revisit together: build the `order.paid` consumer, the `orders`-side outbox publisher above, `Ticket` creation, and the QR code decision as one piece, once this is picked back up.
+Design agreed 2026-10-23 (`payments-design.md` §6): `Ticket` moves from the `payments` schema to `orders`, issuance reuses the existing `orders_queue`/hybrid listener (no new queue), QR is generated server-side and uploaded to R2, `OrderDto` gains a `tickets` field, and the frontend extends its existing polling pattern.
 
-- [ ] A consumer subscribing to `order.paid` off RabbitMQ.
-- [ ] Creates one `Ticket` per `OrderItem`, moves `Order` to `issued`.
-- [ ] Idempotent the same way as the other two steps: no-op if already `issued`.
+### F.1 — Schema
+
+- [ ] Move `Ticket` from the `payments` schema to `orders` (`@@schema("orders")`) — one migration, `ALTER TABLE payments.tickets SET SCHEMA orders` (preserves the table rather than drop/recreate).
+
+### F.2 — Publish `order.paid` (the missing piece from Part E.5)
+
+- [ ] Build the `orders`-side `OutboxPublisherService` equivalent: polls `orders.outbox_events` for unpublished rows, emits each to the same RabbitMQ connection the saga controller already listens on, awaits confirmed delivery before marking published — same shape as `payments`' `OutboxPublisherService` (Part E).
+
+### F.3 — Issuance consumer
+
+- [ ] New controller in `orders/internal/`, `@EventPattern('order.paid')`: idempotency check (no-op if `order.status !== 'paid'`, i.e. already `issued` or not actually ready), generates one `Ticket` per `OrderItem`, moves `Order` to `issued`.
+- [ ] QR generation: `qrcode` package, payload = `Ticket.id`.
+- [ ] Upload to R2 via the same `S3Client` shape as `PosterStorageService`, with `ContentDisposition: attachment` set so the frontend's download link works cross-origin. `Ticket.qrCodeRef` = the resulting URL.
+
+### F.4 — API
+
+- [ ] `OrderDto` gains `tickets: { id, seatLabel, qrCodeUrl }[]`, populated once `status === 'issued'` (no new endpoint).
+
+### F.5 — Frontend
+
+- [ ] Extend `OrderPage`'s existing "awaiting payment" polling: once `status === 'paid'` but `tickets` is still empty, keep polling with a "generating your tickets" message.
+- [ ] Render one ticket card (seat label + QR image) per entry once `tickets` is populated, alongside `PaidConfirmation`. Download-button interaction deferred (`payments-design.md` "Not in this doc yet").
 
 ## Part G — Verification
 

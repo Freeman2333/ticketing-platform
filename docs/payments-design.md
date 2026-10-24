@@ -45,13 +45,22 @@ Decision: a real polling outbox (not simulated, not skipped), since CDC requires
 
 ## 6. Ticket issuance as a separate saga step
 
-`paid → issued` is not done inside the webhook transaction. The webhook only gets the order to `paid` and writes the outbox event; a separate consumer (same `backend` process, subscribing to its own `order.paid` message via RabbitMQ) creates a `Ticket` per `OrderItem` and moves the order to `issued`.
+`paid → issued` is not done inside the webhook transaction, nor inside `orders`' `payment.succeeded` handler. The webhook only gets the order to `paid` and writes to `orders.outbox_events`; a separate consumer, in the same `backend` process, reacts to its own `order.paid` message and creates a `Ticket` per `OrderItem`, then moves the order to `issued`.
 
 This is what makes "saga" in `backend-design.md` §12 an actual implemented thing rather than a label: a chain of independently-retriable steps, each with its own idempotency, rather than one big transaction. It also keeps the Stripe webhook handler fast — Stripe expects a quick response and retries if it doesn't get one, so pushing potentially heavier work (ticket/QR generation) out of that handler is the correct shape, not just a stylistic choice.
 
+**Module ownership: `orders`, not `payments`.** `Ticket` was originally added to the `payments` Postgres schema (Part A, before this was designed in detail). Decided 2026-10-23 to move it to the `orders` schema instead: `Ticket.orderItemId` and `Order.status = 'issued'` are both `orders`-owned already, and having `payments` write to `Order.status` would reintroduce the exact cross-module-write problem that forced the `payments` → `orders` split in the first place (§5) — it would just move the violation to the other module instead of removing it.
+
+**No new queue.** Since the consumer lives in `orders`, it reuses the existing `orders_queue` and the existing hybrid-app listener (`main.ts`, `backend-design.md`'s saga-controller pattern) — publishing `order.paid` to the same queue `payment.succeeded` already flows through. `@nestjs/microservices` routes locally by event-pattern name, not by queue, so multiple event types share one queue without conflict.
+
+**QR code**: generated server-side (the `qrcode` npm package), encoding just `Ticket.id` (a UUID v4 — unguessable enough for this project's threat model; no separate signed token). The generated image is uploaded to Cloudflare R2 using the same `S3Client` shape `PosterStorageService` already uses, with `ContentDisposition: attachment` set on upload so the frontend's download link works despite the image being cross-origin (browsers ignore the HTML `download` attribute on cross-origin resources unless the server sends that header). `Ticket.qrCodeRef` stores the resulting R2 URL.
+
+**API surface**: no new endpoint. `OrderDto` (`GET /orders/:id`) gains a `tickets` field (`{ id, seatLabel, qrCodeUrl }[]`), populated once `order.status === 'issued'`.
+
+**Frontend**: `OrderPage`'s existing "awaiting payment" polling (added for the Stripe-redirect wait) extends through this step too — once `status === 'paid'` but `tickets` is still empty, keep polling with a "generating your tickets" message; render one ticket card (seat label + QR image, download button TBD) per entry once `tickets` is populated. No separate "My Tickets" page — researched 2026-10-23: real ticketing platforms (GuestManager, CM.com, AudienceView) treat the order/confirmation page itself as the persistent ticket view, which `OrderPage` already is (reachable again later via the orders list), rather than a separate destination.
+
 ## Not in this doc yet
 
-- QR code format/generation for issued tickets — a detail of the ticket-issuance step itself, decided when that step is implemented, not before.
 - Payment failure/decline handling beyond what `system-design.md` §7 already states (order stays `reserved`, attendee can retry, producing another `Payment` row).
 - Compensation for a failed ticket-issuance step specifically (e.g. retried via the same at-least-once redelivery the outbox already provides, or something more) — to be decided when that step is built.
-- Task breakdown — to be written as `step-6-payments-plan.md` once this design is implemented against, matching the pattern used for Steps 1-5.
+- The ticket download button's exact interaction — deferred, revisit once the rest of the step is implemented.

@@ -4,9 +4,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
 import { EVENTS_API } from '../../events/public/events-api.interface';
 import type { EventsApi } from '../../events/public/events-api.interface';
 import { OrdersRepository } from './orders.repository';
+import { TicketQrService } from './ticket-qr.service';
 import type { OrdersApi } from '../public/orders-api.interface';
 
 const HOLD_DURATION_MS = 5 * 60 * 1000;
@@ -15,6 +17,7 @@ const HOLD_DURATION_MS = 5 * 60 * 1000;
 export class OrdersService implements OrdersApi {
   constructor(
     private readonly ordersRepository: OrdersRepository,
+    private readonly ticketQrService: TicketQrService,
     @Inject(EVENTS_API) private readonly eventsApi: EventsApi,
   ) {}
 
@@ -101,5 +104,23 @@ export class OrdersService implements OrdersApi {
       'order.paid',
       { orderId, orderItemIds: order.items.map((item) => item.id) },
     );
+  }
+
+  async issueTickets(orderId: string): Promise<void> {
+    const order = await this.ordersRepository.findById(orderId);
+    if (!order || order.status !== 'paid') {
+      console.log('Order already processed or not found, skipping.');
+      return;
+    }
+
+    const tickets = await Promise.all(
+      order.items.map(async (item) => {
+        const id = randomUUID();
+        const qrCodeRef = await this.ticketQrService.generateAndUpload(id);
+        return { id, orderItemId: item.id, qrCodeRef };
+      }),
+    );
+
+    await this.ordersRepository.markIssuedAndCreateTickets(orderId, tickets);
   }
 }
