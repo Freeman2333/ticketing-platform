@@ -26,6 +26,11 @@ export const OrdersControllerCreateOrderResponse = zod.object({
   "seatId": zod.string(),
   "seatLabel": zod.string(),
   "price": zod.number()
+})),
+  "tickets": zod.array(zod.object({
+  "id": zod.string(),
+  "seatLabel": zod.string(),
+  "qrCodeUrl": zod.string()
 }))
 })
 
@@ -43,6 +48,11 @@ export const OrdersControllerListOrdersResponseItem = zod.object({
   "seatId": zod.string(),
   "seatLabel": zod.string(),
   "price": zod.number()
+})),
+  "tickets": zod.array(zod.object({
+  "id": zod.string(),
+  "seatLabel": zod.string(),
+  "qrCodeUrl": zod.string()
 }))
 })
 export const OrdersControllerListOrdersResponse = zod.array(OrdersControllerListOrdersResponseItem)
@@ -65,6 +75,11 @@ export const OrdersControllerGetOrderResponse = zod.object({
   "seatId": zod.string(),
   "seatLabel": zod.string(),
   "price": zod.number()
+})),
+  "tickets": zod.array(zod.object({
+  "id": zod.string(),
+  "seatLabel": zod.string(),
+  "qrCodeUrl": zod.string()
 }))
 })
 
@@ -86,6 +101,11 @@ export const OrdersControllerCancelOrderResponse = zod.object({
   "seatId": zod.string(),
   "seatLabel": zod.string(),
   "price": zod.number()
+})),
+  "tickets": zod.array(zod.object({
+  "id": zod.string(),
+  "seatLabel": zod.string(),
+  "qrCodeUrl": zod.string()
 }))
 })
 

@@ -6,6 +6,7 @@
  */
 import type { OrderDtoStatus } from './orderDtoStatus.js';
 import type { OrderItemDto } from './orderItemDto.js';
+import type { OrderTicketDto } from './orderTicketDto.js';
 
 export interface OrderDto {
   id: string;
@@ -18,4 +19,5 @@ export interface OrderDto {
   reservedUntil: string | null;
   createdAt: string;
   items: OrderItemDto[];
+  tickets: OrderTicketDto[];
 }

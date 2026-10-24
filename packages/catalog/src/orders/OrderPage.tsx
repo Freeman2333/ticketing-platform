@@ -1,39 +1,34 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  OrderDtoStatus,
-  useOrdersControllerGetOrder,
-} from '@ticketing/api-client';
+import { OrderDtoStatus } from '@ticketing/api-client';
 import { Button, formatCountdown, formatDateTime } from '@ticketing/ui';
 import { CancelReservationButton } from './components/CancelReservationButton';
 import { LeaveOrderGuard } from './components/LeaveOrderGuard';
 import { OrderItemsList } from './components/OrderItemsList';
 import { PaidConfirmation } from './components/PaidConfirmation';
 import { PayButton } from './components/PayButton';
+import { TicketsList } from './components/TicketsList';
 import { useAutoCancelOnExpiry } from './hooks/use-auto-cancel-on-expiry';
-import { useIsReturningFromCheckout } from './hooks/use-is-returning-from-checkout';
+import { useOrder } from './hooks/use-order';
 
 export function OrderPage() {
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
-  const isReturningFromCheckout = useIsReturningFromCheckout();
 
   const {
-    data: order,
+    order,
     isLoading,
     isError,
     refetch,
-  } = useOrdersControllerGetOrder(orderId!, {
-    query: { refetchInterval: isReturningFromCheckout ? 1500 : false },
-  });
+    isReserved,
+    isAwaitingPayment,
+    isAwaitingTickets,
+  } = useOrder(orderId!);
 
   const remainingMs = useAutoCancelOnExpiry({
     reservedUntil: order?.reservedUntil,
     orderId: orderId!,
     onSettled: refetch,
   });
-
-  const isReserved = order?.status === OrderDtoStatus.reserved;
-  const isAwaitingPayment = isReturningFromCheckout && isReserved;
 
   if (isLoading) return <p>Loading...</p>;
   if (isError || !order) return <p>Order not found.</p>;
@@ -70,6 +65,16 @@ export function OrderPage() {
         order.status === OrderDtoStatus.issued) && (
         <PaidConfirmation eventId={order.eventId} />
       )}
+
+      {isAwaitingTickets && (
+        <div className="mt-6 text-center">
+          <p className="text-muted-foreground">
+            Generating your tickets...
+          </p>
+        </div>
+      )}
+
+      {order.tickets.length > 0 && <TicketsList tickets={order.tickets} />}
 
       {order.status === OrderDtoStatus.cancelled && (
         <div className="mt-6">

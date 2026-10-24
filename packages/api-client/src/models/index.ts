@@ -22,6 +22,7 @@ export * from './loginDto.js';
 export * from './orderDto.js';
 export * from './orderDtoStatus.js';
 export * from './orderItemDto.js';
+export * from './orderTicketDto.js';
 export * from './recentlyViewedDto.js';
 export * from './refreshResponseDto.js';
 export * from './registerDto.js';
