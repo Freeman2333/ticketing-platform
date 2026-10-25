@@ -29,9 +29,9 @@ export const OrdersControllerCreateOrderResponse = zod.object({
 })),
   "tickets": zod.array(zod.object({
   "id": zod.string(),
-  "seatLabel": zod.string(),
-  "qrCodeUrl": zod.string()
-}))
+  "seatLabel": zod.string()
+})),
+  "ticketsPdfUrl": zod.string().nullable()
 })
 
 export const OrdersControllerListOrdersResponseItem = zod.object({
@@ -51,9 +51,9 @@ export const OrdersControllerListOrdersResponseItem = zod.object({
 })),
   "tickets": zod.array(zod.object({
   "id": zod.string(),
-  "seatLabel": zod.string(),
-  "qrCodeUrl": zod.string()
-}))
+  "seatLabel": zod.string()
+})),
+  "ticketsPdfUrl": zod.string().nullable()
 })
 export const OrdersControllerListOrdersResponse = zod.array(OrdersControllerListOrdersResponseItem)
 
@@ -78,9 +78,9 @@ export const OrdersControllerGetOrderResponse = zod.object({
 })),
   "tickets": zod.array(zod.object({
   "id": zod.string(),
-  "seatLabel": zod.string(),
-  "qrCodeUrl": zod.string()
-}))
+  "seatLabel": zod.string()
+})),
+  "ticketsPdfUrl": zod.string().nullable()
 })
 
 export const OrdersControllerCancelOrderParams = zod.object({
@@ -104,8 +104,8 @@ export const OrdersControllerCancelOrderResponse = zod.object({
 })),
   "tickets": zod.array(zod.object({
   "id": zod.string(),
-  "seatLabel": zod.string(),
-  "qrCodeUrl": zod.string()
-}))
+  "seatLabel": zod.string()
+})),
+  "ticketsPdfUrl": zod.string().nullable()
 })
 

@@ -20,8 +20,7 @@ export function useOrder(orderId: string) {
           isReturningFromCheckout &&
           current?.status === OrderDtoStatus.reserved;
         const awaitingTickets =
-          current?.status === OrderDtoStatus.paid &&
-          current.tickets.length === 0;
+          current?.status === OrderDtoStatus.paid && !current.ticketsPdfUrl;
         return awaitingPayment || awaitingTickets ? 1500 : false;
       },
     },
@@ -30,7 +29,10 @@ export function useOrder(orderId: string) {
   const isReserved = order?.status === OrderDtoStatus.reserved;
   const isAwaitingPayment = isReturningFromCheckout && isReserved;
   const isAwaitingTickets =
-    order?.status === OrderDtoStatus.paid && order.tickets.length === 0;
+    order?.status === OrderDtoStatus.paid && !order.ticketsPdfUrl;
+  const isPaidOrIssued =
+    order?.status === OrderDtoStatus.paid ||
+    order?.status === OrderDtoStatus.issued;
 
   return {
     order,
@@ -40,5 +42,6 @@ export function useOrder(orderId: string) {
     isReserved,
     isAwaitingPayment,
     isAwaitingTickets,
+    isPaidOrIssued,
   };
 }

@@ -20,4 +20,6 @@ export interface OrderDto {
   createdAt: string;
   items: OrderItemDto[];
   tickets: OrderTicketDto[];
+  /** @nullable */
+  ticketsPdfUrl: string | null;
 }

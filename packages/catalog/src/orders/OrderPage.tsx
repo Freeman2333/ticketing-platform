@@ -4,9 +4,8 @@ import { Button, formatCountdown, formatDateTime } from '@ticketing/ui';
 import { CancelReservationButton } from './components/CancelReservationButton';
 import { LeaveOrderGuard } from './components/LeaveOrderGuard';
 import { OrderItemsList } from './components/OrderItemsList';
-import { PaidConfirmation } from './components/PaidConfirmation';
 import { PayButton } from './components/PayButton';
-import { TicketsList } from './components/TicketsList';
+import { SuccessCheckmark } from './components/SuccessCheckmark';
 import { useAutoCancelOnExpiry } from './hooks/use-auto-cancel-on-expiry';
 import { useOrder } from './hooks/use-order';
 
@@ -22,6 +21,7 @@ export function OrderPage() {
     isReserved,
     isAwaitingPayment,
     isAwaitingTickets,
+    isPaidOrIssued,
   } = useOrder(orderId!);
 
   const remainingMs = useAutoCancelOnExpiry({
@@ -32,6 +32,8 @@ export function OrderPage() {
 
   if (isLoading) return <p>Loading...</p>;
   if (isError || !order) return <p>Order not found.</p>;
+
+  const goToEvent = () => navigate(`/${order.eventId}`);
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -61,9 +63,14 @@ export function OrderPage() {
         </div>
       )}
 
-      {(order.status === OrderDtoStatus.paid ||
-        order.status === OrderDtoStatus.issued) && (
-        <PaidConfirmation eventId={order.eventId} />
+      {isPaidOrIssued && (
+        <div className="mt-6 text-center">
+          <SuccessCheckmark />
+          <p className="mt-4 font-medium text-green-700">Payment confirmed</p>
+          <p className="text-muted-foreground">
+            You're all set for this event.
+          </p>
+        </div>
       )}
 
       {isAwaitingTickets && (
@@ -74,17 +81,31 @@ export function OrderPage() {
         </div>
       )}
 
-      {order.tickets.length > 0 && <TicketsList tickets={order.tickets} />}
+      {isPaidOrIssued && (
+        <div className="mt-6 flex justify-center gap-3">
+          {order.ticketsPdfUrl && (
+            <Button asChild>
+              <a
+                href={order.ticketsPdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View/Download tickets
+              </a>
+            </Button>
+          )}
+          <Button variant="outline" onClick={goToEvent}>
+            Back to event
+          </Button>
+        </div>
+      )}
 
       {order.status === OrderDtoStatus.cancelled && (
         <div className="mt-6">
           <p className="text-muted-foreground">
             Your hold has expired and this reservation was cancelled.
           </p>
-          <Button
-            className="mt-4"
-            onClick={() => navigate(`/${order.eventId}`)}
-          >
+          <Button className="mt-4" onClick={goToEvent}>
             Back to event
           </Button>
         </div>

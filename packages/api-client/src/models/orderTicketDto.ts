@@ -8,5 +8,4 @@
 export interface OrderTicketDto {
   id: string;
   seatLabel: string;
-  qrCodeUrl: string;
 }

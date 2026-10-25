@@ -28,7 +28,14 @@ module.exports = {
       compiler: 'tsc',
       main: './src/main.ts',
       tsConfig: './tsconfig.app.json',
-      assets: ['./src/assets'],
+      assets: [
+        './src/assets',
+        {
+          glob: '**/*.afm',
+          input: join(__dirname, 'node_modules/pdfkit/js/data'),
+          output: './data',
+        },
+      ],
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: false,
