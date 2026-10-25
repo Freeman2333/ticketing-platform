@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { useEventsControllerListEventsSuspenseInfinite } from '@ticketing/api-client';
 import { useInfiniteScrollTrigger } from '@ticketing/ui';
 import { ErrorBoundary } from '../ErrorBoundary';
-import { EventCard, EventCardSkeleton } from './EventCard';
+import { EventCard, EventCardSkeleton } from './components/EventCard';
 
 const PAGE_SIZE = 8;
 const FIRST_PAGE = 1;
@@ -49,7 +49,7 @@ function EventListContent() {
   );
 }
 
-export function EventList() {
+export function EventListPage() {
   return (
     <div>
       <h1 className="mb-4 text-2xl font-semibold">Events</h1>

@@ -6,7 +6,7 @@ import {
   useEventsControllerRecordView,
 } from '@ticketing/api-client';
 import { formatDateTime } from '@ticketing/ui';
-import { ReservationPanel } from './ReservationPanel';
+import { ReservationPanel } from './components/ReservationPanel';
 import { SeatMap } from './seats/SeatMap';
 import { SeatMapSkeleton } from './seats/SeatMapSkeleton';
 import { useSeatAvailability } from './seats/useSeatAvailability';
