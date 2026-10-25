@@ -33,4 +33,7 @@ export class OrderDto {
 
   @ApiProperty({ type: OrderTicketDto, isArray: true })
   tickets!: OrderTicketDto[];
+
+  @ApiProperty({ type: String, nullable: true })
+  ticketsPdfUrl!: string | null;
 }

@@ -132,6 +132,7 @@ model Order {
   eventStartsAt DateTime    @map("event_starts_at")
   status        OrderStatus @default(draft)
   reservedUntil DateTime?   @map("reserved_until")
+  ticketsPdfUrl String?     @map("tickets_pdf_url")
   createdAt     DateTime    @default(now()) @map("created_at")
 
   items OrderItem[]
@@ -193,7 +194,6 @@ model Ticket {
   id          String   @id @default(uuid())
   orderItemId String   @unique @map("order_item_id")
   issuedAt    DateTime @default(now()) @map("issued_at")
-  qrCodeRef   String?  @map("qr_code_ref")
 
   orderItem OrderItem @relation(fields: [orderItemId], references: [id])
 

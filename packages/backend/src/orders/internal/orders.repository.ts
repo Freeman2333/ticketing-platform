@@ -56,12 +56,13 @@ export class OrdersRepository {
 
   markIssuedAndCreateTickets(
     orderId: string,
-    tickets: { id: string; orderItemId: string; qrCodeRef: string }[],
+    ticketsPdfUrl: string,
+    tickets: { id: string; orderItemId: string }[],
   ) {
     return this.prisma.$transaction(async (tx) => {
       await tx.order.update({
         where: { id: orderId },
-        data: { status: 'issued' },
+        data: { status: 'issued', ticketsPdfUrl },
       });
       await tx.ticket.createMany({ data: tickets });
     });

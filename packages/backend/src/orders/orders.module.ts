@@ -7,6 +7,7 @@ import { OrdersSagaController } from './internal/orders-saga.controller';
 import { OrdersRepository } from './internal/orders.repository';
 import { OrdersService } from './internal/orders.service';
 import { OutboxPublisherService } from './internal/outbox-publisher.service';
+import { TicketPdfService } from './internal/ticket-pdf.service';
 import { TicketQrService } from './internal/ticket-qr.service';
 import { ORDERS_API } from './public/orders-api.interface';
 
@@ -32,6 +33,7 @@ import { ORDERS_API } from './public/orders-api.interface';
     HoldExpiryCron,
     OutboxPublisherService,
     TicketQrService,
+    TicketPdfService,
     { provide: ORDERS_API, useExisting: OrdersService },
   ],
   exports: [ORDERS_API],

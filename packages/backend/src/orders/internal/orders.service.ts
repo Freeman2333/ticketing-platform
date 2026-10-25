@@ -8,6 +8,7 @@ import { randomUUID } from 'node:crypto';
 import { EVENTS_API } from '../../events/public/events-api.interface';
 import type { EventsApi } from '../../events/public/events-api.interface';
 import { OrdersRepository } from './orders.repository';
+import { TicketPdfService } from './ticket-pdf.service';
 import { TicketQrService } from './ticket-qr.service';
 import type { OrdersApi } from '../public/orders-api.interface';
 
@@ -22,6 +23,7 @@ export class OrdersService implements OrdersApi {
   constructor(
     private readonly ordersRepository: OrdersRepository,
     private readonly ticketQrService: TicketQrService,
+    private readonly ticketPdfService: TicketPdfService,
     @Inject(EVENTS_API) private readonly eventsApi: EventsApi,
   ) {}
 
@@ -120,7 +122,6 @@ export class OrdersService implements OrdersApi {
         .map((item) => ({
           id: item.ticket!.id,
           seatLabel: item.seatLabel,
-          qrCodeUrl: item.ticket!.qrCodeRef!,
         })),
     };
   }
@@ -132,14 +133,30 @@ export class OrdersService implements OrdersApi {
       return;
     }
 
-    const tickets = await Promise.all(
-      order.items.map(async (item) => {
-        const id = randomUUID();
-        const qrCodeRef = await this.ticketQrService.generateAndUpload(id);
-        return { id, orderItemId: item.id, qrCodeRef };
-      }),
+    const tickets = order.items.map((item) => ({
+      id: randomUUID(),
+      orderItemId: item.id,
+      seatLabel: item.seatLabel,
+    }));
+
+    const seats = await Promise.all(
+      tickets.map(async (ticket) => ({
+        seatLabel: ticket.seatLabel,
+        qrBuffer: await this.ticketQrService.generateBuffer(ticket.id),
+      })),
     );
 
-    await this.ordersRepository.markIssuedAndCreateTickets(orderId, tickets);
+    const ticketsPdfUrl = await this.ticketPdfService.generateAndUpload(
+      orderId,
+      order.eventTitle,
+      order.eventStartsAt,
+      seats,
+    );
+
+    await this.ordersRepository.markIssuedAndCreateTickets(
+      orderId,
+      ticketsPdfUrl,
+      tickets.map(({ id, orderItemId }) => ({ id, orderItemId })),
+    );
   }
 }

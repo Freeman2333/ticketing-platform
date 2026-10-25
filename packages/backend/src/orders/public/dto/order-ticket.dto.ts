@@ -6,7 +6,4 @@ export class OrderTicketDto {
 
   @ApiProperty()
   seatLabel!: string;
-
-  @ApiProperty()
-  qrCodeUrl!: string;
 }
