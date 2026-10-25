@@ -4,7 +4,7 @@
 
 In progress. Breaks `project-plan.md` §5 Phase 4 into concrete, ordered tasks per the decisions locked in `payments-design.md`. Depends on Step 3 (Orders) for the `reserved` state this builds on.
 
-Parts A-D done; Part E (payments→orders outbox hop) done; Part E.5 (orders reacting to `payment.succeeded`, a saga hop not in the original design) done; frontend payment flow done, deployed, and verified end to end (`docs/deployment-plan.md`). Part F (ticket issuance) design agreed 2026-10-23 (`payments-design.md` §6), broken into tasks below — in progress.
+Parts A-D done; Part E (payments→orders outbox hop) done; Part E.5 (orders reacting to `payment.succeeded`, a saga hop not in the original design) done; frontend payment flow done, deployed, and verified end to end (`docs/deployment-plan.md`). Part F (ticket issuance, QR per seat) done and verified against real backlog data, then revised before shipping — see Part H (single PDF per order), in progress.
 
 ## Part A — Infra
 
@@ -54,26 +54,51 @@ Design agreed 2026-10-23 (`payments-design.md` §6): `Ticket` moves from the `pa
 
 ### F.1 — Schema
 
-- [ ] Move `Ticket` from the `payments` schema to `orders` (`@@schema("orders")`) — one migration, `ALTER TABLE payments.tickets SET SCHEMA orders` (preserves the table rather than drop/recreate).
+- [x] Move `Ticket` from the `payments` schema to `orders` (`@@schema("orders")`) — one migration, `ALTER TABLE payments.tickets SET SCHEMA orders` (preserves the table rather than drop/recreate). Also added a real `@relation` to `OrderItem` (no longer cross-schema, so no reason to keep it opaque).
 
 ### F.2 — Publish `order.paid` (the missing piece from Part E.5)
 
-- [ ] Build the `orders`-side `OutboxPublisherService` equivalent: polls `orders.outbox_events` for unpublished rows, emits each to the same RabbitMQ connection the saga controller already listens on, awaits confirmed delivery before marking published — same shape as `payments`' `OutboxPublisherService` (Part E).
+- [x] Build the `orders`-side `OutboxPublisherService` equivalent: polls `orders.outbox_events` for unpublished rows, emits each to the same RabbitMQ connection the saga controller already listens on, awaits confirmed delivery before marking published — same shape as `payments`' `OutboxPublisherService` (Part E).
 
 ### F.3 — Issuance consumer
 
-- [ ] New controller in `orders/internal/`, `@EventPattern('order.paid')`: idempotency check (no-op if `order.status !== 'paid'`, i.e. already `issued` or not actually ready), generates one `Ticket` per `OrderItem`, moves `Order` to `issued`.
-- [ ] QR generation: `qrcode` package, payload = `Ticket.id`.
-- [ ] Upload to R2 via the same `S3Client` shape as `PosterStorageService`, with `ContentDisposition: attachment` set so the frontend's download link works cross-origin. `Ticket.qrCodeRef` = the resulting URL.
+- [x] New controller in `orders/internal/`, `@EventPattern('order.paid')`: idempotency check (no-op if `order.status !== 'paid'`, i.e. already `issued` or not actually ready), generates one `Ticket` per `OrderItem`, moves `Order` to `issued`.
+- [x] ~~QR generation: `qrcode` package, payload = `Ticket.id`. Upload to R2... `Ticket.qrCodeRef` = the resulting URL.~~ Implemented as a standalone PNG per seat, verified working end to end (10 backlogged orders, 19 tickets, real R2-equivalent URLs) — then **superseded by Part H below** before ever shipping to users, once the email requirement made a single combined PDF the better shape.
 
 ### F.4 — API
 
-- [ ] `OrderDto` gains `tickets: { id, seatLabel, qrCodeUrl }[]`, populated once `status === 'issued'` (no new endpoint).
+- [x] ~~`OrderDto` gains `tickets: { id, seatLabel, qrCodeUrl }[]`~~ — shipped, then superseded by Part H's `ticketsPdfUrl`.
 
 ### F.5 — Frontend
 
-- [ ] Extend `OrderPage`'s existing "awaiting payment" polling: once `status === 'paid'` but `tickets` is still empty, keep polling with a "generating your tickets" message.
-- [ ] Render one ticket card (seat label + QR image) per entry once `tickets` is populated, alongside `PaidConfirmation`. Download-button interaction deferred (`payments-design.md` "Not in this doc yet").
+- [x] Extend `OrderPage`'s existing "awaiting payment" polling: once `status === 'paid'` but `tickets` is still empty, keep polling with a "generating your tickets" message. (Also fixed a latent bug while here: polling previously never stopped once `session_id` was in the URL, even after reaching a terminal state — now driven by the query's own data via a `refetchInterval` function, not just the URL flag.)
+- [x] ~~Render one ticket card (seat label + QR image) per entry~~ — shipped (`TicketsList.tsx`), then superseded by Part H's single "View/Download tickets" button.
+
+## Part H — Revise ticket delivery to a single PDF per order
+
+Revised 2026-10-25 (`payments-design.md` §6, "QR code, revised"): once `notifications` re-enters the picture (§1 — `order.paid` is meant to trigger a real confirmation email), emailing a ticket needs a server-generated artifact regardless of what the web page shows — so F.3's per-seat PNGs plus a hypothetical client-side QR render would have been a third redundant implementation, not a simplification. One combined PDF per order (not per seat) serves the page, the download, and the future email attachment with a single generated file.
+
+### H.1 — PDF generation
+
+- [ ] Add `pdfkit`.
+- [ ] `TicketQrService` split: a method that generates a QR buffer (still `qrcode`, still just `Ticket.id`), and a separate method for anything upload-related — no standalone PNG upload anymore, so this shrinks rather than grows.
+- [ ] New `TicketPdfService`: takes the order + each seat's QR buffer, draws one PDF (event title, date, per-seat label + QR), uploads to R2 (`tickets/<orderId>.pdf`, `ContentDisposition: attachment`).
+
+### H.2 — Schema
+
+- [ ] Migration: add `Order.ticketsPdfUrl` (nullable). Remove `Ticket.qrCodeRef` (nothing reads it once there's no standalone image).
+
+### H.3 — Issuance consumer
+
+- [ ] `OrdersService.issueTickets`: generate each seat's QR buffer, pass all of them into one `TicketPdfService` call instead of uploading per-seat PNGs. Atomically: `Order.issued` + `Order.ticketsPdfUrl` + `Ticket` rows (no `qrCodeRef` field anymore).
+
+### H.4 — API
+
+- [ ] `OrderDto.tickets` loses `qrCodeUrl`; `OrderDto` gains `ticketsPdfUrl: string | null`, populated once `status === 'issued'`.
+
+### H.5 — Frontend
+
+- [ ] Replace `TicketsList.tsx`'s QR grid with a single "View/Download tickets" button/link to `order.ticketsPdfUrl` (opens the browser's native PDF viewer — plain link, no inline embed for now).
 
 ## Part G — Verification
 
@@ -81,11 +106,11 @@ Design agreed 2026-10-23 (`payments-design.md` §6): `Ticket` moves from the `pa
 - [ ] Duplicate webhook delivery (Stripe CLI can resend an event) confirmed idempotent — no second `Payment`/outbox write.
 - [ ] Declined test card: order stays `reserved`, a new `Payment` row is created on retry (`system-design.md` §7, already decided).
 - [ ] Outbox durability: confirm a row written in the webhook's transaction is visible and gets published even if the webhook handler's process restarts before the worker's next poll.
-- [ ] Full chain through `Order.issued` — blocked on Part F.
+- [x] ~~Full chain through `Order.issued` — blocked on Part F.~~ Verified 2026-10-24 via the real backlog of 10 orders left `paid` from earlier payment testing: all picked up automatically on a backend restart (Part F.2's publisher + F.3's consumer), 19 tickets created, QR images confirmed reachable. Not a synthetic test — genuine leftover production-shaped data.
 
 ## Not in this step
 
-- QR code generation for `Ticket.qrCodeRef` — `payments-design.md` "Not in this doc yet", decided when Part F is picked up.
+- The ticket PDF's exact layout/styling — Part H.1 covers generating it, not its visual design in detail.
 - Re-wiring `notifications` to a real trigger (`order.paid`) — `step-5-notifications-plan.md`'s paused Part C/D become doable once Part F's `order.paid` consumer exists, but are tracked in that doc, not duplicated here.
 - Compensation for a failed ticket-issuance step beyond the at-least-once redelivery the outbox already provides — `payments-design.md` "Not in this doc yet".
 - ~~**Frontend integration**~~ — done: `PayButton`/`PaidConfirmation` on `OrderPage`, `?session_id=` detection + polling for the webhook-processing window.
