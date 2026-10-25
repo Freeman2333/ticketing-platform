@@ -5,6 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
+import { AUTH_API } from '../../auth/public/auth-api.interface';
+import type { AuthApi } from '../../auth/public/auth-api.interface';
 import { EVENTS_API } from '../../events/public/events-api.interface';
 import type { EventsApi } from '../../events/public/events-api.interface';
 import { OrdersRepository } from './orders.repository';
@@ -25,6 +27,7 @@ export class OrdersService implements OrdersApi {
     private readonly ticketQrService: TicketQrService,
     private readonly ticketPdfService: TicketPdfService,
     @Inject(EVENTS_API) private readonly eventsApi: EventsApi,
+    @Inject(AUTH_API) private readonly authApi: AuthApi,
   ) {}
 
   async createOrder(userId: string, eventId: string, seatIds: string[]) {
@@ -153,10 +156,21 @@ export class OrdersService implements OrdersApi {
       seats,
     );
 
+    const user = await this.authApi.getUserById(order.userId);
+    const orderIssuedPayload = {
+      orderId,
+      email: user?.email,
+      eventTitle: order.eventTitle,
+      eventStartsAt: order.eventStartsAt,
+      seatLabels: order.items.map((item) => item.seatLabel),
+      ticketsPdfUrl,
+    };
+
     await this.ordersRepository.markIssuedAndCreateTickets(
       orderId,
       ticketsPdfUrl,
       tickets.map(({ id, orderItemId }) => ({ id, orderItemId })),
+      orderIssuedPayload,
     );
   }
 }

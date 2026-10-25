@@ -4,7 +4,7 @@
 
 In progress. Breaks `project-plan.md` §5 Phase 4 into concrete, ordered tasks per the decisions locked in `payments-design.md`. Depends on Step 3 (Orders) for the `reserved` state this builds on.
 
-Parts A-D done; Part E (payments→orders outbox hop) done; Part E.5 (orders reacting to `payment.succeeded`, a saga hop not in the original design) done; frontend payment flow done, deployed, and verified end to end (`docs/deployment-plan.md`). Part F (ticket issuance, QR per seat) done and verified against real backlog data, then revised before shipping — see Part H (single PDF per order), in progress.
+Parts A-D done; Part E (payments→orders outbox hop) done; Part E.5 (orders reacting to `payment.succeeded`, a saga hop not in the original design) done; frontend payment flow done, deployed, and verified end to end (`docs/deployment-plan.md`). Part F (ticket issuance, QR per seat) done and verified against real backlog data, then revised before shipping — see Part H (single PDF per order), done and verified end to end locally. Part G (remaining idempotency/durability tests) still open.
 
 ## Part A — Infra
 
@@ -80,32 +80,32 @@ Revised 2026-10-25 (`payments-design.md` §6, "QR code, revised"): once `notific
 
 ### H.1 — PDF generation
 
-- [ ] Add `pdfkit`.
-- [ ] `TicketQrService` split: a method that generates a QR buffer (still `qrcode`, still just `Ticket.id`), and a separate method for anything upload-related — no standalone PNG upload anymore, so this shrinks rather than grows.
-- [ ] New `TicketPdfService`: takes the order + each seat's QR buffer, draws one PDF (event title, date, per-seat label + QR), uploads to R2 (`tickets/<orderId>.pdf`, `ContentDisposition: attachment`).
+- [x] Add `pdfkit`. Pinned to `0.17.2`, not latest — `0.20.2`'s standard-font loading uses a dynamic Node "imports" subpath (`#standard-fonts/*`) that webpack can't bundle, breaking PDF generation at runtime (`Cannot find module '#standard-fonts/Helvetica'`). `0.17.2` uses plain `fs.readFileSync` font loading instead; its `.afm` font files are copied into `dist/data` via a `webpack.config.js` assets entry.
+- [x] `TicketQrService` split: now just `generateBuffer(ticketId)` — no S3 client, no upload method, since there's no standalone PNG anymore.
+- [x] New `TicketPdfService`: takes the order + each seat's QR buffer, draws one PDF (event title, date, per-seat label + QR, one page per seat), uploads to R2/MinIO (`tickets/<orderId>.pdf`, `ContentDisposition: attachment`).
 
 ### H.2 — Schema
 
-- [ ] Migration: add `Order.ticketsPdfUrl` (nullable). Remove `Ticket.qrCodeRef` (nothing reads it once there's no standalone image).
+- [x] Migration (`20261025082632_add_tickets_pdf_url`): added `Order.ticketsPdfUrl` (nullable), removed `Ticket.qrCodeRef`. Also required adding `prisma.config.ts` at the repo root — Prisma 7 moved datasource connection config out of `schema.prisma` into a separate config file, which this project didn't have yet.
 
 ### H.3 — Issuance consumer
 
-- [ ] `OrdersService.issueTickets`: generate each seat's QR buffer, pass all of them into one `TicketPdfService` call instead of uploading per-seat PNGs. Atomically: `Order.issued` + `Order.ticketsPdfUrl` + `Ticket` rows (no `qrCodeRef` field anymore).
+- [x] `OrdersService.issueTickets`: generates each seat's `id` + QR buffer up front (QR must encode the id before the row exists), passes them all into one `TicketPdfService` call, then atomically writes `Order.issued` + `Order.ticketsPdfUrl` + `Ticket` rows (no `qrCodeRef`).
 
 ### H.4 — API
 
-- [ ] `OrderDto.tickets` loses `qrCodeUrl`; `OrderDto` gains `ticketsPdfUrl: string | null`, populated once `status === 'issued'`.
+- [x] `OrderTicketDto` loses `qrCodeUrl` (now just `{ id, seatLabel }`); `OrderDto` gains `ticketsPdfUrl: string | null`.
 
 ### H.5 — Frontend
 
-- [ ] Replace `TicketsList.tsx`'s QR grid with a single "View/Download tickets" button/link to `order.ticketsPdfUrl` (opens the browser's native PDF viewer — plain link, no inline embed for now).
+- [x] Replaced the QR grid with a single "View/Download tickets" button linking to `order.ticketsPdfUrl` (new tab, native PDF viewer). `PaidConfirmation.tsx` and `TicketsList.tsx` were later inlined into `OrderPage.tsx` and deleted — both had shrunk to single-purpose wrappers (icon+text, one button) with no reuse once the PNG grid was gone. The "View/Download tickets" and "Back to event" buttons sit in one row with explicit hierarchy (primary vs `outline`) instead of stacked equally-weighted buttons.
 
 ## Part G — Verification
 
 - [x] Happy path up through `Order.paid`: reserved a real order, called `POST /payments/checkout-session`, paid with a Stripe test card (`4242 4242 4242 4242`) in a real browser, confirmed via `psql`: `Payment.status = succeeded`, `Order.status = paid`, `payments.outbox_events` row published (`published_at` set), `orders.outbox_events` row written with the correct `orderItemIds` (not yet published — see Part E.5).
-- [ ] Duplicate webhook delivery (Stripe CLI can resend an event) confirmed idempotent — no second `Payment`/outbox write.
-- [ ] Declined test card: order stays `reserved`, a new `Payment` row is created on retry (`system-design.md` §7, already decided).
-- [ ] Outbox durability: confirm a row written in the webhook's transaction is visible and gets published even if the webhook handler's process restarts before the worker's next poll.
+- [x] Duplicate webhook delivery confirmed idempotent. `stripe events resend` needs a dashboard-registered webhook endpoint, which `stripe listen`-based local dev doesn't create, so re-delivered a real already-succeeded event manually: fetched its body via `stripe events retrieve`, re-signed it with `STRIPE_WEBHOOK_SECRET` (same HMAC scheme Stripe uses), POSTed it to `/api/payments/webhook`. Backend logged `"Webhook already processed or payment not found, skipping."`; `Payment` and `payments.outbox_events` row counts unchanged.
+- [ ] ~~Declined test card: order stays `reserved`, a new `Payment` row is created on retry (`system-design.md` §7, already decided).~~ Skipped 2026-10-25 — needs real browser interaction with Stripe's hosted Checkout page, not worth the setup for this project.
+- [x] Outbox durability confirmed. First attempt (send a signed webhook, then `taskkill` the process immediately) raced the 5s poll interval and lost — the row was already published before the kill landed, since there's real latency between the HTTP response returning and a separate `taskkill` command executing. Retested deterministically instead: with the backend process fully stopped, inserted an unpublished `payments.outbox_events` row directly via SQL (so no process could have touched it yet), then started a fresh backend process. It picked up and published the row on its first poll, and the downstream order correctly reached `issued` with a real `ticketsPdfUrl` — confirming the guarantee doesn't depend on which process wrote vs. publishes a row, only on DB state.
 - [x] ~~Full chain through `Order.issued` — blocked on Part F.~~ Verified 2026-10-24 via the real backlog of 10 orders left `paid` from earlier payment testing: all picked up automatically on a backend restart (Part F.2's publisher + F.3's consumer), 19 tickets created, QR images confirmed reachable. Not a synthetic test — genuine leftover production-shaped data.
 
 ## Not in this step

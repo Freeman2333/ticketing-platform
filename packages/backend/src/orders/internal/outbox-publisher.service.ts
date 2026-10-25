@@ -9,6 +9,8 @@ export class OutboxPublisherService {
   constructor(
     private readonly ordersRepository: OrdersRepository,
     @Inject('ORDERS_QUEUE_CLIENT') private readonly ordersQueueClient: ClientProxy,
+    @Inject('NOTIFICATIONS_QUEUE_CLIENT')
+    private readonly notificationsQueueClient: ClientProxy,
   ) {}
 
   @Interval(5000)
@@ -16,9 +18,12 @@ export class OutboxPublisherService {
     const events = await this.ordersRepository.findUnpublishedOutboxEvents();
 
     for (const event of events) {
-      await firstValueFrom(
-        this.ordersQueueClient.emit(event.eventType, event.payload),
-      );
+      const client =
+        event.eventType === 'order.issued'
+          ? this.notificationsQueueClient
+          : this.ordersQueueClient;
+
+      await firstValueFrom(client.emit(event.eventType, event.payload));
       await this.ordersRepository.markOutboxEventPublished(event.id);
     }
   }

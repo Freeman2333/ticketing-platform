@@ -4,7 +4,7 @@
 
 Phase 4 per `project-plan.md` §5: booking → payment → ticket-issuance, with Stripe (test mode) as the payment provider. Builds on the `reserved` state Phase 1 already produces; adds `paid` and `issued` to `OrderStatus` (`system-design.md` §5, `step-3-orders-plan.md`).
 
-This also unblocks the `notifications` extraction paused in `step-5-notifications-plan.md` — `order.paid` becomes the real trigger for a booking-confirmation email, replacing the `order.created`/`order.reservation_expired` triggers that were removed for lacking a genuine "purchase completed" moment.
+This also unblocks the `notifications` extraction paused in `step-5-notifications-plan.md` — revised 2026-10-25: the trigger is `Order.issued`, not `order.paid`. Once tickets are a PDF (§6), the confirmation email's whole point is to deliver that PDF — emailing at `order.paid` (before the PDF exists) and then a second email once issued would be two messages for one event from the attendee's point of view. `Order.issued` is slightly later but lets the one email carry the real ticket.
 
 ## 2. Payment flow: Stripe Checkout
 

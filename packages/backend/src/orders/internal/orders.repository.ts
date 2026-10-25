@@ -58,6 +58,7 @@ export class OrdersRepository {
     orderId: string,
     ticketsPdfUrl: string,
     tickets: { id: string; orderItemId: string }[],
+    outboxPayload: object,
   ) {
     return this.prisma.$transaction(async (tx) => {
       await tx.order.update({
@@ -65,6 +66,9 @@ export class OrdersRepository {
         data: { status: 'issued', ticketsPdfUrl },
       });
       await tx.ticket.createMany({ data: tickets });
+      await tx.ordersOutboxEvent.create({
+        data: { eventType: 'order.issued', payload: outboxPayload },
+      });
     });
   }
 
