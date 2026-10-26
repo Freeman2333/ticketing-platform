@@ -5,6 +5,7 @@ import { ProviderBoundary } from './ProviderBoundary';
 import { Header } from './Header';
 import { LoginPage } from './LoginPage';
 import { RegisterPage } from './RegisterPage';
+import { RequireRole } from './RequireRole';
 
 const ProviderCatalog = lazyProvider('catalog', 'App');
 const ProviderOrganizer = lazyProvider('organizer', 'App');
@@ -28,18 +29,20 @@ function HomePage() {
 
 function OrganizerPage() {
   return (
-    <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
-      <ProviderBoundary
-        name="organizer"
-        fallback={
-          <div className="flex min-h-[70vh] items-center justify-center">
-            <Spinner className="size-8" />
-          </div>
-        }
-      >
-        <ProviderOrganizer />
-      </ProviderBoundary>
-    </main>
+    <RequireRole role="organizer">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
+        <ProviderBoundary
+          name="organizer"
+          fallback={
+            <div className="flex min-h-[70vh] items-center justify-center">
+              <Spinner className="size-8" />
+            </div>
+          }
+        >
+          <ProviderOrganizer />
+        </ProviderBoundary>
+      </main>
+    </RequireRole>
   );
 }
 

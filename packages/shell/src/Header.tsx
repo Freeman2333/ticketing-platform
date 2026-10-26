@@ -1,5 +1,9 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { setAccessToken, useIsAuthenticated } from '@ticketing/auth-client';
+import {
+  setAccessToken,
+  useIsAuthenticated,
+  useUserRole,
+} from '@ticketing/auth-client';
 import { useAuthControllerLogout } from '@ticketing/api-client';
 import { Button } from '@ticketing/ui';
 import { lazyProvider } from './mf';
@@ -12,6 +16,7 @@ export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const isLoggedIn = useIsAuthenticated();
+  const role = useUserRole();
   const logoutMutation = useAuthControllerLogout();
   const showSearch = !NON_CATALOG_PATHS.includes(location.pathname);
 
@@ -43,9 +48,16 @@ export function Header() {
       )}
       <nav className="col-start-3 flex justify-end gap-2">
         {isLoggedIn ? (
-          <Button variant="outline" onClick={handleLogout}>
-            Log out
-          </Button>
+          <>
+            {role === 'organizer' && (
+              <Button variant="ghost" asChild>
+                <Link to="/organizer">Organizer</Link>
+              </Button>
+            )}
+            <Button variant="outline" onClick={handleLogout}>
+              Log out
+            </Button>
+          </>
         ) : (
           <>
             <Button variant="ghost" asChild>
