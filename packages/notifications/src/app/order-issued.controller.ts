@@ -1,8 +1,9 @@
 import { Controller, Logger } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bullmq';
 import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
-import { ResendService } from './resend.service';
+import type { Queue } from 'bullmq';
 
-interface OrderIssuedPayload {
+export interface OrderIssuedPayload {
   orderId: string;
   email?: string;
   eventTitle: string;
@@ -14,7 +15,7 @@ interface OrderIssuedPayload {
 export class OrderIssuedController {
   private readonly logger = new Logger(OrderIssuedController.name);
 
-  constructor(private readonly resendService: ResendService) {}
+  constructor(@InjectQueue('email') private readonly emailQueue: Queue) {}
 
   @EventPattern('order.issued')
   async handleOrderIssued(
@@ -26,19 +27,10 @@ export class OrderIssuedController {
         `No email on order.issued payload for order ${payload.orderId}, skipping.`,
       );
     } else {
-      try {
-        await this.resendService.sendTicketEmail({
-          email: payload.email,
-          eventTitle: payload.eventTitle,
-          seatLabels: payload.seatLabels,
-          ticketsPdfUrl: payload.ticketsPdfUrl,
-        });
-      } catch (error) {
-        this.logger.error(
-          `Failed to send ticket email for order ${payload.orderId}`,
-          error,
-        );
-      }
+      await this.emailQueue.add('send-ticket-email', payload, {
+        attempts: 3,
+        backoff: { type: 'exponential', delay: 5000 },
+      });
     }
 
     const channel = context.getChannelRef();

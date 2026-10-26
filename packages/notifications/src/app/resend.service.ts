@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Resend } from 'resend';
+import { UnrecoverableError } from 'bullmq';
 
 @Injectable()
 export class ResendService {
@@ -14,12 +15,24 @@ export class ResendService {
     const pdfResponse = await fetch(params.ticketsPdfUrl);
     const pdfContent = Buffer.from(await pdfResponse.arrayBuffer());
 
-    return this.client.emails.send({
+    const { error } = await this.client.emails.send({
       from: 'onboarding@resend.dev',
       to: params.email,
       subject: `Your tickets for ${params.eventTitle}`,
       text: `Your order is confirmed. Seats: ${params.seatLabels.join(', ')}. Your tickets are attached.`,
       attachments: [{ filename: 'tickets.pdf', content: pdfContent }],
     });
+
+    if (error) {
+      const isPermanent =
+        error.statusCode !== null &&
+        error.statusCode >= 400 &&
+        error.statusCode < 500;
+
+      if (isPermanent) {
+        throw new UnrecoverableError(error.message);
+      }
+      throw new Error(error.message);
+    }
   }
 }

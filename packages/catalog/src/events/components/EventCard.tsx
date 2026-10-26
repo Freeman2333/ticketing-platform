@@ -4,7 +4,7 @@ import {
   type EventDto,
 } from '@ticketing/api-client';
 import { Card, CardContent, formatDateTime, Skeleton } from '@ticketing/ui';
-import { usePrefetchOnHover } from './hooks/usePrefetchOnHover';
+import { usePrefetchOnHover } from '../hooks/usePrefetchOnHover';
 
 export function EventCard({ event }: { event: EventDto }) {
   const prefetchHandlers = usePrefetchOnHover(

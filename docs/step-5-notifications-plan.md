@@ -2,7 +2,7 @@
 
 ## Status
 
-In progress. Breaks `project-plan.md` §5 Phase 3 (first extraction only — BullMQ is a separate, later piece) into concrete, ordered tasks, citing the decisions locked in `extraction-design.md`. Parts A/B done; Part C (producer side, trigger = `Order.issued`) and Part D (verification) unpaused 2026-10-25 now that Phase 4 (payments) is done.
+Done. Breaks `project-plan.md` §5 Phase 3 into concrete, ordered tasks, citing the decisions locked in `extraction-design.md`. Parts A–E all complete, including the previously-deferred BullMQ piece (Part E, 2026-10-26).
 
 ## Part A — Infra
 
@@ -36,11 +36,28 @@ Unpaused 2026-10-25, now that Phase 4 (payments) is done and `Order.issued` exis
 ## Part D — Verification
 
 - [x] `notifications` running standalone (no `backend` wiring yet): a hand-crafted `order.created` message published directly onto `notifications_queue` was received, logged, and a real email arrived at the Resend account's registered address.
-- [ ] End-to-end from a real `backend` action: issue real tickets for a real order, confirm the email arrives with the PDF.
-- [ ] Create a reservation with a *different* test user's email and confirm the sandbox-restriction rejection is logged clearly, without crashing the consumer or leaving the message unacknowledged.
+- [x] End-to-end from a real `backend` action: issued real tickets for a real order through the actual Checkout flow, confirmed the email arrived with the PDF attached.
+- [x] A seeded test user's placeholder `@example.com` email hit Resend's sandbox restriction (`422 Invalid 'to' field`) — logged clearly via `[Resend API Error]`, consumer kept running normally afterward (confirmed by the next event processing successfully), nothing left stuck unacknowledged.
 - [ ] Confirm the manual-ack wiring actually matters: inspect RabbitMQ's management UI (or deliberately slow the handler) to see a message sit as "unacked" while `notifications` is mid-processing, rather than being marked delivered the instant it's received.
+
+## Part E — BullMQ for reliable email sending
+
+Added 2026-10-25 (`project-plan.md` §5's deferred Phase 3 piece). Motivation: `OrderIssuedController` currently calls `ResendService.sendTicketEmail` directly in a `try/catch` and acks the RabbitMQ message regardless of the outcome (Part C's design — a Resend failure isn't necessarily worth retrying forever). But that means a genuinely transient failure (Resend briefly down, a network blip) gets exactly one attempt and is then lost for good, same as a permanent one (bad address, sandbox restriction) — there's currently no way to tell these apart or retry only the former.
+
+**Split responsibility**: `OrderIssuedController` stops calling Resend itself. It enqueues a BullMQ job (`send-ticket-email`, same payload it already has) and acks the RabbitMQ message immediately — fast, decoupled from however long the actual send takes or how many attempts it needs. A separate `EmailWorker` (`@Processor`) consumes that queue and does the actual `ResendService.sendTicketEmail` call.
+
+**Retry policy**: `attempts: 3`, exponential backoff (~5s/10s/20s). Not every failure deserves this, though — a sandbox-restriction rejection (`422 Invalid 'to' field`) will never succeed no matter how many times it's retried. So errors are split:
+- Transient (network error, Resend 5xx) → thrown normally → BullMQ's own retry/backoff kicks in.
+- Permanent (validation error, e.g. bad/restricted recipient) → thrown as BullMQ's `UnrecoverableError` → no retries, job goes straight to `failed`.
+
+After all attempts are exhausted (or an `UnrecoverableError`), the job's `failed` event is just logged — no dead-letter queue, alerting, or dashboard (Bull Board) for this first pass; revisit if this project ever needs operators to see/retry failed jobs.
+
+- [x] `bullmq` + `@nestjs/bullmq` + `ioredis` added to `notifications`; `BullModule.forRoot()` pointed at the same `REDIS_URL` already used by `backend`.
+- [x] `BullModule.registerQueue({ name: 'email' })`, queue producer injected into `OrderIssuedController` via `@InjectQueue('email')` — replaces the direct `ResendService` call with `queue.add('send-ticket-email', payload, { attempts: 3, backoff: { type: 'exponential', delay: 5000 } })`.
+- [x] `EmailWorker` (`@Processor('email')`), one job handler `send-ticket-email`: calls `ResendService.sendTicketEmail`, distinguishes transient vs permanent Resend errors (throws `UnrecoverableError` for the latter). `@OnWorkerEvent('failed')` logs `ERROR` only on the final failed attempt (exhausted retries, or `UnrecoverableError`) and `WARN` on an intermediate attempt that will still retry.
+- [x] Verification: added jobs directly to the `email` BullMQ queue (bypassing RabbitMQ) to isolate the worker. Permanent case (sandbox-rejected recipient) failed after exactly 1 attempt, logged once as `ERROR`, no retry. Transient case (unreachable `ticketsPdfUrl`, `fetch` throws) ran all 3 attempts with the expected exponential spacing, confirmed independently via the job's own BullMQ state (`attemptsMade: 3`, `finishedOn - timestamp` ≈ 15s = 0 + 5s + 10s) since stdout buffering on the redirected dev-process output occasionally delayed/dropped individual log lines.
 
 ## Not in this step
 
-- BullMQ for queued email/push work (`project-plan.md` §5, `extraction-design.md`'s "Not in this doc yet") — separate, later piece of Phase 3.
+- A dead-letter queue, alerting, or a dashboard (Bull Board) for failed email jobs — logged only, for now.
 - A verified custom domain for Resend (would lift the sandbox recipient restriction) — not needed for this learning project.
