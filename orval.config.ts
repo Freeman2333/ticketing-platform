@@ -22,6 +22,11 @@ export default defineConfig({
               useInfiniteQueryParam: 'page',
             },
           },
+          VenuesController_findMine: {
+            query: {
+              useSuspenseQuery: true,
+            },
+          },
         },
       },
     },

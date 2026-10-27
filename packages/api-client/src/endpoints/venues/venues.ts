@@ -5,8 +5,10 @@
  * OpenAPI spec version: 0.1
  */
 import {
+  queryOptions as queryOptionsBuilder,
   useMutation,
-  useQuery
+  useQuery,
+  useSuspenseQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
@@ -20,7 +22,9 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
+  UseQueryResult,
+  UseSuspenseQueryOptions,
+  UseSuspenseQueryResult
 } from '@tanstack/react-query';
 
 import type {
@@ -188,6 +192,58 @@ export function useVenuesControllerFindMine<TData = Awaited<ReturnType<typeof ve
   const queryOptions = getVenuesControllerFindMineQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export const getVenuesControllerFindMineSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>( options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getVenuesControllerFindMineQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesControllerFindMine>>> = ({ signal }) => venuesControllerFindMine(signal);
+
+
+
+
+
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+}
+
+export type VenuesControllerFindMineSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof venuesControllerFindMine>>>
+export type VenuesControllerFindMineSuspenseQueryError = unknown
+
+
+export function useVenuesControllerFindMineSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
+  options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useVenuesControllerFindMineSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
+  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useVenuesControllerFindMineSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
+  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useVenuesControllerFindMineSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
+  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getVenuesControllerFindMineSuspenseQueryOptions(options)
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }

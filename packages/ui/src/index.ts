@@ -1,4 +1,5 @@
 export * from './components/composed/confirm-dialog';
+export * from './components/composed/error-boundary';
 export * from './components/ui/alert-dialog';
 export * from './components/ui/badge';
 export * from './components/ui/button';

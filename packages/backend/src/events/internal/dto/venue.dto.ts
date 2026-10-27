@@ -13,6 +13,6 @@ export class VenueDto {
   @ApiProperty()
   address!: string;
 
-  @ApiProperty({ nullable: true })
+  @ApiProperty({ type: String, nullable: true })
   imageUrl!: string | null;
 }
