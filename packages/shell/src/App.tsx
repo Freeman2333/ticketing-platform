@@ -1,4 +1,9 @@
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  Outlet,
+  RouterProvider,
+  useLocation,
+} from 'react-router-dom';
 import { Spinner, Toaster } from '@ticketing/ui';
 import { lazyProvider } from './mf';
 import { ProviderBoundary } from './ProviderBoundary';
@@ -30,27 +35,28 @@ function HomePage() {
 function OrganizerPage() {
   return (
     <RequireRole role="organizer">
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
-        <ProviderBoundary
-          name="organizer"
-          fallback={
-            <div className="flex min-h-[70vh] items-center justify-center">
-              <Spinner className="size-8" />
-            </div>
-          }
-        >
-          <ProviderOrganizer />
-        </ProviderBoundary>
-      </main>
+      <ProviderBoundary
+        name="organizer"
+        fallback={
+          <div className="flex min-h-[70vh] items-center justify-center">
+            <Spinner className="size-8" />
+          </div>
+        }
+      >
+        <ProviderOrganizer />
+      </ProviderBoundary>
     </RequireRole>
   );
 }
 
 function Layout() {
+  const location = useLocation();
+  const isOrganizerSection = location.pathname.startsWith('/organizer');
+
   return (
     <div className="flex h-full flex-col">
       <Toaster />
-      <Header />
+      {!isOrganizerSection && <Header />}
       <div className="flex flex-1 flex-col overflow-y-auto">
         <Outlet />
       </div>

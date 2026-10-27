@@ -10,7 +10,7 @@ import { lazyProvider } from './mf';
 import { ProviderBoundary } from './ProviderBoundary';
 
 const ProviderCatalogSearch = lazyProvider('catalog', 'Search');
-const NON_CATALOG_PATHS = ['/login', '/register'];
+const NON_CATALOG_PATH_PREFIXES = ['/login', '/register'];
 
 export function Header() {
   const navigate = useNavigate();
@@ -18,7 +18,9 @@ export function Header() {
   const isLoggedIn = useIsAuthenticated();
   const role = useUserRole();
   const logoutMutation = useAuthControllerLogout();
-  const showSearch = !NON_CATALOG_PATHS.includes(location.pathname);
+  const showSearch = !NON_CATALOG_PATH_PREFIXES.some((prefix) =>
+    location.pathname.startsWith(prefix),
+  );
 
   async function handleLogout() {
     try {

@@ -1,4 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
+import { OrganizerHeader } from './OrganizerHeader';
+import { VenuesPage } from './venues/VenuesPage';
 import './styles.css';
 
 function OrganizerHomePage() {
@@ -7,9 +9,15 @@ function OrganizerHomePage() {
 
 export function App() {
   return (
-    <Routes>
-      <Route path="/" element={<OrganizerHomePage />} />
-    </Routes>
+    <div className="flex h-full flex-col">
+      <OrganizerHeader />
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
+        <Routes>
+          <Route path="/" element={<OrganizerHomePage />} />
+          <Route path="/venues" element={<VenuesPage />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
