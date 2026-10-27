@@ -4,10 +4,13 @@
  * Ticketing Platform API
  * OpenAPI spec version: 0.1
  */
+import type { VenueDtoImageUrl } from './venueDtoImageUrl.js';
 
 export interface VenueDto {
   id: string;
   organizerId: string;
   name: string;
   address: string;
+  /** @nullable */
+  imageUrl: VenueDtoImageUrl;
 }

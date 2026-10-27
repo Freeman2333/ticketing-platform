@@ -333,7 +333,93 @@ const {mutation: mutationOptions} = options ?
       > => {
       return useMutation(getEventsControllerCreateMutationOptions(options), queryClient);
     }
-    export const eventsControllerGetRecentlyViewed = (
+    export const eventsControllerListMyEvents = (
+
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<EventDto[]>(
+      {url: `/api/events/mine`, method: 'GET', signal
+    },
+      );
+    }
+
+
+
+
+export const getEventsControllerListMyEventsQueryKey = () => {
+    return [
+    `/api/events/mine`
+    ] as const;
+    }
+
+
+export const getEventsControllerListMyEventsQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListMyEventsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListMyEvents>>> = ({ signal }) => eventsControllerListMyEvents(signal);
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type EventsControllerListMyEventsQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListMyEvents>>>
+export type EventsControllerListMyEventsQueryError = unknown
+
+
+export function useEventsControllerListMyEvents<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerListMyEvents>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerListMyEvents>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListMyEvents<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerListMyEvents>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerListMyEvents>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListMyEvents<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerListMyEvents<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerListMyEventsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export const eventsControllerGetRecentlyViewed = (
 
  signal?: AbortSignal
 ) => {

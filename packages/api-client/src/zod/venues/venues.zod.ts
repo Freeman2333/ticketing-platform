@@ -16,14 +16,20 @@ export const VenuesControllerCreateResponse = zod.object({
   "id": zod.string(),
   "organizerId": zod.string(),
   "name": zod.string(),
-  "address": zod.string()
+  "address": zod.string(),
+  "imageUrl": zod.looseObject({
+
+}).nullable()
 })
 
 export const VenuesControllerFindMineResponseItem = zod.object({
   "id": zod.string(),
   "organizerId": zod.string(),
   "name": zod.string(),
-  "address": zod.string()
+  "address": zod.string(),
+  "imageUrl": zod.looseObject({
+
+}).nullable()
 })
 export const VenuesControllerFindMineResponse = zod.array(VenuesControllerFindMineResponseItem)
 
@@ -35,7 +41,10 @@ export const VenuesControllerFindOneResponse = zod.object({
   "id": zod.string(),
   "organizerId": zod.string(),
   "name": zod.string(),
-  "address": zod.string()
+  "address": zod.string(),
+  "imageUrl": zod.looseObject({
+
+}).nullable()
 })
 
 export const VenuesControllerUpdateParams = zod.object({
@@ -51,6 +60,27 @@ export const VenuesControllerUpdateResponse = zod.object({
   "id": zod.string(),
   "organizerId": zod.string(),
   "name": zod.string(),
-  "address": zod.string()
+  "address": zod.string(),
+  "imageUrl": zod.looseObject({
+
+}).nullable()
+})
+
+export const VenuesControllerUploadImageParams = zod.object({
+  "id": zod.string()
+})
+
+export const VenuesControllerUploadImageBody = zod.object({
+  "file": zod.instanceof(Blob).optional()
+})
+
+export const VenuesControllerUploadImageResponse = zod.object({
+  "id": zod.string(),
+  "organizerId": zod.string(),
+  "name": zod.string(),
+  "address": zod.string(),
+  "imageUrl": zod.looseObject({
+
+}).nullable()
 })
 

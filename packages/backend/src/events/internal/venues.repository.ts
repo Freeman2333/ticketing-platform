@@ -17,7 +17,10 @@ export class VenuesRepository {
     return this.prisma.venue.create({ data: { organizerId, name, address } });
   }
 
-  update(id: string, data: { name?: string; address?: string }) {
+  update(
+    id: string,
+    data: { name?: string; address?: string; imageUrl?: string },
+  ) {
     return this.prisma.venue.update({ where: { id }, data });
   }
 }

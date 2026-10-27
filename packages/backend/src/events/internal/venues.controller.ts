@@ -7,11 +7,22 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import type { Request } from 'express';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../generated/prisma/client';
+import { processPosterImage } from './process-poster-image';
+import { PosterStorageService } from './poster-storage.service';
 import { CreateVenueDto } from './dto/create-venue.dto';
 import { UpdateVenueDto } from './dto/update-venue.dto';
 import { VenueDto } from './dto/venue.dto';
@@ -19,7 +30,10 @@ import { VenuesRepository } from './venues.repository';
 
 @Controller('venues')
 export class VenuesController {
-  constructor(private readonly venuesRepository: VenuesRepository) {}
+  constructor(
+    private readonly venuesRepository: VenuesRepository,
+    private readonly posterStorageService: PosterStorageService,
+  ) {}
 
   @Post()
   @Roles(Role.organizer)
@@ -68,5 +82,37 @@ export class VenuesController {
     }
 
     return this.venuesRepository.update(id, dto);
+  }
+
+  @Post(':id/image')
+  @Roles(Role.organizer)
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: { file: { type: 'string', format: 'binary' } },
+    },
+  })
+  @ApiOkResponse({ type: VenueDto })
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadImage(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: Request,
+  ): Promise<VenueDto> {
+    const venue = await this.venuesRepository.findById(id);
+    if (!venue || venue.organizerId !== req.user!.sub) {
+      throw new NotFoundException();
+    }
+
+    const processed = await processPosterImage(file.buffer);
+    const imageUrl = await this.posterStorageService.upload(
+      `venues/${id}.webp`,
+      processed,
+      'image/webp',
+    );
+
+    return this.venuesRepository.update(id, { imageUrl });
   }
 }

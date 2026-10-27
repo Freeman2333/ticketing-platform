@@ -26,7 +26,8 @@ import type {
 import type {
   CreateVenueDto,
   UpdateVenueDto,
-  VenueDto
+  VenueDto,
+  VenuesControllerUploadImageBody
 } from '../../models';
 
 import { customInstance } from '../../mutator.js';
@@ -343,4 +344,70 @@ const {mutation: mutationOptions} = options ?
         TContext
       > => {
       return useMutation(getVenuesControllerUpdateMutationOptions(options), queryClient);
+    }
+    export const venuesControllerUploadImage = (
+    id: string,
+    venuesControllerUploadImageBody: VenuesControllerUploadImageBody,
+ signal?: AbortSignal
+) => {
+
+      const formData = new FormData();
+if(venuesControllerUploadImageBody.file !== undefined) {
+ formData.append(`file`, venuesControllerUploadImageBody.file);
+ }
+
+      return customInstance<VenueDto>(
+      {url: `/api/venues/${id}/image`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      );
+    }
+
+
+
+
+export const getVenuesControllerUploadImageMutationKey = () => ['venuesControllerUploadImage'] as const;
+
+export const getVenuesControllerUploadImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerUploadImage>>, TError,VenuesControllerUploadImageMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof venuesControllerUploadImage>>, TError,VenuesControllerUploadImageMutationVariables, TContext> => {
+
+const mutationKey = getVenuesControllerUploadImageMutationKey();
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof venuesControllerUploadImage>>, VenuesControllerUploadImageMutationVariables> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  venuesControllerUploadImage(id,data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type VenuesControllerUploadImageMutationResult = NonNullable<Awaited<ReturnType<typeof venuesControllerUploadImage>>>
+    export type VenuesControllerUploadImageMutationBody = VenuesControllerUploadImageBody
+    export type VenuesControllerUploadImageMutationError = unknown
+    export type VenuesControllerUploadImageMutationVariables = {id: string;data: VenuesControllerUploadImageBody}
+
+    export const useVenuesControllerUploadImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerUploadImage>>, TError,VenuesControllerUploadImageMutationVariables, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof venuesControllerUploadImage>>,
+        TError,
+        VenuesControllerUploadImageMutationVariables,
+        TContext
+      > => {
+      return useMutation(getVenuesControllerUploadImageMutationOptions(options), queryClient);
     }

@@ -40,6 +40,16 @@ export const EventsControllerCreateResponse = zod.object({
   "posterUrl": zod.string().nullable()
 })
 
+export const EventsControllerListMyEventsResponseItem = zod.object({
+  "id": zod.string(),
+  "venueId": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().nullable(),
+  "startsAt": zod.iso.datetime({"offset":true}),
+  "posterUrl": zod.string().nullable()
+})
+export const EventsControllerListMyEventsResponse = zod.array(EventsControllerListMyEventsResponseItem)
+
 export const EventsControllerGetRecentlyViewedResponse = zod.object({
   "recentlyViewed": zod.array(zod.object({
   "id": zod.string(),
