@@ -65,6 +65,14 @@ export class EventsController {
     });
   }
 
+  @Get('mine')
+  @Roles(Role.organizer)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: EventDto, isArray: true })
+  listMyEvents(@Req() req: Request): Promise<EventDto[]> {
+    return this.eventsService.listMyEvents(req.user!.sub);
+  }
+
   @Get('recently-viewed')
   @OptionalAuth()
   @ApiOkResponse({ type: RecentlyViewedDto })

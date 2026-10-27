@@ -64,6 +64,11 @@ export class EventsService implements EventsApi {
     return result;
   }
 
+  async listMyEvents(organizerId: string): Promise<EventDto[]> {
+    const events = await this.eventsRepository.findByOrganizerId(organizerId);
+    return events.map((event) => this.toEventDto(event));
+  }
+
   async getSeatAvailability(eventId: string): Promise<SeatDto[]> {
     const seats = await this.seatsRepository.findByEventId(eventId);
     return seats.map((seat) => this.toSeatDto(seat));

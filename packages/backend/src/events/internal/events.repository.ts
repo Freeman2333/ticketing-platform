@@ -20,6 +20,13 @@ export class EventsRepository {
     });
   }
 
+  findByOrganizerId(organizerId: string) {
+    return this.prisma.event.findMany({
+      where: { venue: { organizerId } },
+      orderBy: [{ startsAt: 'asc' }, { id: 'asc' }],
+    });
+  }
+
   findUpcoming(excludeIds: string[], take: number) {
     return this.prisma.event.findMany({
       where: { id: { notIn: excludeIds } },
