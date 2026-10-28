@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { OrganizerHeader } from './OrganizerHeader';
+import { CreateVenuePage } from './venues/CreateVenuePage';
 import { VenuesPage } from './venues/VenuesPage';
 import './styles.css';
 
@@ -15,6 +16,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<OrganizerHomePage />} />
           <Route path="/venues" element={<VenuesPage />} />
+          <Route path="/venues/new" element={<CreateVenuePage />} />
         </Routes>
       </main>
     </div>
