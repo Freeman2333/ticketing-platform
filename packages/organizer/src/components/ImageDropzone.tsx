@@ -5,21 +5,23 @@ import { ImageIcon } from 'lucide-react';
 export function ImageDropzone({
   file,
   onFileChange,
+  initialImageUrl = null,
 }: {
   file: File | null;
   onFileChange: (file: File | null) => void;
+  initialImageUrl?: string | null;
 }) {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(initialImageUrl);
 
   useEffect(() => {
     if (!file) {
-      setPreviewUrl(null);
+      setPreviewUrl(initialImageUrl);
       return;
     }
     const url = URL.createObjectURL(file);
     setPreviewUrl(url);
     return () => URL.revokeObjectURL(url);
-  }, [file]);
+  }, [file, initialImageUrl]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'image/*': [] },
