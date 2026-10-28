@@ -23,9 +23,11 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../generated/prisma/client';
 import { processPosterImage } from './process-poster-image';
 import { PosterStorageService } from './poster-storage.service';
+import { SeatsRepository } from './seats.repository';
 import { CreateVenueDto } from './dto/create-venue.dto';
 import { UpdateVenueDto } from './dto/update-venue.dto';
 import { VenueDto } from './dto/venue.dto';
+import { VenueStatsDto } from './dto/venue-stats.dto';
 import { VenuesRepository } from './venues.repository';
 
 @Controller('venues')
@@ -33,6 +35,7 @@ export class VenuesController {
   constructor(
     private readonly venuesRepository: VenuesRepository,
     private readonly posterStorageService: PosterStorageService,
+    private readonly seatsRepository: SeatsRepository,
   ) {}
 
   @Post()
@@ -114,5 +117,25 @@ export class VenuesController {
     );
 
     return this.venuesRepository.update(id, { imageUrl });
+  }
+
+  @Get(':id/stats')
+  @Roles(Role.organizer)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: VenueStatsDto })
+  async getStats(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<VenueStatsDto> {
+    const venue = await this.venuesRepository.findById(id);
+    if (!venue || venue.organizerId !== req.user!.sub) {
+      throw new NotFoundException();
+    }
+
+    const result = await this.seatsRepository.aggregateByVenueId(id);
+    return {
+      ticketsSold: result._count,
+      revenue: result._sum.price ?? 0,
+    };
   }
 }

@@ -27,6 +27,21 @@ export default defineConfig({
               useSuspenseQuery: true,
             },
           },
+          VenuesController_findOne: {
+            query: {
+              useSuspenseQuery: true,
+            },
+          },
+          VenuesController_getStats: {
+            query: {
+              useSuspenseQuery: true,
+            },
+          },
+          EventsController_listMyEvents: {
+            query: {
+              useSuspenseQuery: true,
+            },
+          },
         },
       },
     },

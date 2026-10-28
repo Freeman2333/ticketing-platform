@@ -74,3 +74,12 @@ export const VenuesControllerUploadImageResponse = zod.object({
   "imageUrl": zod.string().nullable()
 })
 
+export const VenuesControllerGetStatsParams = zod.object({
+  "id": zod.string()
+})
+
+export const VenuesControllerGetStatsResponse = zod.object({
+  "ticketsSold": zod.number(),
+  "revenue": zod.number()
+})
+

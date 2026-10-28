@@ -27,6 +27,14 @@ export class SeatsRepository {
     });
   }
 
+  aggregateByVenueId(venueId: string) {
+    return this.prisma.seat.aggregate({
+      where: { event: { venueId }, status: 'booked' },
+      _count: true,
+      _sum: { price: true },
+    });
+  }
+
   async holdIfAvailable(eventId: string, seatIds: string[]): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
       const result = await tx.seat.updateMany({

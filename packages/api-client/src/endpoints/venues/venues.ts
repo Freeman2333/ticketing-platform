@@ -31,6 +31,7 @@ import type {
   CreateVenueDto,
   UpdateVenueDto,
   VenueDto,
+  VenueStatsDto,
   VenuesControllerUploadImageBody
 } from '../../models';
 
@@ -339,6 +340,58 @@ export function useVenuesControllerFindOne<TData = Awaited<ReturnType<typeof ven
 
 
 
+export const getVenuesControllerFindOneSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getVenuesControllerFindOneQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesControllerFindOne>>> = ({ signal }) => venuesControllerFindOne(id, signal);
+
+
+
+
+
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+}
+
+export type VenuesControllerFindOneSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof venuesControllerFindOne>>>
+export type VenuesControllerFindOneSuspenseQueryError = unknown
+
+
+export function useVenuesControllerFindOneSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
+ id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useVenuesControllerFindOneSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useVenuesControllerFindOneSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useVenuesControllerFindOneSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getVenuesControllerFindOneSuspenseQueryOptions(id,options)
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 export const venuesControllerUpdate = (
     id: string,
     updateVenueDto: UpdateVenueDto,
@@ -467,3 +520,141 @@ const {mutation: mutationOptions} = options ?
       > => {
       return useMutation(getVenuesControllerUploadImageMutationOptions(options), queryClient);
     }
+    export const venuesControllerGetStats = (
+    id: string,
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<VenueStatsDto>(
+      {url: `/api/venues/${id}/stats`, method: 'GET', signal
+    },
+      );
+    }
+
+
+
+
+export const getVenuesControllerGetStatsQueryKey = (id: string,) => {
+    return [
+    `/api/venues/${id}/stats`
+    ] as const;
+    }
+
+
+export const getVenuesControllerGetStatsQueryOptions = <TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getVenuesControllerGetStatsQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesControllerGetStats>>> = ({ signal }) => venuesControllerGetStats(id, signal);
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type VenuesControllerGetStatsQueryResult = NonNullable<Awaited<ReturnType<typeof venuesControllerGetStats>>>
+export type VenuesControllerGetStatsQueryError = unknown
+
+
+export function useVenuesControllerGetStats<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof venuesControllerGetStats>>,
+          TError,
+          Awaited<ReturnType<typeof venuesControllerGetStats>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useVenuesControllerGetStats<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof venuesControllerGetStats>>,
+          TError,
+          Awaited<ReturnType<typeof venuesControllerGetStats>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useVenuesControllerGetStats<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useVenuesControllerGetStats<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getVenuesControllerGetStatsQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export const getVenuesControllerGetStatsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getVenuesControllerGetStatsQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesControllerGetStats>>> = ({ signal }) => venuesControllerGetStats(id, signal);
+
+
+
+
+
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+}
+
+export type VenuesControllerGetStatsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof venuesControllerGetStats>>>
+export type VenuesControllerGetStatsSuspenseQueryError = unknown
+
+
+export function useVenuesControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
+ id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useVenuesControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useVenuesControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useVenuesControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getVenuesControllerGetStatsSuspenseQueryOptions(id,options)
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+

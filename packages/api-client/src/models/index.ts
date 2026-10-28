@@ -36,3 +36,4 @@ export * from './userDtoRole.js';
 export * from './venueDto.js';
 export * from './venueDtoImageUrl.js';
 export * from './venuesControllerUploadImageBody.js';
+export * from './venueStatsDto.js';

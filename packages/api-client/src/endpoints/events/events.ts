@@ -5,10 +5,12 @@
  * OpenAPI spec version: 0.1
  */
 import {
+  queryOptions as queryOptionsBuilder,
   useInfiniteQuery,
   useMutation,
   useQuery,
-  useSuspenseInfiniteQuery
+  useSuspenseInfiniteQuery,
+  useSuspenseQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
@@ -28,7 +30,9 @@ import type {
   UseQueryOptions,
   UseQueryResult,
   UseSuspenseInfiniteQueryOptions,
-  UseSuspenseInfiniteQueryResult
+  UseSuspenseInfiniteQueryResult,
+  UseSuspenseQueryOptions,
+  UseSuspenseQueryResult
 } from '@tanstack/react-query';
 
 import type {
@@ -410,6 +414,58 @@ export function useEventsControllerListMyEvents<TData = Awaited<ReturnType<typeo
   const queryOptions = getEventsControllerListMyEventsQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export const getEventsControllerListMyEventsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>( options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListMyEventsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListMyEvents>>> = ({ signal }) => eventsControllerListMyEvents(signal);
+
+
+
+
+
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+}
+
+export type EventsControllerListMyEventsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListMyEvents>>>
+export type EventsControllerListMyEventsSuspenseQueryError = unknown
+
+
+export function useEventsControllerListMyEventsSuspense<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
+  options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListMyEventsSuspense<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
+  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListMyEventsSuspense<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
+  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerListMyEventsSuspense<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
+  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerListMyEventsSuspenseQueryOptions(options)
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
