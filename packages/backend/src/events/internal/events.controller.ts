@@ -68,9 +68,18 @@ export class EventsController {
   @Get('mine')
   @Roles(Role.organizer)
   @ApiBearerAuth()
-  @ApiOkResponse({ type: EventDto, isArray: true })
-  listMyEvents(@Req() req: Request): Promise<EventDto[]> {
-    return this.eventsService.listMyEvents(req.user!.sub);
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiOkResponse({ type: EventListDto })
+  listMyEvents(
+    @Req() req: Request,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ): Promise<EventListDto> {
+    return this.eventsService.listMyEvents(req.user!.sub, {
+      page: page ? Number(page) : undefined,
+      limit: limit ? Number(limit) : undefined,
+    });
   }
 
   @Get('recently-viewed')

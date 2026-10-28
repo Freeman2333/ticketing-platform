@@ -8,6 +8,7 @@ import { EventsApi } from '../public/events-api.interface';
 import { EventViewsRepository } from './event-views.repository';
 import { EventsGateway } from './events.gateway';
 import { EventsRepository } from './events.repository';
+import { paginate } from './paginate';
 import { SeatLockService } from './seat-lock.service';
 import { SeatsRepository } from './seats.repository';
 import { RedisService } from '../../redis/redis.service';
@@ -52,21 +53,30 @@ export class EventsService implements EventsApi {
     const cached = await this.redis.get(cacheKey);
     if (cached) return JSON.parse(cached);
 
-    const events = await this.eventsRepository.findMany(
-      filter?.title,
-      (page - 1) * limit,
-      limit + 1,
+    const { items: events, hasMore } = await paginate(
+      (skip, take) => this.eventsRepository.findMany(filter?.title, skip, take),
+      page,
+      limit,
     );
-    const hasMore = events.length > limit;
-    const items = hasMore ? events.slice(0, limit) : events;
-    const result = { items: items.map((event) => this.toEventDto(event)), hasMore };
+    const result = { items: events.map((event) => this.toEventDto(event)), hasMore };
     await this.redis.set(cacheKey, JSON.stringify(result), 'EX', CACHE_TTL_SECONDS);
     return result;
   }
 
-  async listMyEvents(organizerId: string): Promise<EventDto[]> {
-    const events = await this.eventsRepository.findByOrganizerId(organizerId);
-    return events.map((event) => this.toEventDto(event));
+  async listMyEvents(
+    organizerId: string,
+    filter?: { page?: number; limit?: number },
+  ): Promise<EventListDto> {
+    const limit = filter?.limit ?? DEFAULT_LIMIT;
+    const page = filter?.page ?? DEFAULT_PAGE;
+
+    const { items, hasMore } = await paginate(
+      (skip, take) =>
+        this.eventsRepository.findByOrganizerId(organizerId, skip, take),
+      page,
+      limit,
+    );
+    return { items: items.map((event) => this.toEventDto(event)), hasMore };
   }
 
   async getSeatAvailability(eventId: string): Promise<SeatDto[]> {
