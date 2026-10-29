@@ -23,4 +23,12 @@ export class VenuesRepository {
   ) {
     return this.prisma.venue.update({ where: { id }, data });
   }
+
+  countEventsByVenueId(venueId: string) {
+    return this.prisma.event.count({ where: { venueId } });
+  }
+
+  delete(id: string) {
+    return this.prisma.venue.delete({ where: { id } });
+  }
 }

@@ -1,7 +1,11 @@
 import {
   Body,
+  ConflictException,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Patch,
@@ -117,6 +121,24 @@ export class VenuesController {
     );
 
     return this.venuesRepository.update(id, { imageUrl });
+  }
+
+  @Delete(':id')
+  @Roles(Role.organizer)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string, @Req() req: Request): Promise<void> {
+    const venue = await this.venuesRepository.findById(id);
+    if (!venue || venue.organizerId !== req.user!.sub) {
+      throw new NotFoundException();
+    }
+
+    const eventCount = await this.venuesRepository.countEventsByVenueId(id);
+    if (eventCount > 0) {
+      throw new ConflictException('Venue still has events');
+    }
+
+    await this.venuesRepository.delete(id);
   }
 
   @Get(':id/stats')

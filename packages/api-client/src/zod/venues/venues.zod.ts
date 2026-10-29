@@ -58,6 +58,12 @@ export const VenuesControllerUpdateResponse = zod.object({
   "imageUrl": zod.string().nullable()
 })
 
+export const VenuesControllerRemoveParams = zod.object({
+  "id": zod.string()
+})
+
+export const VenuesControllerRemoveResponse = zod.void()
+
 export const VenuesControllerUploadImageParams = zod.object({
   "id": zod.string()
 })

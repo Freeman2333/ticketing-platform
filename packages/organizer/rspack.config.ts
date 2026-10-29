@@ -84,6 +84,7 @@ export default defineConfig((_env, argv) => {
           'react-dom': { singleton: true },
           'react-router-dom': { singleton: true },
           '@tanstack/react-query': { singleton: true },
+          sonner: { singleton: true },
           '@ticketing/api-client': {},
           '@ticketing/auth-client': { singleton: true },
           '@ticketing/ui': {},

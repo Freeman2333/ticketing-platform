@@ -454,6 +454,65 @@ const {mutation: mutationOptions} = options ?
       > => {
       return useMutation(getVenuesControllerUpdateMutationOptions(options), queryClient);
     }
+    export const venuesControllerRemove = (
+    id: string,
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<void>(
+      {url: `/api/venues/${id}`, method: 'DELETE', signal
+    },
+      );
+    }
+
+
+
+
+export const getVenuesControllerRemoveMutationKey = () => ['venuesControllerRemove'] as const;
+
+export const getVenuesControllerRemoveMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerRemove>>, TError,VenuesControllerRemoveMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof venuesControllerRemove>>, TError,VenuesControllerRemoveMutationVariables, TContext> => {
+
+const mutationKey = getVenuesControllerRemoveMutationKey();
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof venuesControllerRemove>>, VenuesControllerRemoveMutationVariables> = (props) => {
+          const {id} = props ?? {};
+
+          return  venuesControllerRemove(id,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type VenuesControllerRemoveMutationResult = NonNullable<Awaited<ReturnType<typeof venuesControllerRemove>>>
+
+    export type VenuesControllerRemoveMutationError = unknown
+    export type VenuesControllerRemoveMutationVariables = {id: string}
+
+    export const useVenuesControllerRemove = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerRemove>>, TError,VenuesControllerRemoveMutationVariables, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof venuesControllerRemove>>,
+        TError,
+        VenuesControllerRemoveMutationVariables,
+        TContext
+      > => {
+      return useMutation(getVenuesControllerRemoveMutationOptions(options), queryClient);
+    }
     export const venuesControllerUploadImage = (
     id: string,
     venuesControllerUploadImageBody: VenuesControllerUploadImageBody,

@@ -10,9 +10,11 @@ import {
   Button,
   Card,
   CardContent,
+  ConfirmDialog,
   ErrorBoundary,
   Skeleton,
 } from '@ticketing/ui';
+import { useDeleteVenue } from './hooks/useDeleteVenue';
 import { useMyEvents } from '../hooks/useMyEvents';
 import { EventListItem } from '../components/EventListItem';
 
@@ -35,10 +37,11 @@ function VenueDetailsContent({ id }: { id: string }) {
     isFetchingNextPage,
     fetchNextPage,
   } = useMyEvents({ venueId: id });
-  
+  const { deleteVenue, isPending: isDeleting } = useDeleteVenue();
+
   const userId = useUserId();
   const isOwner = venue.organizerId === userId;
-  
+
   return (
     <div className="flex flex-col gap-6">
       <div className="bg-muted flex h-48 w-full items-center justify-center overflow-hidden rounded-md">
@@ -59,9 +62,20 @@ function VenueDetailsContent({ id }: { id: string }) {
           <p className="text-muted-foreground">{venue.address}</p>
         </div>
         {isOwner && (
-          <Button variant="outline" asChild>
-            <Link to={`/organizer/venues/${venue.id}/edit`}>Edit</Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" asChild>
+              <Link to={`/organizer/venues/${venue.id}/edit`}>Edit</Link>
+            </Button>
+            <ConfirmDialog
+              trigger={<Button variant="destructive">Delete</Button>}
+              title="Delete venue?"
+              description={`This will permanently delete "${venue.name}". This cannot be undone.`}
+              confirmLabel="Delete"
+              variant="destructive"
+              isLoading={isDeleting}
+              onConfirm={() => deleteVenue(id)}
+            />
+          </div>
         )}
       </div>
 
