@@ -9,6 +9,9 @@ export class SeatDto {
   eventId!: string;
 
   @ApiProperty()
+  seatTypeId!: string;
+
+  @ApiProperty()
   label!: string;
 
   @ApiProperty({ enum: SeatStatus })

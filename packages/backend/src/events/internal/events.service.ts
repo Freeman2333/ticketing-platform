@@ -1,5 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { Event, Seat } from '../../generated/prisma/client';
+import { Prisma } from '../../generated/prisma/client';
+import type { Event, Seat, SeatType } from '../../generated/prisma/client';
 import { EventDto } from '../public/dto/event.dto';
 import { EventListDto } from '../public/dto/event-list.dto';
 import { RecentlyViewedDto } from '../public/dto/recently-viewed.dto';
@@ -10,6 +11,7 @@ import { EventsGateway } from './events.gateway';
 import { EventsRepository } from './events.repository';
 import { paginate } from './paginate';
 import { SeatLockService } from './seat-lock.service';
+import { SeatTypesRepository } from './seat-types.repository';
 import { SeatsRepository } from './seats.repository';
 import { RedisService } from '../../redis/redis.service';
 
@@ -23,6 +25,7 @@ export class EventsService implements EventsApi {
   constructor(
     private readonly eventsRepository: EventsRepository,
     private readonly seatsRepository: SeatsRepository,
+    private readonly seatTypesRepository: SeatTypesRepository,
     private readonly eventViewsRepository: EventViewsRepository,
     private readonly eventsGateway: EventsGateway,
     private readonly seatLockService: SeatLockService,
@@ -122,21 +125,20 @@ export class EventsService implements EventsApi {
   async createSeats(
     eventId: string,
     rows: { label: string; count: number; price: number }[],
-  ): Promise<SeatDto[]> {
-    const existingSeats = await this.seatsRepository.findByEventId(eventId);
-    if (existingSeats.length > 0) {
-      throw new ConflictException('Event already has seats');
+  ): Promise<SeatType[]> {
+    try {
+      return await this.seatTypesRepository.createMany(eventId, rows);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          'A ticket type with that label already exists for this event',
+        );
+      }
+      throw error;
     }
-
-    const seatsToCreate = rows.flatMap((row) =>
-      Array.from({ length: row.count }, (_, i) => ({
-        label: `${row.label}${i + 1}`,
-        price: row.price,
-      })),
-    );
-
-    const seats = await this.seatsRepository.createMany(eventId, seatsToCreate);
-    return seats.map((seat) => this.toSeatDto(seat));
   }
 
   async recordView(
@@ -215,13 +217,14 @@ export class EventsService implements EventsApi {
     };
   }
 
-  private toSeatDto(seat: Seat): SeatDto {
+  private toSeatDto(seat: Seat & { seatType: SeatType }): SeatDto {
     return {
       id: seat.id,
       eventId: seat.eventId,
+      seatTypeId: seat.seatTypeId,
       label: seat.label,
       status: seat.status,
-      price: seat.price,
+      price: seat.seatType.price,
     };
   }
 }

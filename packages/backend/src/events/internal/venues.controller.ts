@@ -154,10 +154,9 @@ export class VenuesController {
       throw new NotFoundException();
     }
 
-    const result = await this.seatsRepository.aggregateByVenueId(id);
-    return {
-      ticketsSold: result._count,
-      revenue: result._sum.price ?? 0,
-    };
+    const ticketsSold = await this.seatsRepository.countBookedByVenueId(id);
+    // revenue placeholder until the Part E read-model lands - no longer
+    // computable from Seat, which no longer stores price.
+    return { ticketsSold, revenue: 0 };
   }
 }

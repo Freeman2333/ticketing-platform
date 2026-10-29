@@ -6,6 +6,7 @@ import { EventsRepository } from './internal/events.repository';
 import { EventsService } from './internal/events.service';
 import { PosterStorageService } from './internal/poster-storage.service';
 import { SeatLockService } from './internal/seat-lock.service';
+import { SeatTypesRepository } from './internal/seat-types.repository';
 import { SeatsRepository } from './internal/seats.repository';
 import { VenuesController } from './internal/venues.controller';
 import { VenuesRepository } from './internal/venues.repository';
@@ -20,6 +21,7 @@ import { EVENTS_API } from './public/events-api.interface';
     EventViewsRepository,
     PosterStorageService,
     SeatLockService,
+    SeatTypesRepository,
     SeatsRepository,
     VenuesRepository,
     { provide: EVENTS_API, useExisting: EventsService },

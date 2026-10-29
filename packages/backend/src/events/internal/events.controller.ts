@@ -33,6 +33,7 @@ import { RecentlyViewedDto } from '../public/dto/recently-viewed.dto';
 import { SeatDto } from '../public/dto/seat.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { CreateSeatsDto } from './dto/create-seats.dto';
+import { SeatTypeDto } from './dto/seat-type.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventsService } from './events.service';
 import { PosterStorageService } from './poster-storage.service';
@@ -118,12 +119,12 @@ export class EventsController {
   @Post(':id/seats')
   @Roles(Role.organizer)
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: SeatDto, isArray: true })
+  @ApiCreatedResponse({ type: SeatTypeDto, isArray: true })
   async createSeats(
     @Param('id') id: string,
     @Body() dto: CreateSeatsDto,
     @Req() req: Request,
-  ): Promise<SeatDto[]> {
+  ): Promise<SeatTypeDto[]> {
     const event = await this.eventsService.getEvent(id);
     if (!event) throw new NotFoundException();
 

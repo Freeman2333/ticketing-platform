@@ -7,15 +7,18 @@ export class SeatsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   findByEventId(eventId: string) {
-    return this.prisma.seat.findMany({ where: { eventId } });
+    return this.prisma.seat.findMany({
+      where: { eventId },
+      include: { seatType: true },
+    });
   }
 
-  createMany(eventId: string, seats: { label: string; price: number }[]) {
+  createMany(eventId: string, seatTypeId: string, seats: { label: string }[]) {
     return this.prisma.seat.createManyAndReturn({
       data: seats.map((seat) => ({
         eventId,
+        seatTypeId,
         label: seat.label,
-        price: seat.price,
       })),
     });
   }
@@ -27,11 +30,9 @@ export class SeatsRepository {
     });
   }
 
-  aggregateByVenueId(venueId: string) {
-    return this.prisma.seat.aggregate({
+  countBookedByVenueId(venueId: string) {
+    return this.prisma.seat.count({
       where: { event: { venueId }, status: 'booked' },
-      _count: true,
-      _sum: { price: true },
     });
   }
 

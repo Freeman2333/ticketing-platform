@@ -68,9 +68,10 @@ model Event {
   startsAt    DateTime @map("starts_at")
   posterUrl   String?  @map("poster_url")
 
-  venue Venue  @relation(fields: [venueId], references: [id])
-  seats Seat[]
-  views EventView[]
+  venue     Venue      @relation(fields: [venueId], references: [id])
+  seats     Seat[]
+  seatTypes SeatType[]
+  views     EventView[]
 
   @@map("events")
   @@schema("events")
@@ -84,14 +85,29 @@ enum SeatStatus {
   @@schema("events")
 }
 
-model Seat {
-  id      String     @id @default(uuid())
-  eventId String     @map("event_id")
+model SeatType {
+  id      String @id @default(uuid())
+  eventId String @map("event_id")
   label   String
-  status  SeatStatus @default(available)
   price   Int
 
-  event Event @relation(fields: [eventId], references: [id])
+  event Event  @relation(fields: [eventId], references: [id])
+  seats Seat[]
+
+  @@unique([eventId, label])
+  @@map("seat_types")
+  @@schema("events")
+}
+
+model Seat {
+  id         String     @id @default(uuid())
+  eventId    String     @map("event_id")
+  seatTypeId String     @map("seat_type_id")
+  label      String
+  status     SeatStatus @default(available)
+
+  event    Event    @relation(fields: [eventId], references: [id])
+  seatType SeatType @relation(fields: [seatTypeId], references: [id])
 
   @@index([eventId, status])
   @@map("seats")
