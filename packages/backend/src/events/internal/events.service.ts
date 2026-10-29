@@ -65,14 +65,19 @@ export class EventsService implements EventsApi {
 
   async listMyEvents(
     organizerId: string,
-    filter?: { page?: number; limit?: number },
+    filter?: { page?: number; limit?: number; venueId?: string },
   ): Promise<EventListDto> {
     const limit = filter?.limit ?? DEFAULT_LIMIT;
     const page = filter?.page ?? DEFAULT_PAGE;
 
     const { items, hasMore } = await paginate(
       (skip, take) =>
-        this.eventsRepository.findByOrganizerId(organizerId, skip, take),
+        this.eventsRepository.findByOrganizerId(
+          organizerId,
+          skip,
+          take,
+          filter?.venueId,
+        ),
       page,
       limit,
     );

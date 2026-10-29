@@ -70,15 +70,18 @@ export class EventsController {
   @ApiBearerAuth()
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'venueId', required: false, type: String })
   @ApiOkResponse({ type: EventListDto })
   listMyEvents(
     @Req() req: Request,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('venueId') venueId?: string,
   ): Promise<EventListDto> {
     return this.eventsService.listMyEvents(req.user!.sub, {
       page: page ? Number(page) : undefined,
       limit: limit ? Number(limit) : undefined,
+      venueId,
     });
   }
 

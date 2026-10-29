@@ -1,12 +1,13 @@
 import { Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import { useEventsControllerListMyEventsSuspense } from '@ticketing/api-client';
 import { Button, ErrorBoundary } from '@ticketing/ui';
+import { useMyEvents } from '../hooks/useMyEvents';
 import {
   EventListItem,
   EventListItemSkeleton,
 } from '../components/EventListItem';
 
+const PAGE_SIZE = 10;
 const SKELETON_ROW_COUNT = 5;
 
 function SkeletonList() {
@@ -20,7 +21,8 @@ function SkeletonList() {
 }
 
 function EventsContent() {
-  const { data: events } = useEventsControllerListMyEventsSuspense();
+  const { events, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useMyEvents({ limit: PAGE_SIZE });
 
   if (events.length === 0) {
     return (
@@ -31,11 +33,24 @@ function EventsContent() {
   }
 
   return (
-    <ul className="divide-y rounded-md border">
-      {events.map((event) => (
-        <EventListItem key={event.id} event={event} />
-      ))}
-    </ul>
+    <>
+      <ul className="divide-y rounded-md border">
+        {events.map((event) => (
+          <EventListItem key={event.id} event={event} />
+        ))}
+      </ul>
+      {hasNextPage && (
+        <div className="mt-4 flex justify-center">
+          <Button
+            variant="outline"
+            disabled={isFetchingNextPage}
+            onClick={() => fetchNextPage()}
+          >
+            {isFetchingNextPage ? 'Loading...' : 'Load more'}
+          </Button>
+        </div>
+      )}
+    </>
   );
 }
 

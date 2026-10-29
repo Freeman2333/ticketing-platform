@@ -3,7 +3,6 @@ import { Link, useParams } from 'react-router-dom';
 import { ImageIcon } from 'lucide-react';
 import { useUserId } from '@ticketing/auth-client';
 import {
-  useEventsControllerListMyEventsSuspense,
   useVenuesControllerFindOneSuspense,
   useVenuesControllerGetStatsSuspense,
 } from '@ticketing/api-client';
@@ -14,6 +13,7 @@ import {
   ErrorBoundary,
   Skeleton,
 } from '@ticketing/ui';
+import { useMyEvents } from '../hooks/useMyEvents';
 import { EventListItem } from '../components/EventListItem';
 
 function VenueDetailsSkeleton() {
@@ -29,9 +29,12 @@ function VenueDetailsSkeleton() {
 function VenueDetailsContent({ id }: { id: string }) {
   const { data: venue } = useVenuesControllerFindOneSuspense(id);
   const { data: stats } = useVenuesControllerGetStatsSuspense(id);
-  const { data: venueEvents } = useEventsControllerListMyEventsSuspense({
-    query: { select: (events) => events.filter((event) => event.venueId === id) },
-  });
+  const {
+    events: venueEvents,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useMyEvents({ venueId: id });
   
   const userId = useUserId();
   const isOwner = venue.organizerId === userId;
@@ -84,11 +87,24 @@ function VenueDetailsContent({ id }: { id: string }) {
             No events at this venue yet.
           </p>
         ) : (
-          <ul className="divide-y rounded-md border">
-            {venueEvents.map((event) => (
-              <EventListItem key={event.id} event={event} />
-            ))}
-          </ul>
+          <>
+            <ul className="divide-y rounded-md border">
+              {venueEvents.map((event) => (
+                <EventListItem key={event.id} event={event} />
+              ))}
+            </ul>
+            {hasNextPage && (
+              <div className="mt-4 flex justify-center">
+                <Button
+                  variant="outline"
+                  disabled={isFetchingNextPage}
+                  onClick={() => fetchNextPage()}
+                >
+                  {isFetchingNextPage ? 'Loading...' : 'Load more'}
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

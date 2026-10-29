@@ -20,9 +20,14 @@ export class EventsRepository {
     });
   }
 
-  findByOrganizerId(organizerId: string, skip: number, take: number) {
+  findByOrganizerId(
+    organizerId: string,
+    skip: number,
+    take: number,
+    venueId?: string,
+  ) {
     return this.prisma.event.findMany({
-      where: { venue: { organizerId } },
+      where: { venue: { organizerId }, venueId },
       orderBy: [{ startsAt: 'asc' }, { id: 'asc' }],
       skip,
       take,
