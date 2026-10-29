@@ -1,11 +1,17 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client';
-import type { Event, Seat, SeatType } from '../../generated/prisma/client';
+import type {
+  Event,
+  Seat,
+  SeatStatus,
+  SeatType,
+} from '../../generated/prisma/client';
 import { EventDto } from '../public/dto/event.dto';
 import { EventListDto } from '../public/dto/event-list.dto';
 import { RecentlyViewedDto } from '../public/dto/recently-viewed.dto';
 import { SeatDto } from '../public/dto/seat.dto';
 import { EventsApi } from '../public/events-api.interface';
+import { SeatTypeWithCountsDto } from './dto/seat-type-with-counts.dto';
 import { EventViewsRepository } from './event-views.repository';
 import { EventsGateway } from './events.gateway';
 import { EventsRepository } from './events.repository';
@@ -141,6 +147,11 @@ export class EventsService implements EventsApi {
     }
   }
 
+  async listSeatTypes(eventId: string): Promise<SeatTypeWithCountsDto[]> {
+    const seatTypes = await this.seatTypesRepository.findByEventId(eventId);
+    return seatTypes.map((seatType) => this.toSeatTypeWithCountsDto(seatType));
+  }
+
   async recordView(
     eventId: string,
     identity: { userId?: string; anonId?: string },
@@ -214,6 +225,23 @@ export class EventsService implements EventsApi {
       description: event.description,
       startsAt: event.startsAt,
       posterUrl: event.posterUrl,
+    };
+  }
+
+  private toSeatTypeWithCountsDto(
+    seatType: SeatType & { seats: { status: SeatStatus }[] },
+  ): SeatTypeWithCountsDto {
+    const counts = { available: 0, held: 0, booked: 0 };
+    for (const seat of seatType.seats) counts[seat.status]++;
+
+    return {
+      id: seatType.id,
+      eventId: seatType.eventId,
+      label: seatType.label,
+      price: seatType.price,
+      availableCount: counts.available,
+      heldCount: counts.held,
+      bookedCount: counts.booked,
     };
   }
 

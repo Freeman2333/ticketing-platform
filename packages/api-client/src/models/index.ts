@@ -30,6 +30,8 @@ export * from './registerDto.js';
 export * from './registerDtoRole.js';
 export * from './seatDto.js';
 export * from './seatDtoStatus.js';
+export * from './seatTypeDto.js';
+export * from './seatTypeWithCountsDto.js';
 export * from './updateEventDto.js';
 export * from './updateVenueDto.js';
 export * from './userDto.js';

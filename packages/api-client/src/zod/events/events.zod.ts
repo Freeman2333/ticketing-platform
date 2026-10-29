@@ -115,6 +115,7 @@ export const EventsControllerGetSeatsParams = zod.object({
 export const EventsControllerGetSeatsResponseItem = zod.object({
   "id": zod.string(),
   "eventId": zod.string(),
+  "seatTypeId": zod.string(),
   "label": zod.string(),
   "status": zod.enum(['available', 'held', 'booked']),
   "price": zod.number()
@@ -137,10 +138,24 @@ export const EventsControllerCreateSeatsResponseItem = zod.object({
   "id": zod.string(),
   "eventId": zod.string(),
   "label": zod.string(),
-  "status": zod.enum(['available', 'held', 'booked']),
   "price": zod.number()
 })
 export const EventsControllerCreateSeatsResponse = zod.array(EventsControllerCreateSeatsResponseItem)
+
+export const EventsControllerListSeatTypesParams = zod.object({
+  "id": zod.string()
+})
+
+export const EventsControllerListSeatTypesResponseItem = zod.object({
+  "id": zod.string(),
+  "eventId": zod.string(),
+  "label": zod.string(),
+  "price": zod.number(),
+  "availableCount": zod.number(),
+  "heldCount": zod.number(),
+  "bookedCount": zod.number()
+})
+export const EventsControllerListSeatTypesResponse = zod.array(EventsControllerListSeatTypesResponseItem)
 
 export const EventsControllerRecordViewParams = zod.object({
   "id": zod.string()

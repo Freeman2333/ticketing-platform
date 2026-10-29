@@ -9,6 +9,7 @@ import type { SeatDtoStatus } from './seatDtoStatus.js';
 export interface SeatDto {
   id: string;
   eventId: string;
+  seatTypeId: string;
   label: string;
   status: SeatDtoStatus;
   price: number;

@@ -41,6 +41,8 @@ import type {
   EventsControllerUploadPosterBody,
   RecentlyViewedDto,
   SeatDto,
+  SeatTypeDto,
+  SeatTypeWithCountsDto,
   UpdateEventDto
 } from '../../models';
 
@@ -870,7 +872,7 @@ export const eventsControllerCreateSeats = (
 ) => {
 
 
-      return customInstance<SeatDto[]>(
+      return customInstance<SeatTypeDto[]>(
       {url: `/api/events/${id}/seats`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: createSeatsDto, signal
@@ -925,7 +927,93 @@ const {mutation: mutationOptions} = options ?
       > => {
       return useMutation(getEventsControllerCreateSeatsMutationOptions(options), queryClient);
     }
-    export const eventsControllerRecordView = (
+    export const eventsControllerListSeatTypes = (
+    id: string,
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<SeatTypeWithCountsDto[]>(
+      {url: `/api/events/${id}/seat-types`, method: 'GET', signal
+    },
+      );
+    }
+
+
+
+
+export const getEventsControllerListSeatTypesQueryKey = (id: string,) => {
+    return [
+    `/api/events/${id}/seat-types`
+    ] as const;
+    }
+
+
+export const getEventsControllerListSeatTypesQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListSeatTypesQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>> = ({ signal }) => eventsControllerListSeatTypes(id, signal);
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type EventsControllerListSeatTypesQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>>
+export type EventsControllerListSeatTypesQueryError = unknown
+
+
+export function useEventsControllerListSeatTypes<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerListSeatTypes>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerListSeatTypes>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListSeatTypes<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerListSeatTypes>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerListSeatTypes>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListSeatTypes<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerListSeatTypes<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerListSeatTypesQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export const eventsControllerRecordView = (
     id: string,
  signal?: AbortSignal
 ) => {

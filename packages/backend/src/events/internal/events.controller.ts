@@ -33,6 +33,7 @@ import { RecentlyViewedDto } from '../public/dto/recently-viewed.dto';
 import { SeatDto } from '../public/dto/seat.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { CreateSeatsDto } from './dto/create-seats.dto';
+import { SeatTypeWithCountsDto } from './dto/seat-type-with-counts.dto';
 import { SeatTypeDto } from './dto/seat-type.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventsService } from './events.service';
@@ -134,6 +135,25 @@ export class EventsController {
     }
 
     return this.eventsService.createSeats(id, dto.rows);
+  }
+
+  @Get(':id/seat-types')
+  @Roles(Role.organizer)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: SeatTypeWithCountsDto, isArray: true })
+  async listSeatTypes(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<SeatTypeWithCountsDto[]> {
+    const event = await this.eventsService.getEvent(id);
+    if (!event) throw new NotFoundException();
+
+    const venue = await this.venuesRepository.findById(event.venueId);
+    if (!venue || venue.organizerId !== req.user!.sub) {
+      throw new NotFoundException();
+    }
+
+    return this.eventsService.listSeatTypes(id);
   }
 
   @Post(':id/view')
