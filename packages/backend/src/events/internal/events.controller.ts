@@ -36,7 +36,9 @@ import { CreateSeatsDto } from './dto/create-seats.dto';
 import { SeatTypeWithCountsDto } from './dto/seat-type-with-counts.dto';
 import { SeatTypeDto } from './dto/seat-type.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { UpdateSeatTypeDto } from './dto/update-seat-type.dto';
 import { EventsService } from './events.service';
+import { SeatTypesRepository } from './seat-types.repository';
 import { PosterStorageService } from './poster-storage.service';
 import { processPosterImage } from './process-poster-image';
 import { VenuesRepository } from './venues.repository';
@@ -47,6 +49,7 @@ export class EventsController {
     private readonly eventsService: EventsService,
     private readonly venuesRepository: VenuesRepository,
     private readonly posterStorageService: PosterStorageService,
+    private readonly seatTypesRepository: SeatTypesRepository,
   ) {}
 
   @Get()
@@ -154,6 +157,32 @@ export class EventsController {
     }
 
     return this.eventsService.listSeatTypes(id);
+  }
+
+  @Patch(':id/seat-types/:seatTypeId')
+  @Roles(Role.organizer)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: SeatTypeDto })
+  async updateSeatType(
+    @Param('id') id: string,
+    @Param('seatTypeId') seatTypeId: string,
+    @Body() dto: UpdateSeatTypeDto,
+    @Req() req: Request,
+  ): Promise<SeatTypeDto> {
+    const event = await this.eventsService.getEvent(id);
+    if (!event) throw new NotFoundException();
+
+    const venue = await this.venuesRepository.findById(event.venueId);
+    if (!venue || venue.organizerId !== req.user!.sub) {
+      throw new NotFoundException();
+    }
+
+    const seatType = await this.seatTypesRepository.findById(seatTypeId);
+    if (!seatType || seatType.eventId !== id) {
+      throw new NotFoundException();
+    }
+
+    return this.eventsService.updateSeatTypePrice(seatTypeId, dto.price);
   }
 
   @Post(':id/view')

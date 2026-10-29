@@ -152,6 +152,13 @@ export class EventsService implements EventsApi {
     return seatTypes.map((seatType) => this.toSeatTypeWithCountsDto(seatType));
   }
 
+  async updateSeatTypePrice(
+    seatTypeId: string,
+    price: number,
+  ): Promise<SeatType> {
+    return this.seatTypesRepository.updatePrice(seatTypeId, price);
+  }
+
   async recordView(
     eventId: string,
     identity: { userId?: string; anonId?: string },
