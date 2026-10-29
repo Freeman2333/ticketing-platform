@@ -33,6 +33,7 @@ export * from './seatDtoStatus.js';
 export * from './seatTypeDto.js';
 export * from './seatTypeWithCountsDto.js';
 export * from './updateEventDto.js';
+export * from './updateSeatTypeDto.js';
 export * from './updateVenueDto.js';
 export * from './userDto.js';
 export * from './userDtoRole.js';

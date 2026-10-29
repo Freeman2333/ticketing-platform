@@ -157,6 +157,22 @@ export const EventsControllerListSeatTypesResponseItem = zod.object({
 })
 export const EventsControllerListSeatTypesResponse = zod.array(EventsControllerListSeatTypesResponseItem)
 
+export const EventsControllerUpdateSeatTypeParams = zod.object({
+  "id": zod.string(),
+  "seatTypeId": zod.string()
+})
+
+export const EventsControllerUpdateSeatTypeBody = zod.object({
+  "price": zod.number()
+})
+
+export const EventsControllerUpdateSeatTypeResponse = zod.object({
+  "id": zod.string(),
+  "eventId": zod.string(),
+  "label": zod.string(),
+  "price": zod.number()
+})
+
 export const EventsControllerRecordViewParams = zod.object({
   "id": zod.string()
 })

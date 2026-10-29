@@ -43,7 +43,8 @@ import type {
   SeatDto,
   SeatTypeDto,
   SeatTypeWithCountsDto,
-  UpdateEventDto
+  UpdateEventDto,
+  UpdateSeatTypeDto
 } from '../../models';
 
 import { customInstance } from '../../mutator.js';
@@ -1013,7 +1014,70 @@ export function useEventsControllerListSeatTypes<TData = Awaited<ReturnType<type
 
 
 
-export const eventsControllerRecordView = (
+export const eventsControllerUpdateSeatType = (
+    id: string,
+    seatTypeId: string,
+    updateSeatTypeDto: UpdateSeatTypeDto,
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<SeatTypeDto>(
+      {url: `/api/events/${id}/seat-types/${seatTypeId}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateSeatTypeDto, signal
+    },
+      );
+    }
+
+
+
+
+export const getEventsControllerUpdateSeatTypeMutationKey = () => ['eventsControllerUpdateSeatType'] as const;
+
+export const getEventsControllerUpdateSeatTypeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>, TError,EventsControllerUpdateSeatTypeMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>, TError,EventsControllerUpdateSeatTypeMutationVariables, TContext> => {
+
+const mutationKey = getEventsControllerUpdateSeatTypeMutationKey();
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>, EventsControllerUpdateSeatTypeMutationVariables> = (props) => {
+          const {id,seatTypeId,data} = props ?? {};
+
+          return  eventsControllerUpdateSeatType(id,seatTypeId,data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EventsControllerUpdateSeatTypeMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>>
+    export type EventsControllerUpdateSeatTypeMutationBody = UpdateSeatTypeDto
+    export type EventsControllerUpdateSeatTypeMutationError = unknown
+    export type EventsControllerUpdateSeatTypeMutationVariables = {id: string;seatTypeId: string;data: UpdateSeatTypeDto}
+
+    export const useEventsControllerUpdateSeatType = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>, TError,EventsControllerUpdateSeatTypeMutationVariables, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>,
+        TError,
+        EventsControllerUpdateSeatTypeMutationVariables,
+        TContext
+      > => {
+      return useMutation(getEventsControllerUpdateSeatTypeMutationOptions(options), queryClient);
+    }
+    export const eventsControllerRecordView = (
     id: string,
  signal?: AbortSignal
 ) => {
