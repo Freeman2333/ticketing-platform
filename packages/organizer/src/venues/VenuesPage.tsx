@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import { useVenuesControllerFindMineSuspense } from '@ticketing/api-client';
+import { useVenuesFindMineSuspense } from '@ticketing/api-client';
 import { Button, ErrorBoundary } from '@ticketing/ui';
 import {
   VenueListItem,
@@ -20,7 +20,7 @@ function SkeletonList() {
 }
 
 function VenuesContent() {
-  const { data: venues } = useVenuesControllerFindMineSuspense();
+  const { data: venues } = useVenuesFindMineSuspense();
 
   if (venues.length === 0) {
     return (

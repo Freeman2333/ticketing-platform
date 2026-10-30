@@ -3,10 +3,10 @@ import { Link, useParams } from 'react-router-dom';
 import { ImageIcon } from 'lucide-react';
 import { useUserId } from '@ticketing/auth-client';
 import {
-  useEventsControllerGetEventSuspense,
-  useEventsControllerGetStatsSuspense,
-  useEventsControllerListSeatTypesSuspense,
-  useVenuesControllerFindOneSuspense,
+  useEventsGetEventSuspense,
+  useEventsGetStatsSuspense,
+  useEventsListSeatTypesSuspense,
+  useVenuesFindOneSuspense,
 } from '@ticketing/api-client';
 import {
   Button,
@@ -30,10 +30,10 @@ function EventDetailsSkeleton() {
 }
 
 function EventDetailsContent({ id }: { id: string }) {
-  const { data: event } = useEventsControllerGetEventSuspense(id);
-  const { data: venue } = useVenuesControllerFindOneSuspense(event.venueId);
-  const { data: stats } = useEventsControllerGetStatsSuspense(id);
-  const { data: seatTypes } = useEventsControllerListSeatTypesSuspense(id);
+  const { data: event } = useEventsGetEventSuspense(id);
+  const { data: venue } = useVenuesFindOneSuspense(event.venueId);
+  const { data: stats } = useEventsGetStatsSuspense(id);
+  const { data: seatTypes } = useEventsListSeatTypesSuspense(id);
   const { deleteEvent, isPending: isDeleting } = useDeleteEvent();
 
   const userId = useUserId();

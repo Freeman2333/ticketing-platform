@@ -58,6 +58,10 @@ async function bootstrap() {
       .setVersion('0.1')
       .addBearerAuth()
       .build(),
+    {
+      operationIdFactory: (controllerKey: string, methodKey: string) =>
+        `${controllerKey.replace(/Controller$/, '')}_${methodKey}`,
+    },
   );
   SwaggerModule.setup(`${globalPrefix}/docs`, app, swaggerDocument);
 

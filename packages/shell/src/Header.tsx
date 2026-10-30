@@ -4,7 +4,7 @@ import {
   useIsAuthenticated,
   useUserRole,
 } from '@ticketing/auth-client';
-import { useAuthControllerLogout } from '@ticketing/api-client';
+import { useAuthLogout } from '@ticketing/api-client';
 import { Button } from '@ticketing/ui';
 import { lazyProvider } from './mf';
 import { ProviderBoundary } from './ProviderBoundary';
@@ -17,7 +17,7 @@ export function Header() {
   const location = useLocation();
   const isLoggedIn = useIsAuthenticated();
   const role = useUserRole();
-  const logoutMutation = useAuthControllerLogout();
+  const logoutMutation = useAuthLogout();
   const showSearch = !NON_CATALOG_PATH_PREFIXES.some((prefix) =>
     location.pathname.startsWith(prefix),
   );

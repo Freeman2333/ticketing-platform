@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
-  useEventsControllerGetEvent,
-  useEventsControllerGetSeats,
-  useEventsControllerRecordView,
+  useEventsGetEvent,
+  useEventsGetSeats,
+  useEventsRecordView,
 } from '@ticketing/api-client';
 import { formatDateTime } from '@ticketing/ui';
 import { ReservationPanel } from './components/ReservationPanel';
@@ -13,13 +13,13 @@ import { useSeatAvailability } from './seats/useSeatAvailability';
 
 export function EventDetailsPage() {
   const { eventId } = useParams<{ eventId: string }>();
-  const { data: event, isLoading: isEventLoading } = useEventsControllerGetEvent(
+  const { data: event, isLoading: isEventLoading } = useEventsGetEvent(
     eventId!,
   );
-  const { data: seats, isLoading: isSeatsLoading } = useEventsControllerGetSeats(
+  const { data: seats, isLoading: isSeatsLoading } = useEventsGetSeats(
     eventId!,
   );
-  const { mutate: recordView } = useEventsControllerRecordView();
+  const { mutate: recordView } = useEventsRecordView();
   
   const [selectedSeatIds, setSelectedSeatIds] = useState<Set<string>>(
     new Set(),

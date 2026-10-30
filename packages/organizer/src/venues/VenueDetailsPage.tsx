@@ -3,8 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import { ImageIcon } from 'lucide-react';
 import { useUserId } from '@ticketing/auth-client';
 import {
-  useVenuesControllerFindOneSuspense,
-  useVenuesControllerGetStatsSuspense,
+  useVenuesFindOneSuspense,
+  useVenuesGetStatsSuspense,
 } from '@ticketing/api-client';
 import {
   Button,
@@ -29,8 +29,8 @@ function VenueDetailsSkeleton() {
 }
 
 function VenueDetailsContent({ id }: { id: string }) {
-  const { data: venue } = useVenuesControllerFindOneSuspense(id);
-  const { data: stats } = useVenuesControllerGetStatsSuspense(id);
+  const { data: venue } = useVenuesFindOneSuspense(id);
+  const { data: stats } = useVenuesGetStatsSuspense(id);
   const {
     events: venueEvents,
     hasNextPage,

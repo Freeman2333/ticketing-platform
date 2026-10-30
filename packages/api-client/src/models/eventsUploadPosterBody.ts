@@ -5,8 +5,6 @@
  * OpenAPI spec version: 0.1
  */
 
-export type EventsControllerListEventsParams = {
-title?: string;
-page?: number;
-limit?: number;
+export type EventsUploadPosterBody = {
+  file?: Blob | File;
 };

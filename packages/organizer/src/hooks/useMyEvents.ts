@@ -1,13 +1,13 @@
 import {
-  EventsControllerListMyEventsParams,
-  useEventsControllerListMyEventsSuspenseInfinite,
+  EventsListMyEventsParams,
+  useEventsListMyEventsSuspenseInfinite,
 } from '@ticketing/api-client';
 
 const FIRST_PAGE = 1;
 
-export function useMyEvents(params?: EventsControllerListMyEventsParams) {
+export function useMyEvents(params?: EventsListMyEventsParams) {
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
-    useEventsControllerListMyEventsSuspenseInfinite(params, {
+    useEventsListMyEventsSuspenseInfinite(params, {
       query: {
         initialPageParam: FIRST_PAGE,
         getNextPageParam: (lastPage, _pages, lastPageParam) =>

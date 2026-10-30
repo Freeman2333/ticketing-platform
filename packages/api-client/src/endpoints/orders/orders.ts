@@ -48,7 +48,7 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   return result;
 };
 
-export const ordersControllerCreateOrder = (
+export const ordersCreateOrder = (
     createOrderDto: CreateOrderDto,
  signal?: AbortSignal
 ) => {
@@ -65,13 +65,13 @@ export const ordersControllerCreateOrder = (
 
 
 
-export const getOrdersControllerCreateOrderMutationKey = () => ['ordersControllerCreateOrder'] as const;
+export const getOrdersCreateOrderMutationKey = () => ['ordersCreateOrder'] as const;
 
-export const getOrdersControllerCreateOrderMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ordersControllerCreateOrder>>, TError,OrdersControllerCreateOrderMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof ordersControllerCreateOrder>>, TError,OrdersControllerCreateOrderMutationVariables, TContext> => {
+export const getOrdersCreateOrderMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ordersCreateOrder>>, TError,OrdersCreateOrderMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof ordersCreateOrder>>, TError,OrdersCreateOrderMutationVariables, TContext> => {
 
-const mutationKey = getOrdersControllerCreateOrderMutationKey();
+const mutationKey = getOrdersCreateOrderMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -81,10 +81,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ordersControllerCreateOrder>>, OrdersControllerCreateOrderMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ordersCreateOrder>>, OrdersCreateOrderMutationVariables> = (props) => {
           const {data} = props ?? {};
 
-          return  ordersControllerCreateOrder(data,)
+          return  ordersCreateOrder(data,)
         }
 
 
@@ -94,22 +94,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type OrdersControllerCreateOrderMutationResult = NonNullable<Awaited<ReturnType<typeof ordersControllerCreateOrder>>>
-    export type OrdersControllerCreateOrderMutationBody = CreateOrderDto
-    export type OrdersControllerCreateOrderMutationError = unknown
-    export type OrdersControllerCreateOrderMutationVariables = {data: CreateOrderDto}
+    export type OrdersCreateOrderMutationResult = NonNullable<Awaited<ReturnType<typeof ordersCreateOrder>>>
+    export type OrdersCreateOrderMutationBody = CreateOrderDto
+    export type OrdersCreateOrderMutationError = unknown
+    export type OrdersCreateOrderMutationVariables = {data: CreateOrderDto}
 
-    export const useOrdersControllerCreateOrder = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ordersControllerCreateOrder>>, TError,OrdersControllerCreateOrderMutationVariables, TContext>, }
+    export const useOrdersCreateOrder = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ordersCreateOrder>>, TError,OrdersCreateOrderMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof ordersControllerCreateOrder>>,
+        Awaited<ReturnType<typeof ordersCreateOrder>>,
         TError,
-        OrdersControllerCreateOrderMutationVariables,
+        OrdersCreateOrderMutationVariables,
         TContext
       > => {
-      return useMutation(getOrdersControllerCreateOrderMutationOptions(options), queryClient);
+      return useMutation(getOrdersCreateOrderMutationOptions(options), queryClient);
     }
-    export const ordersControllerListOrders = (
+    export const ordersListOrders = (
 
  signal?: AbortSignal
 ) => {
@@ -124,66 +124,66 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getOrdersControllerListOrdersQueryKey = () => {
+export const getOrdersListOrdersQueryKey = () => {
     return [
     `/api/orders`
     ] as const;
     }
 
 
-export const getOrdersControllerListOrdersQueryOptions = <TData = Awaited<ReturnType<typeof ordersControllerListOrders>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersControllerListOrders>>, TError, TData>>, }
+export const getOrdersListOrdersQueryOptions = <TData = Awaited<ReturnType<typeof ordersListOrders>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersListOrders>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getOrdersControllerListOrdersQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getOrdersListOrdersQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof ordersControllerListOrders>>> = ({ signal }) => ordersControllerListOrders(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof ordersListOrders>>> = ({ signal }) => ordersListOrders(signal);
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof ordersControllerListOrders>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof ordersListOrders>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type OrdersControllerListOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof ordersControllerListOrders>>>
-export type OrdersControllerListOrdersQueryError = unknown
+export type OrdersListOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof ordersListOrders>>>
+export type OrdersListOrdersQueryError = unknown
 
 
-export function useOrdersControllerListOrders<TData = Awaited<ReturnType<typeof ordersControllerListOrders>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersControllerListOrders>>, TError, TData>> & Pick<
+export function useOrdersListOrders<TData = Awaited<ReturnType<typeof ordersListOrders>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersListOrders>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ordersControllerListOrders>>,
+          Awaited<ReturnType<typeof ordersListOrders>>,
           TError,
-          Awaited<ReturnType<typeof ordersControllerListOrders>>
+          Awaited<ReturnType<typeof ordersListOrders>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useOrdersControllerListOrders<TData = Awaited<ReturnType<typeof ordersControllerListOrders>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersControllerListOrders>>, TError, TData>> & Pick<
+export function useOrdersListOrders<TData = Awaited<ReturnType<typeof ordersListOrders>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersListOrders>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ordersControllerListOrders>>,
+          Awaited<ReturnType<typeof ordersListOrders>>,
           TError,
-          Awaited<ReturnType<typeof ordersControllerListOrders>>
+          Awaited<ReturnType<typeof ordersListOrders>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useOrdersControllerListOrders<TData = Awaited<ReturnType<typeof ordersControllerListOrders>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersControllerListOrders>>, TError, TData>>, }
+export function useOrdersListOrders<TData = Awaited<ReturnType<typeof ordersListOrders>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersListOrders>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useOrdersControllerListOrders<TData = Awaited<ReturnType<typeof ordersControllerListOrders>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersControllerListOrders>>, TError, TData>>, }
+export function useOrdersListOrders<TData = Awaited<ReturnType<typeof ordersListOrders>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersListOrders>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getOrdersControllerListOrdersQueryOptions(options)
+  const queryOptions = getOrdersListOrdersQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -195,7 +195,7 @@ export function useOrdersControllerListOrders<TData = Awaited<ReturnType<typeof 
 
 
 
-export const ordersControllerGetOrder = (
+export const ordersGetOrder = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -210,66 +210,66 @@ export const ordersControllerGetOrder = (
 
 
 
-export const getOrdersControllerGetOrderQueryKey = (id: string,) => {
+export const getOrdersGetOrderQueryKey = (id: string,) => {
     return [
     `/api/orders/${id}`
     ] as const;
     }
 
 
-export const getOrdersControllerGetOrderQueryOptions = <TData = Awaited<ReturnType<typeof ordersControllerGetOrder>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersControllerGetOrder>>, TError, TData>>, }
+export const getOrdersGetOrderQueryOptions = <TData = Awaited<ReturnType<typeof ordersGetOrder>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersGetOrder>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getOrdersControllerGetOrderQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getOrdersGetOrderQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof ordersControllerGetOrder>>> = ({ signal }) => ordersControllerGetOrder(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof ordersGetOrder>>> = ({ signal }) => ordersGetOrder(id, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof ordersControllerGetOrder>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof ordersGetOrder>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type OrdersControllerGetOrderQueryResult = NonNullable<Awaited<ReturnType<typeof ordersControllerGetOrder>>>
-export type OrdersControllerGetOrderQueryError = unknown
+export type OrdersGetOrderQueryResult = NonNullable<Awaited<ReturnType<typeof ordersGetOrder>>>
+export type OrdersGetOrderQueryError = unknown
 
 
-export function useOrdersControllerGetOrder<TData = Awaited<ReturnType<typeof ordersControllerGetOrder>>, TError = unknown>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersControllerGetOrder>>, TError, TData>> & Pick<
+export function useOrdersGetOrder<TData = Awaited<ReturnType<typeof ordersGetOrder>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersGetOrder>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ordersControllerGetOrder>>,
+          Awaited<ReturnType<typeof ordersGetOrder>>,
           TError,
-          Awaited<ReturnType<typeof ordersControllerGetOrder>>
+          Awaited<ReturnType<typeof ordersGetOrder>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useOrdersControllerGetOrder<TData = Awaited<ReturnType<typeof ordersControllerGetOrder>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersControllerGetOrder>>, TError, TData>> & Pick<
+export function useOrdersGetOrder<TData = Awaited<ReturnType<typeof ordersGetOrder>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersGetOrder>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ordersControllerGetOrder>>,
+          Awaited<ReturnType<typeof ordersGetOrder>>,
           TError,
-          Awaited<ReturnType<typeof ordersControllerGetOrder>>
+          Awaited<ReturnType<typeof ordersGetOrder>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useOrdersControllerGetOrder<TData = Awaited<ReturnType<typeof ordersControllerGetOrder>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersControllerGetOrder>>, TError, TData>>, }
+export function useOrdersGetOrder<TData = Awaited<ReturnType<typeof ordersGetOrder>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersGetOrder>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useOrdersControllerGetOrder<TData = Awaited<ReturnType<typeof ordersControllerGetOrder>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersControllerGetOrder>>, TError, TData>>, }
+export function useOrdersGetOrder<TData = Awaited<ReturnType<typeof ordersGetOrder>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof ordersGetOrder>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getOrdersControllerGetOrderQueryOptions(id,options)
+  const queryOptions = getOrdersGetOrderQueryOptions(id,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -281,7 +281,7 @@ export function useOrdersControllerGetOrder<TData = Awaited<ReturnType<typeof or
 
 
 
-export const ordersControllerCancelOrder = (
+export const ordersCancelOrder = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -296,13 +296,13 @@ export const ordersControllerCancelOrder = (
 
 
 
-export const getOrdersControllerCancelOrderMutationKey = () => ['ordersControllerCancelOrder'] as const;
+export const getOrdersCancelOrderMutationKey = () => ['ordersCancelOrder'] as const;
 
-export const getOrdersControllerCancelOrderMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ordersControllerCancelOrder>>, TError,OrdersControllerCancelOrderMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof ordersControllerCancelOrder>>, TError,OrdersControllerCancelOrderMutationVariables, TContext> => {
+export const getOrdersCancelOrderMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ordersCancelOrder>>, TError,OrdersCancelOrderMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof ordersCancelOrder>>, TError,OrdersCancelOrderMutationVariables, TContext> => {
 
-const mutationKey = getOrdersControllerCancelOrderMutationKey();
+const mutationKey = getOrdersCancelOrderMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -312,10 +312,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ordersControllerCancelOrder>>, OrdersControllerCancelOrderMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ordersCancelOrder>>, OrdersCancelOrderMutationVariables> = (props) => {
           const {id} = props ?? {};
 
-          return  ordersControllerCancelOrder(id,)
+          return  ordersCancelOrder(id,)
         }
 
 
@@ -325,18 +325,18 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type OrdersControllerCancelOrderMutationResult = NonNullable<Awaited<ReturnType<typeof ordersControllerCancelOrder>>>
+    export type OrdersCancelOrderMutationResult = NonNullable<Awaited<ReturnType<typeof ordersCancelOrder>>>
 
-    export type OrdersControllerCancelOrderMutationError = unknown
-    export type OrdersControllerCancelOrderMutationVariables = {id: string}
+    export type OrdersCancelOrderMutationError = unknown
+    export type OrdersCancelOrderMutationVariables = {id: string}
 
-    export const useOrdersControllerCancelOrder = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ordersControllerCancelOrder>>, TError,OrdersControllerCancelOrderMutationVariables, TContext>, }
+    export const useOrdersCancelOrder = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ordersCancelOrder>>, TError,OrdersCancelOrderMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof ordersControllerCancelOrder>>,
+        Awaited<ReturnType<typeof ordersCancelOrder>>,
         TError,
-        OrdersControllerCancelOrderMutationVariables,
+        OrdersCancelOrderMutationVariables,
         TContext
       > => {
-      return useMutation(getOrdersControllerCancelOrderMutationOptions(options), queryClient);
+      return useMutation(getOrdersCancelOrderMutationOptions(options), queryClient);
     }

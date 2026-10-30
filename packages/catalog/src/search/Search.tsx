@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  useEventsControllerGetRecentlyViewed,
-  useEventsControllerListEventsInfinite,
+  useEventsGetRecentlyViewed,
+  useEventsListEventsInfinite,
 } from '@ticketing/api-client';
 import {
   CommandDialog,
@@ -24,7 +24,7 @@ export function Search() {
 
   const isDefaultState = debouncedSearch.length === 0;
 
-  const searchQuery = useEventsControllerListEventsInfinite(
+  const searchQuery = useEventsListEventsInfinite(
     { title: debouncedSearch, limit: PAGE_SIZE },
     {
       query: {
@@ -38,7 +38,7 @@ export function Search() {
   const sentinelRef = useInfiniteScrollTrigger(searchQuery);
   const events = searchQuery.data?.pages.flatMap((page) => page.items);
 
-  const { data: recentlyViewedData } = useEventsControllerGetRecentlyViewed({
+  const { data: recentlyViewedData } = useEventsGetRecentlyViewed({
     query: { enabled: open && isDefaultState },
   });
 

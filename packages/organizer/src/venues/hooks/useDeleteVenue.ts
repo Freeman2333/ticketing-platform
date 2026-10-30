@@ -2,20 +2,20 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  getVenuesControllerFindMineQueryKey,
-  useVenuesControllerRemove,
+  getVenuesFindMineQueryKey,
+  useVenuesRemove,
 } from '@ticketing/api-client';
 
 export function useDeleteVenue() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const deleteMutation = useVenuesControllerRemove();
+  const deleteMutation = useVenuesRemove();
 
   async function deleteVenue(id: string) {
     try {
       await deleteMutation.mutateAsync({ id });
       queryClient.invalidateQueries({
-        queryKey: getVenuesControllerFindMineQueryKey(),
+        queryKey: getVenuesFindMineQueryKey(),
       });
       toast.success('Venue deleted.');
       navigate('/organizer/venues');

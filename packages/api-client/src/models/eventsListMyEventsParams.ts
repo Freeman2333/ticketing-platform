@@ -5,6 +5,8 @@
  * OpenAPI spec version: 0.1
  */
 
-export type VenuesControllerUploadImageBody = {
-  file?: Blob | File;
+export type EventsListMyEventsParams = {
+page?: number;
+limit?: number;
+venueId?: string;
 };

@@ -2,20 +2,20 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  getEventsControllerListMyEventsInfiniteQueryKey,
-  useEventsControllerRemove,
+  getEventsListMyEventsInfiniteQueryKey,
+  useEventsRemove,
 } from '@ticketing/api-client';
 
 export function useDeleteEvent() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const deleteMutation = useEventsControllerRemove();
+  const deleteMutation = useEventsRemove();
 
   async function deleteEvent(id: string) {
     try {
       await deleteMutation.mutateAsync({ id });
       queryClient.invalidateQueries({
-        queryKey: getEventsControllerListMyEventsInfiniteQueryKey(),
+        queryKey: getEventsListMyEventsInfiniteQueryKey(),
       });
       toast.success('Event deleted.');
       navigate('/organizer');

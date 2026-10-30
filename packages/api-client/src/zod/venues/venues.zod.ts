@@ -7,12 +7,12 @@
 import * as zod from 'zod';
 
 
-export const VenuesControllerCreateBody = zod.object({
+export const VenuesCreateBody = zod.object({
   "name": zod.string(),
   "address": zod.string()
 })
 
-export const VenuesControllerCreateResponse = zod.object({
+export const VenuesCreateResponse = zod.object({
   "id": zod.string(),
   "organizerId": zod.string(),
   "name": zod.string(),
@@ -20,20 +20,20 @@ export const VenuesControllerCreateResponse = zod.object({
   "imageUrl": zod.string().nullable()
 })
 
-export const VenuesControllerFindMineResponseItem = zod.object({
+export const VenuesFindMineResponseItem = zod.object({
   "id": zod.string(),
   "organizerId": zod.string(),
   "name": zod.string(),
   "address": zod.string(),
   "imageUrl": zod.string().nullable()
 })
-export const VenuesControllerFindMineResponse = zod.array(VenuesControllerFindMineResponseItem)
+export const VenuesFindMineResponse = zod.array(VenuesFindMineResponseItem)
 
-export const VenuesControllerFindOneParams = zod.object({
+export const VenuesFindOneParams = zod.object({
   "id": zod.string()
 })
 
-export const VenuesControllerFindOneResponse = zod.object({
+export const VenuesFindOneResponse = zod.object({
   "id": zod.string(),
   "organizerId": zod.string(),
   "name": zod.string(),
@@ -41,16 +41,16 @@ export const VenuesControllerFindOneResponse = zod.object({
   "imageUrl": zod.string().nullable()
 })
 
-export const VenuesControllerUpdateParams = zod.object({
+export const VenuesUpdateParams = zod.object({
   "id": zod.string()
 })
 
-export const VenuesControllerUpdateBody = zod.object({
+export const VenuesUpdateBody = zod.object({
   "name": zod.string().optional(),
   "address": zod.string().optional()
 })
 
-export const VenuesControllerUpdateResponse = zod.object({
+export const VenuesUpdateResponse = zod.object({
   "id": zod.string(),
   "organizerId": zod.string(),
   "name": zod.string(),
@@ -58,21 +58,21 @@ export const VenuesControllerUpdateResponse = zod.object({
   "imageUrl": zod.string().nullable()
 })
 
-export const VenuesControllerRemoveParams = zod.object({
+export const VenuesRemoveParams = zod.object({
   "id": zod.string()
 })
 
-export const VenuesControllerRemoveResponse = zod.void()
+export const VenuesRemoveResponse = zod.void()
 
-export const VenuesControllerUploadImageParams = zod.object({
+export const VenuesUploadImageParams = zod.object({
   "id": zod.string()
 })
 
-export const VenuesControllerUploadImageBody = zod.object({
+export const VenuesUploadImageBody = zod.object({
   "file": zod.instanceof(Blob).optional()
 })
 
-export const VenuesControllerUploadImageResponse = zod.object({
+export const VenuesUploadImageResponse = zod.object({
   "id": zod.string(),
   "organizerId": zod.string(),
   "name": zod.string(),
@@ -80,11 +80,11 @@ export const VenuesControllerUploadImageResponse = zod.object({
   "imageUrl": zod.string().nullable()
 })
 
-export const VenuesControllerGetStatsParams = zod.object({
+export const VenuesGetStatsParams = zod.object({
   "id": zod.string()
 })
 
-export const VenuesControllerGetStatsResponse = zod.object({
+export const VenuesGetStatsResponse = zod.object({
   "ticketsSold": zod.number(),
   "revenue": zod.number()
 })

@@ -1,4 +1,4 @@
-import { useOrdersControllerCancelOrder } from '@ticketing/api-client';
+import { useOrdersCancelOrder } from '@ticketing/api-client';
 import { useCountdown } from '@ticketing/ui';
 
 export function useAutoCancelOnExpiry({
@@ -10,7 +10,7 @@ export function useAutoCancelOnExpiry({
   orderId: string;
   onSettled: () => void;
 }): number {
-  const { mutate: cancelOrder } = useOrdersControllerCancelOrder();
+  const { mutate: cancelOrder } = useOrdersCancelOrder();
 
   return useCountdown(reservedUntil ? new Date(reservedUntil) : null, () => {
     cancelOrder({ id: orderId }, { onSuccess: onSettled, onError: onSettled });

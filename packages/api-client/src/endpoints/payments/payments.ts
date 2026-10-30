@@ -24,7 +24,7 @@ import { customInstance } from '../../mutator.js';
 
 
 
-export const paymentsControllerCreateCheckoutSession = (
+export const paymentsCreateCheckoutSession = (
     createCheckoutSessionDto: CreateCheckoutSessionDto,
  signal?: AbortSignal
 ) => {
@@ -41,13 +41,13 @@ export const paymentsControllerCreateCheckoutSession = (
 
 
 
-export const getPaymentsControllerCreateCheckoutSessionMutationKey = () => ['paymentsControllerCreateCheckoutSession'] as const;
+export const getPaymentsCreateCheckoutSessionMutationKey = () => ['paymentsCreateCheckoutSession'] as const;
 
-export const getPaymentsControllerCreateCheckoutSessionMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentsControllerCreateCheckoutSession>>, TError,PaymentsControllerCreateCheckoutSessionMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof paymentsControllerCreateCheckoutSession>>, TError,PaymentsControllerCreateCheckoutSessionMutationVariables, TContext> => {
+export const getPaymentsCreateCheckoutSessionMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentsCreateCheckoutSession>>, TError,PaymentsCreateCheckoutSessionMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof paymentsCreateCheckoutSession>>, TError,PaymentsCreateCheckoutSessionMutationVariables, TContext> => {
 
-const mutationKey = getPaymentsControllerCreateCheckoutSessionMutationKey();
+const mutationKey = getPaymentsCreateCheckoutSessionMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -57,10 +57,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof paymentsControllerCreateCheckoutSession>>, PaymentsControllerCreateCheckoutSessionMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof paymentsCreateCheckoutSession>>, PaymentsCreateCheckoutSessionMutationVariables> = (props) => {
           const {data} = props ?? {};
 
-          return  paymentsControllerCreateCheckoutSession(data,)
+          return  paymentsCreateCheckoutSession(data,)
         }
 
 
@@ -70,22 +70,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PaymentsControllerCreateCheckoutSessionMutationResult = NonNullable<Awaited<ReturnType<typeof paymentsControllerCreateCheckoutSession>>>
-    export type PaymentsControllerCreateCheckoutSessionMutationBody = CreateCheckoutSessionDto
-    export type PaymentsControllerCreateCheckoutSessionMutationError = unknown
-    export type PaymentsControllerCreateCheckoutSessionMutationVariables = {data: CreateCheckoutSessionDto}
+    export type PaymentsCreateCheckoutSessionMutationResult = NonNullable<Awaited<ReturnType<typeof paymentsCreateCheckoutSession>>>
+    export type PaymentsCreateCheckoutSessionMutationBody = CreateCheckoutSessionDto
+    export type PaymentsCreateCheckoutSessionMutationError = unknown
+    export type PaymentsCreateCheckoutSessionMutationVariables = {data: CreateCheckoutSessionDto}
 
-    export const usePaymentsControllerCreateCheckoutSession = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentsControllerCreateCheckoutSession>>, TError,PaymentsControllerCreateCheckoutSessionMutationVariables, TContext>, }
+    export const usePaymentsCreateCheckoutSession = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentsCreateCheckoutSession>>, TError,PaymentsCreateCheckoutSessionMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof paymentsControllerCreateCheckoutSession>>,
+        Awaited<ReturnType<typeof paymentsCreateCheckoutSession>>,
         TError,
-        PaymentsControllerCreateCheckoutSessionMutationVariables,
+        PaymentsCreateCheckoutSessionMutationVariables,
         TContext
       > => {
-      return useMutation(getPaymentsControllerCreateCheckoutSessionMutationOptions(options), queryClient);
+      return useMutation(getPaymentsCreateCheckoutSessionMutationOptions(options), queryClient);
     }
-    export const paymentsControllerHandleWebhook = (
+    export const paymentsHandleWebhook = (
 
  signal?: AbortSignal
 ) => {
@@ -100,13 +100,13 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getPaymentsControllerHandleWebhookMutationKey = () => ['paymentsControllerHandleWebhook'] as const;
+export const getPaymentsHandleWebhookMutationKey = () => ['paymentsHandleWebhook'] as const;
 
-export const getPaymentsControllerHandleWebhookMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentsControllerHandleWebhook>>, TError,void, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof paymentsControllerHandleWebhook>>, TError,void, TContext> => {
+export const getPaymentsHandleWebhookMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentsHandleWebhook>>, TError,void, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof paymentsHandleWebhook>>, TError,void, TContext> => {
 
-const mutationKey = getPaymentsControllerHandleWebhookMutationKey();
+const mutationKey = getPaymentsHandleWebhookMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -116,10 +116,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof paymentsControllerHandleWebhook>>, void> = () => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof paymentsHandleWebhook>>, void> = () => {
 
 
-          return  paymentsControllerHandleWebhook()
+          return  paymentsHandleWebhook()
         }
 
 
@@ -129,18 +129,18 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PaymentsControllerHandleWebhookMutationResult = NonNullable<Awaited<ReturnType<typeof paymentsControllerHandleWebhook>>>
+    export type PaymentsHandleWebhookMutationResult = NonNullable<Awaited<ReturnType<typeof paymentsHandleWebhook>>>
 
-    export type PaymentsControllerHandleWebhookMutationError = unknown
+    export type PaymentsHandleWebhookMutationError = unknown
 
 
-    export const usePaymentsControllerHandleWebhook = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentsControllerHandleWebhook>>, TError,void, TContext>, }
+    export const usePaymentsHandleWebhook = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentsHandleWebhook>>, TError,void, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof paymentsControllerHandleWebhook>>,
+        Awaited<ReturnType<typeof paymentsHandleWebhook>>,
         TError,
         void,
         TContext
       > => {
-      return useMutation(getPaymentsControllerHandleWebhookMutationOptions(options), queryClient);
+      return useMutation(getPaymentsHandleWebhookMutationOptions(options), queryClient);
     }

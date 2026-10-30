@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { useEventsControllerListEventsSuspenseInfinite } from '@ticketing/api-client';
+import { useEventsListEventsSuspenseInfinite } from '@ticketing/api-client';
 import { ErrorBoundary, useInfiniteScrollTrigger } from '@ticketing/ui';
 import { EventCard, EventCardSkeleton } from './components/EventCard';
 
@@ -17,7 +17,7 @@ function SkeletonGrid() {
 }
 
 function EventListContent() {
-  const query = useEventsControllerListEventsSuspenseInfinite(
+  const query = useEventsListEventsSuspenseInfinite(
     { limit: PAGE_SIZE },
     {
       query: {

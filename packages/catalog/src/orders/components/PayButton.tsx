@@ -1,9 +1,9 @@
-import { usePaymentsControllerCreateCheckoutSession } from '@ticketing/api-client';
+import { usePaymentsCreateCheckoutSession } from '@ticketing/api-client';
 import { Button } from '@ticketing/ui';
 
 export function PayButton({ orderId }: { orderId: string }) {
   const { mutate: createCheckoutSession, isPending } =
-    usePaymentsControllerCreateCheckoutSession();
+    usePaymentsCreateCheckoutSession();
 
   return (
     <Button

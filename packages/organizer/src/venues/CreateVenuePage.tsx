@@ -5,10 +5,10 @@ import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  getVenuesControllerFindMineQueryKey,
-  useVenuesControllerCreate,
-  useVenuesControllerUploadImage,
-  VenuesControllerCreateBody,
+  getVenuesFindMineQueryKey,
+  useVenuesCreate,
+  useVenuesUploadImage,
+  VenuesCreateBody,
 } from '@ticketing/api-client';
 import {
   Button,
@@ -27,17 +27,17 @@ import {
 } from '@ticketing/ui';
 import { ImageDropzone } from '../components/ImageDropzone';
 
-type CreateVenueFormValues = z.infer<typeof VenuesControllerCreateBody>;
+type CreateVenueFormValues = z.infer<typeof VenuesCreateBody>;
 
 export function CreateVenuePage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [file, setFile] = useState<File | null>(null);
   const form = useForm<CreateVenueFormValues>({
-    resolver: zodResolver(VenuesControllerCreateBody),
+    resolver: zodResolver(VenuesCreateBody),
   });
-  const createMutation = useVenuesControllerCreate();
-  const uploadMutation = useVenuesControllerUploadImage();
+  const createMutation = useVenuesCreate();
+  const uploadMutation = useVenuesUploadImage();
 
   async function onSubmit(values: CreateVenueFormValues) {
     try {
@@ -46,7 +46,7 @@ export function CreateVenuePage() {
         await uploadMutation.mutateAsync({ id: venue.id, data: { file } });
       }
       queryClient.invalidateQueries({
-        queryKey: getVenuesControllerFindMineQueryKey(),
+        queryKey: getVenuesFindMineQueryKey(),
       });
       navigate('/organizer/venues');
     } catch {

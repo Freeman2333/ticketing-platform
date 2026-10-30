@@ -5,7 +5,8 @@
  * OpenAPI spec version: 0.1
  */
 
-/**
- * @nullable
- */
-export type VenueDtoImageUrl = { [key: string]: unknown } | null;
+export type EventsListEventsParams = {
+title?: string;
+page?: number;
+limit?: number;
+};

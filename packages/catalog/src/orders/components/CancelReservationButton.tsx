@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  getOrdersControllerGetOrderQueryKey,
-  useOrdersControllerCancelOrder,
+  getOrdersGetOrderQueryKey,
+  useOrdersCancelOrder,
 } from '@ticketing/api-client';
 import { Button, ConfirmDialog } from '@ticketing/ui';
 
@@ -10,7 +10,7 @@ export function CancelReservationButton({ orderId }: { orderId: string }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutate: cancelOrder, isPending: isCancelling } =
-    useOrdersControllerCancelOrder();
+    useOrdersCancelOrder();
 
   return (
     <ConfirmDialog
@@ -31,7 +31,7 @@ export function CancelReservationButton({ orderId }: { orderId: string }) {
           {
             onSuccess: (cancelled) => {
               queryClient.setQueryData(
-                getOrdersControllerGetOrderQueryKey(orderId),
+                getOrdersGetOrderQueryKey(orderId),
                 cancelled,
               );
               navigate(`/${cancelled.eventId}`);

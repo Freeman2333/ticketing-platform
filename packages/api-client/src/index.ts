@@ -2,4 +2,5 @@
 export * from './endpoints';
 export * from './models';
 export * from './zod/index.zod';
-export { EventsControllerUploadPosterBody } from './zod/events/events.zod';
+export { EventsUploadPosterBody } from './zod/events/events.zod';
+export { VenuesUploadImageBody } from './zod/venues/venues.zod';

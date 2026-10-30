@@ -51,7 +51,7 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   return result;
 };
 
-export const authControllerRegister = (
+export const authRegister = (
     registerDto: RegisterDto,
  signal?: AbortSignal
 ) => {
@@ -68,13 +68,13 @@ export const authControllerRegister = (
 
 
 
-export const getAuthControllerRegisterMutationKey = () => ['authControllerRegister'] as const;
+export const getAuthRegisterMutationKey = () => ['authRegister'] as const;
 
-export const getAuthControllerRegisterMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerRegister>>, TError,AuthControllerRegisterMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof authControllerRegister>>, TError,AuthControllerRegisterMutationVariables, TContext> => {
+export const getAuthRegisterMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authRegister>>, TError,AuthRegisterMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof authRegister>>, TError,AuthRegisterMutationVariables, TContext> => {
 
-const mutationKey = getAuthControllerRegisterMutationKey();
+const mutationKey = getAuthRegisterMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -84,10 +84,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authControllerRegister>>, AuthControllerRegisterMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authRegister>>, AuthRegisterMutationVariables> = (props) => {
           const {data} = props ?? {};
 
-          return  authControllerRegister(data,)
+          return  authRegister(data,)
         }
 
 
@@ -97,22 +97,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type AuthControllerRegisterMutationResult = NonNullable<Awaited<ReturnType<typeof authControllerRegister>>>
-    export type AuthControllerRegisterMutationBody = RegisterDto
-    export type AuthControllerRegisterMutationError = unknown
-    export type AuthControllerRegisterMutationVariables = {data: RegisterDto}
+    export type AuthRegisterMutationResult = NonNullable<Awaited<ReturnType<typeof authRegister>>>
+    export type AuthRegisterMutationBody = RegisterDto
+    export type AuthRegisterMutationError = unknown
+    export type AuthRegisterMutationVariables = {data: RegisterDto}
 
-    export const useAuthControllerRegister = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerRegister>>, TError,AuthControllerRegisterMutationVariables, TContext>, }
+    export const useAuthRegister = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authRegister>>, TError,AuthRegisterMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof authControllerRegister>>,
+        Awaited<ReturnType<typeof authRegister>>,
         TError,
-        AuthControllerRegisterMutationVariables,
+        AuthRegisterMutationVariables,
         TContext
       > => {
-      return useMutation(getAuthControllerRegisterMutationOptions(options), queryClient);
+      return useMutation(getAuthRegisterMutationOptions(options), queryClient);
     }
-    export const authControllerLogin = (
+    export const authLogin = (
     loginDto: LoginDto,
  signal?: AbortSignal
 ) => {
@@ -129,13 +129,13 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getAuthControllerLoginMutationKey = () => ['authControllerLogin'] as const;
+export const getAuthLoginMutationKey = () => ['authLogin'] as const;
 
-export const getAuthControllerLoginMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerLogin>>, TError,AuthControllerLoginMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof authControllerLogin>>, TError,AuthControllerLoginMutationVariables, TContext> => {
+export const getAuthLoginMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authLogin>>, TError,AuthLoginMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof authLogin>>, TError,AuthLoginMutationVariables, TContext> => {
 
-const mutationKey = getAuthControllerLoginMutationKey();
+const mutationKey = getAuthLoginMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -145,10 +145,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authControllerLogin>>, AuthControllerLoginMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authLogin>>, AuthLoginMutationVariables> = (props) => {
           const {data} = props ?? {};
 
-          return  authControllerLogin(data,)
+          return  authLogin(data,)
         }
 
 
@@ -158,22 +158,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type AuthControllerLoginMutationResult = NonNullable<Awaited<ReturnType<typeof authControllerLogin>>>
-    export type AuthControllerLoginMutationBody = LoginDto
-    export type AuthControllerLoginMutationError = unknown
-    export type AuthControllerLoginMutationVariables = {data: LoginDto}
+    export type AuthLoginMutationResult = NonNullable<Awaited<ReturnType<typeof authLogin>>>
+    export type AuthLoginMutationBody = LoginDto
+    export type AuthLoginMutationError = unknown
+    export type AuthLoginMutationVariables = {data: LoginDto}
 
-    export const useAuthControllerLogin = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerLogin>>, TError,AuthControllerLoginMutationVariables, TContext>, }
+    export const useAuthLogin = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authLogin>>, TError,AuthLoginMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof authControllerLogin>>,
+        Awaited<ReturnType<typeof authLogin>>,
         TError,
-        AuthControllerLoginMutationVariables,
+        AuthLoginMutationVariables,
         TContext
       > => {
-      return useMutation(getAuthControllerLoginMutationOptions(options), queryClient);
+      return useMutation(getAuthLoginMutationOptions(options), queryClient);
     }
-    export const authControllerRefresh = (
+    export const authRefresh = (
 
  signal?: AbortSignal
 ) => {
@@ -188,13 +188,13 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getAuthControllerRefreshMutationKey = () => ['authControllerRefresh'] as const;
+export const getAuthRefreshMutationKey = () => ['authRefresh'] as const;
 
-export const getAuthControllerRefreshMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerRefresh>>, TError,void, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof authControllerRefresh>>, TError,void, TContext> => {
+export const getAuthRefreshMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authRefresh>>, TError,void, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof authRefresh>>, TError,void, TContext> => {
 
-const mutationKey = getAuthControllerRefreshMutationKey();
+const mutationKey = getAuthRefreshMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -204,10 +204,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authControllerRefresh>>, void> = () => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authRefresh>>, void> = () => {
 
 
-          return  authControllerRefresh()
+          return  authRefresh()
         }
 
 
@@ -217,22 +217,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type AuthControllerRefreshMutationResult = NonNullable<Awaited<ReturnType<typeof authControllerRefresh>>>
+    export type AuthRefreshMutationResult = NonNullable<Awaited<ReturnType<typeof authRefresh>>>
 
-    export type AuthControllerRefreshMutationError = unknown
+    export type AuthRefreshMutationError = unknown
 
 
-    export const useAuthControllerRefresh = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerRefresh>>, TError,void, TContext>, }
+    export const useAuthRefresh = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authRefresh>>, TError,void, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof authControllerRefresh>>,
+        Awaited<ReturnType<typeof authRefresh>>,
         TError,
         void,
         TContext
       > => {
-      return useMutation(getAuthControllerRefreshMutationOptions(options), queryClient);
+      return useMutation(getAuthRefreshMutationOptions(options), queryClient);
     }
-    export const authControllerLogout = (
+    export const authLogout = (
 
  signal?: AbortSignal
 ) => {
@@ -247,13 +247,13 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getAuthControllerLogoutMutationKey = () => ['authControllerLogout'] as const;
+export const getAuthLogoutMutationKey = () => ['authLogout'] as const;
 
-export const getAuthControllerLogoutMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerLogout>>, TError,void, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof authControllerLogout>>, TError,void, TContext> => {
+export const getAuthLogoutMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authLogout>>, TError,void, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof authLogout>>, TError,void, TContext> => {
 
-const mutationKey = getAuthControllerLogoutMutationKey();
+const mutationKey = getAuthLogoutMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -263,10 +263,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authControllerLogout>>, void> = () => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authLogout>>, void> = () => {
 
 
-          return  authControllerLogout()
+          return  authLogout()
         }
 
 
@@ -276,22 +276,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type AuthControllerLogoutMutationResult = NonNullable<Awaited<ReturnType<typeof authControllerLogout>>>
+    export type AuthLogoutMutationResult = NonNullable<Awaited<ReturnType<typeof authLogout>>>
 
-    export type AuthControllerLogoutMutationError = unknown
+    export type AuthLogoutMutationError = unknown
 
 
-    export const useAuthControllerLogout = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerLogout>>, TError,void, TContext>, }
+    export const useAuthLogout = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authLogout>>, TError,void, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof authControllerLogout>>,
+        Awaited<ReturnType<typeof authLogout>>,
         TError,
         void,
         TContext
       > => {
-      return useMutation(getAuthControllerLogoutMutationOptions(options), queryClient);
+      return useMutation(getAuthLogoutMutationOptions(options), queryClient);
     }
-    export const authControllerMe = (
+    export const authMe = (
 
  signal?: AbortSignal
 ) => {
@@ -306,66 +306,66 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getAuthControllerMeQueryKey = () => {
+export const getAuthMeQueryKey = () => {
     return [
     `/api/auth/me`
     ] as const;
     }
 
 
-export const getAuthControllerMeQueryOptions = <TData = Awaited<ReturnType<typeof authControllerMe>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof authControllerMe>>, TError, TData>>, }
+export const getAuthMeQueryOptions = <TData = Awaited<ReturnType<typeof authMe>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof authMe>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getAuthControllerMeQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getAuthMeQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof authControllerMe>>> = ({ signal }) => authControllerMe(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof authMe>>> = ({ signal }) => authMe(signal);
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof authControllerMe>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof authMe>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type AuthControllerMeQueryResult = NonNullable<Awaited<ReturnType<typeof authControllerMe>>>
-export type AuthControllerMeQueryError = unknown
+export type AuthMeQueryResult = NonNullable<Awaited<ReturnType<typeof authMe>>>
+export type AuthMeQueryError = unknown
 
 
-export function useAuthControllerMe<TData = Awaited<ReturnType<typeof authControllerMe>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof authControllerMe>>, TError, TData>> & Pick<
+export function useAuthMe<TData = Awaited<ReturnType<typeof authMe>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof authMe>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof authControllerMe>>,
+          Awaited<ReturnType<typeof authMe>>,
           TError,
-          Awaited<ReturnType<typeof authControllerMe>>
+          Awaited<ReturnType<typeof authMe>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useAuthControllerMe<TData = Awaited<ReturnType<typeof authControllerMe>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof authControllerMe>>, TError, TData>> & Pick<
+export function useAuthMe<TData = Awaited<ReturnType<typeof authMe>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof authMe>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof authControllerMe>>,
+          Awaited<ReturnType<typeof authMe>>,
           TError,
-          Awaited<ReturnType<typeof authControllerMe>>
+          Awaited<ReturnType<typeof authMe>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useAuthControllerMe<TData = Awaited<ReturnType<typeof authControllerMe>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof authControllerMe>>, TError, TData>>, }
+export function useAuthMe<TData = Awaited<ReturnType<typeof authMe>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof authMe>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useAuthControllerMe<TData = Awaited<ReturnType<typeof authControllerMe>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof authControllerMe>>, TError, TData>>, }
+export function useAuthMe<TData = Awaited<ReturnType<typeof authMe>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof authMe>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getAuthControllerMeQueryOptions(options)
+  const queryOptions = getAuthMeQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import {
-  getEventsControllerGetEventQueryOptions,
+  getEventsGetEventQueryOptions,
   type EventDto,
 } from '@ticketing/api-client';
 import { Card, CardContent, formatDateTime, Skeleton } from '@ticketing/ui';
@@ -8,7 +8,7 @@ import { usePrefetchOnHover } from '../hooks/usePrefetchOnHover';
 
 export function EventCard({ event }: { event: EventDto }) {
   const prefetchHandlers = usePrefetchOnHover(
-    getEventsControllerGetEventQueryOptions(event.id),
+    getEventsGetEventQueryOptions(event.id),
   );
 
   return (

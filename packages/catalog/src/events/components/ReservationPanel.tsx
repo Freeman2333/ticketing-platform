@@ -5,8 +5,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useIsAuthenticated } from '@ticketing/auth-client';
 import type { SeatDto } from '@ticketing/api-client';
 import {
-  getEventsControllerGetSeatsQueryKey,
-  useOrdersControllerCreateOrder,
+  getEventsGetSeatsQueryKey,
+  useOrdersCreateOrder,
 } from '@ticketing/api-client';
 import { Button } from '@ticketing/ui';
 
@@ -25,8 +25,8 @@ export function ReservationPanel({
   const location = useLocation();
   const queryClient = useQueryClient();
   const isAuthenticated = useIsAuthenticated();
-  const seatsQueryKey = getEventsControllerGetSeatsQueryKey(eventId);
-  const { mutate, isPending } = useOrdersControllerCreateOrder();
+  const seatsQueryKey = getEventsGetSeatsQueryKey(eventId);
+  const { mutate, isPending } = useOrdersCreateOrder();
 
   const selectedSeats = seats.filter((seat) => selectedSeatIds.has(seat.id));
   const totalPrice = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);

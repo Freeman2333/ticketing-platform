@@ -7,13 +7,13 @@
 import * as zod from 'zod';
 
 
-export const PaymentsControllerCreateCheckoutSessionBody = zod.object({
+export const PaymentsCreateCheckoutSessionBody = zod.object({
   "orderId": zod.string()
 })
 
-export const PaymentsControllerCreateCheckoutSessionResponse = zod.object({
+export const PaymentsCreateCheckoutSessionResponse = zod.object({
   "url": zod.string()
 })
 
-export const PaymentsControllerHandleWebhookResponse = zod.void()
+export const PaymentsHandleWebhookResponse = zod.void()
 

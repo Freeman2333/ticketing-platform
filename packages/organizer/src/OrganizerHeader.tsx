@@ -1,11 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { setAccessToken } from '@ticketing/auth-client';
-import { useAuthControllerLogout } from '@ticketing/api-client';
+import { useAuthLogout } from '@ticketing/api-client';
 import { Button } from '@ticketing/ui';
 
 export function OrganizerHeader() {
   const navigate = useNavigate();
-  const logoutMutation = useAuthControllerLogout();
+  const logoutMutation = useAuthLogout();
 
   async function handleLogout() {
     try {

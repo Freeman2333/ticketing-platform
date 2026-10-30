@@ -32,7 +32,7 @@ import type {
   UpdateVenueDto,
   VenueDto,
   VenueStatsDto,
-  VenuesControllerUploadImageBody
+  VenuesUploadImageBody
 } from '../../models';
 
 import { customInstance } from '../../mutator.js';
@@ -55,7 +55,7 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   return result;
 };
 
-export const venuesControllerCreate = (
+export const venuesCreate = (
     createVenueDto: CreateVenueDto,
  signal?: AbortSignal
 ) => {
@@ -72,13 +72,13 @@ export const venuesControllerCreate = (
 
 
 
-export const getVenuesControllerCreateMutationKey = () => ['venuesControllerCreate'] as const;
+export const getVenuesCreateMutationKey = () => ['venuesCreate'] as const;
 
-export const getVenuesControllerCreateMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerCreate>>, TError,VenuesControllerCreateMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof venuesControllerCreate>>, TError,VenuesControllerCreateMutationVariables, TContext> => {
+export const getVenuesCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesCreate>>, TError,VenuesCreateMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof venuesCreate>>, TError,VenuesCreateMutationVariables, TContext> => {
 
-const mutationKey = getVenuesControllerCreateMutationKey();
+const mutationKey = getVenuesCreateMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -88,10 +88,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof venuesControllerCreate>>, VenuesControllerCreateMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof venuesCreate>>, VenuesCreateMutationVariables> = (props) => {
           const {data} = props ?? {};
 
-          return  venuesControllerCreate(data,)
+          return  venuesCreate(data,)
         }
 
 
@@ -101,22 +101,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type VenuesControllerCreateMutationResult = NonNullable<Awaited<ReturnType<typeof venuesControllerCreate>>>
-    export type VenuesControllerCreateMutationBody = CreateVenueDto
-    export type VenuesControllerCreateMutationError = unknown
-    export type VenuesControllerCreateMutationVariables = {data: CreateVenueDto}
+    export type VenuesCreateMutationResult = NonNullable<Awaited<ReturnType<typeof venuesCreate>>>
+    export type VenuesCreateMutationBody = CreateVenueDto
+    export type VenuesCreateMutationError = unknown
+    export type VenuesCreateMutationVariables = {data: CreateVenueDto}
 
-    export const useVenuesControllerCreate = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerCreate>>, TError,VenuesControllerCreateMutationVariables, TContext>, }
+    export const useVenuesCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesCreate>>, TError,VenuesCreateMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof venuesControllerCreate>>,
+        Awaited<ReturnType<typeof venuesCreate>>,
         TError,
-        VenuesControllerCreateMutationVariables,
+        VenuesCreateMutationVariables,
         TContext
       > => {
-      return useMutation(getVenuesControllerCreateMutationOptions(options), queryClient);
+      return useMutation(getVenuesCreateMutationOptions(options), queryClient);
     }
-    export const venuesControllerFindMine = (
+    export const venuesFindMine = (
 
  signal?: AbortSignal
 ) => {
@@ -131,66 +131,66 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getVenuesControllerFindMineQueryKey = () => {
+export const getVenuesFindMineQueryKey = () => {
     return [
     `/api/venues`
     ] as const;
     }
 
 
-export const getVenuesControllerFindMineQueryOptions = <TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+export const getVenuesFindMineQueryOptions = <TData = Awaited<ReturnType<typeof venuesFindMine>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getVenuesControllerFindMineQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getVenuesFindMineQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesControllerFindMine>>> = ({ signal }) => venuesControllerFindMine(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesFindMine>>> = ({ signal }) => venuesFindMine(signal);
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type VenuesControllerFindMineQueryResult = NonNullable<Awaited<ReturnType<typeof venuesControllerFindMine>>>
-export type VenuesControllerFindMineQueryError = unknown
+export type VenuesFindMineQueryResult = NonNullable<Awaited<ReturnType<typeof venuesFindMine>>>
+export type VenuesFindMineQueryError = unknown
 
 
-export function useVenuesControllerFindMine<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>> & Pick<
+export function useVenuesFindMine<TData = Awaited<ReturnType<typeof venuesFindMine>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof venuesControllerFindMine>>,
+          Awaited<ReturnType<typeof venuesFindMine>>,
           TError,
-          Awaited<ReturnType<typeof venuesControllerFindMine>>
+          Awaited<ReturnType<typeof venuesFindMine>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerFindMine<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>> & Pick<
+export function useVenuesFindMine<TData = Awaited<ReturnType<typeof venuesFindMine>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof venuesControllerFindMine>>,
+          Awaited<ReturnType<typeof venuesFindMine>>,
           TError,
-          Awaited<ReturnType<typeof venuesControllerFindMine>>
+          Awaited<ReturnType<typeof venuesFindMine>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerFindMine<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+export function useVenuesFindMine<TData = Awaited<ReturnType<typeof venuesFindMine>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useVenuesControllerFindMine<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+export function useVenuesFindMine<TData = Awaited<ReturnType<typeof venuesFindMine>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getVenuesControllerFindMineQueryOptions(options)
+  const queryOptions = getVenuesFindMineQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -202,47 +202,47 @@ export function useVenuesControllerFindMine<TData = Awaited<ReturnType<typeof ve
 
 
 
-export const getVenuesControllerFindMineSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>( options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+export const getVenuesFindMineSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof venuesFindMine>>, TError = unknown>( options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getVenuesControllerFindMineQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getVenuesFindMineQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesControllerFindMine>>> = ({ signal }) => venuesControllerFindMine(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesFindMine>>> = ({ signal }) => venuesFindMine(signal);
 
 
 
 
 
-   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
 }
 
-export type VenuesControllerFindMineSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof venuesControllerFindMine>>>
-export type VenuesControllerFindMineSuspenseQueryError = unknown
+export type VenuesFindMineSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof venuesFindMine>>>
+export type VenuesFindMineSuspenseQueryError = unknown
 
 
-export function useVenuesControllerFindMineSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
-  options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+export function useVenuesFindMineSuspense<TData = Awaited<ReturnType<typeof venuesFindMine>>, TError = unknown>(
+  options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerFindMineSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
-  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+export function useVenuesFindMineSuspense<TData = Awaited<ReturnType<typeof venuesFindMine>>, TError = unknown>(
+  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerFindMineSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
-  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+export function useVenuesFindMineSuspense<TData = Awaited<ReturnType<typeof venuesFindMine>>, TError = unknown>(
+  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useVenuesControllerFindMineSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindMine>>, TError = unknown>(
-  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindMine>>, TError, TData>>, }
+export function useVenuesFindMineSuspense<TData = Awaited<ReturnType<typeof venuesFindMine>>, TError = unknown>(
+  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindMine>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getVenuesControllerFindMineSuspenseQueryOptions(options)
+  const queryOptions = getVenuesFindMineSuspenseQueryOptions(options)
 
   const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -254,7 +254,7 @@ export function useVenuesControllerFindMineSuspense<TData = Awaited<ReturnType<t
 
 
 
-export const venuesControllerFindOne = (
+export const venuesFindOne = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -269,66 +269,66 @@ export const venuesControllerFindOne = (
 
 
 
-export const getVenuesControllerFindOneQueryKey = (id: string,) => {
+export const getVenuesFindOneQueryKey = (id: string,) => {
     return [
     `/api/venues/${id}`
     ] as const;
     }
 
 
-export const getVenuesControllerFindOneQueryOptions = <TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+export const getVenuesFindOneQueryOptions = <TData = Awaited<ReturnType<typeof venuesFindOne>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getVenuesControllerFindOneQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getVenuesFindOneQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesControllerFindOne>>> = ({ signal }) => venuesControllerFindOne(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesFindOne>>> = ({ signal }) => venuesFindOne(id, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type VenuesControllerFindOneQueryResult = NonNullable<Awaited<ReturnType<typeof venuesControllerFindOne>>>
-export type VenuesControllerFindOneQueryError = unknown
+export type VenuesFindOneQueryResult = NonNullable<Awaited<ReturnType<typeof venuesFindOne>>>
+export type VenuesFindOneQueryError = unknown
 
 
-export function useVenuesControllerFindOne<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>> & Pick<
+export function useVenuesFindOne<TData = Awaited<ReturnType<typeof venuesFindOne>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof venuesControllerFindOne>>,
+          Awaited<ReturnType<typeof venuesFindOne>>,
           TError,
-          Awaited<ReturnType<typeof venuesControllerFindOne>>
+          Awaited<ReturnType<typeof venuesFindOne>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerFindOne<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>> & Pick<
+export function useVenuesFindOne<TData = Awaited<ReturnType<typeof venuesFindOne>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof venuesControllerFindOne>>,
+          Awaited<ReturnType<typeof venuesFindOne>>,
           TError,
-          Awaited<ReturnType<typeof venuesControllerFindOne>>
+          Awaited<ReturnType<typeof venuesFindOne>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerFindOne<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+export function useVenuesFindOne<TData = Awaited<ReturnType<typeof venuesFindOne>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useVenuesControllerFindOne<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+export function useVenuesFindOne<TData = Awaited<ReturnType<typeof venuesFindOne>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getVenuesControllerFindOneQueryOptions(id,options)
+  const queryOptions = getVenuesFindOneQueryOptions(id,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -340,47 +340,47 @@ export function useVenuesControllerFindOne<TData = Awaited<ReturnType<typeof ven
 
 
 
-export const getVenuesControllerFindOneSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+export const getVenuesFindOneSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof venuesFindOne>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getVenuesControllerFindOneQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getVenuesFindOneQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesControllerFindOne>>> = ({ signal }) => venuesControllerFindOne(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesFindOne>>> = ({ signal }) => venuesFindOne(id, signal);
 
 
 
 
 
-   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
 }
 
-export type VenuesControllerFindOneSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof venuesControllerFindOne>>>
-export type VenuesControllerFindOneSuspenseQueryError = unknown
+export type VenuesFindOneSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof venuesFindOne>>>
+export type VenuesFindOneSuspenseQueryError = unknown
 
 
-export function useVenuesControllerFindOneSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
- id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+export function useVenuesFindOneSuspense<TData = Awaited<ReturnType<typeof venuesFindOne>>, TError = unknown>(
+ id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerFindOneSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+export function useVenuesFindOneSuspense<TData = Awaited<ReturnType<typeof venuesFindOne>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerFindOneSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+export function useVenuesFindOneSuspense<TData = Awaited<ReturnType<typeof venuesFindOne>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useVenuesControllerFindOneSuspense<TData = Awaited<ReturnType<typeof venuesControllerFindOne>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerFindOne>>, TError, TData>>, }
+export function useVenuesFindOneSuspense<TData = Awaited<ReturnType<typeof venuesFindOne>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesFindOne>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getVenuesControllerFindOneSuspenseQueryOptions(id,options)
+  const queryOptions = getVenuesFindOneSuspenseQueryOptions(id,options)
 
   const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -392,7 +392,7 @@ export function useVenuesControllerFindOneSuspense<TData = Awaited<ReturnType<ty
 
 
 
-export const venuesControllerUpdate = (
+export const venuesUpdate = (
     id: string,
     updateVenueDto: UpdateVenueDto,
  signal?: AbortSignal
@@ -410,13 +410,13 @@ export const venuesControllerUpdate = (
 
 
 
-export const getVenuesControllerUpdateMutationKey = () => ['venuesControllerUpdate'] as const;
+export const getVenuesUpdateMutationKey = () => ['venuesUpdate'] as const;
 
-export const getVenuesControllerUpdateMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerUpdate>>, TError,VenuesControllerUpdateMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof venuesControllerUpdate>>, TError,VenuesControllerUpdateMutationVariables, TContext> => {
+export const getVenuesUpdateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesUpdate>>, TError,VenuesUpdateMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof venuesUpdate>>, TError,VenuesUpdateMutationVariables, TContext> => {
 
-const mutationKey = getVenuesControllerUpdateMutationKey();
+const mutationKey = getVenuesUpdateMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -426,10 +426,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof venuesControllerUpdate>>, VenuesControllerUpdateMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof venuesUpdate>>, VenuesUpdateMutationVariables> = (props) => {
           const {id,data} = props ?? {};
 
-          return  venuesControllerUpdate(id,data,)
+          return  venuesUpdate(id,data,)
         }
 
 
@@ -439,22 +439,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type VenuesControllerUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof venuesControllerUpdate>>>
-    export type VenuesControllerUpdateMutationBody = UpdateVenueDto
-    export type VenuesControllerUpdateMutationError = unknown
-    export type VenuesControllerUpdateMutationVariables = {id: string;data: UpdateVenueDto}
+    export type VenuesUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof venuesUpdate>>>
+    export type VenuesUpdateMutationBody = UpdateVenueDto
+    export type VenuesUpdateMutationError = unknown
+    export type VenuesUpdateMutationVariables = {id: string;data: UpdateVenueDto}
 
-    export const useVenuesControllerUpdate = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerUpdate>>, TError,VenuesControllerUpdateMutationVariables, TContext>, }
+    export const useVenuesUpdate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesUpdate>>, TError,VenuesUpdateMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof venuesControllerUpdate>>,
+        Awaited<ReturnType<typeof venuesUpdate>>,
         TError,
-        VenuesControllerUpdateMutationVariables,
+        VenuesUpdateMutationVariables,
         TContext
       > => {
-      return useMutation(getVenuesControllerUpdateMutationOptions(options), queryClient);
+      return useMutation(getVenuesUpdateMutationOptions(options), queryClient);
     }
-    export const venuesControllerRemove = (
+    export const venuesRemove = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -469,13 +469,13 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getVenuesControllerRemoveMutationKey = () => ['venuesControllerRemove'] as const;
+export const getVenuesRemoveMutationKey = () => ['venuesRemove'] as const;
 
-export const getVenuesControllerRemoveMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerRemove>>, TError,VenuesControllerRemoveMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof venuesControllerRemove>>, TError,VenuesControllerRemoveMutationVariables, TContext> => {
+export const getVenuesRemoveMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesRemove>>, TError,VenuesRemoveMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof venuesRemove>>, TError,VenuesRemoveMutationVariables, TContext> => {
 
-const mutationKey = getVenuesControllerRemoveMutationKey();
+const mutationKey = getVenuesRemoveMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -485,10 +485,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof venuesControllerRemove>>, VenuesControllerRemoveMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof venuesRemove>>, VenuesRemoveMutationVariables> = (props) => {
           const {id} = props ?? {};
 
-          return  venuesControllerRemove(id,)
+          return  venuesRemove(id,)
         }
 
 
@@ -498,30 +498,30 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type VenuesControllerRemoveMutationResult = NonNullable<Awaited<ReturnType<typeof venuesControllerRemove>>>
+    export type VenuesRemoveMutationResult = NonNullable<Awaited<ReturnType<typeof venuesRemove>>>
 
-    export type VenuesControllerRemoveMutationError = unknown
-    export type VenuesControllerRemoveMutationVariables = {id: string}
+    export type VenuesRemoveMutationError = unknown
+    export type VenuesRemoveMutationVariables = {id: string}
 
-    export const useVenuesControllerRemove = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerRemove>>, TError,VenuesControllerRemoveMutationVariables, TContext>, }
+    export const useVenuesRemove = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesRemove>>, TError,VenuesRemoveMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof venuesControllerRemove>>,
+        Awaited<ReturnType<typeof venuesRemove>>,
         TError,
-        VenuesControllerRemoveMutationVariables,
+        VenuesRemoveMutationVariables,
         TContext
       > => {
-      return useMutation(getVenuesControllerRemoveMutationOptions(options), queryClient);
+      return useMutation(getVenuesRemoveMutationOptions(options), queryClient);
     }
-    export const venuesControllerUploadImage = (
+    export const venuesUploadImage = (
     id: string,
-    venuesControllerUploadImageBody: VenuesControllerUploadImageBody,
+    venuesUploadImageBody: VenuesUploadImageBody,
  signal?: AbortSignal
 ) => {
 
       const formData = new FormData();
-if(venuesControllerUploadImageBody.file !== undefined) {
- formData.append(`file`, venuesControllerUploadImageBody.file);
+if(venuesUploadImageBody.file !== undefined) {
+ formData.append(`file`, venuesUploadImageBody.file);
  }
 
       return customInstance<VenueDto>(
@@ -535,13 +535,13 @@ if(venuesControllerUploadImageBody.file !== undefined) {
 
 
 
-export const getVenuesControllerUploadImageMutationKey = () => ['venuesControllerUploadImage'] as const;
+export const getVenuesUploadImageMutationKey = () => ['venuesUploadImage'] as const;
 
-export const getVenuesControllerUploadImageMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerUploadImage>>, TError,VenuesControllerUploadImageMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof venuesControllerUploadImage>>, TError,VenuesControllerUploadImageMutationVariables, TContext> => {
+export const getVenuesUploadImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesUploadImage>>, TError,VenuesUploadImageMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof venuesUploadImage>>, TError,VenuesUploadImageMutationVariables, TContext> => {
 
-const mutationKey = getVenuesControllerUploadImageMutationKey();
+const mutationKey = getVenuesUploadImageMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -551,10 +551,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof venuesControllerUploadImage>>, VenuesControllerUploadImageMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof venuesUploadImage>>, VenuesUploadImageMutationVariables> = (props) => {
           const {id,data} = props ?? {};
 
-          return  venuesControllerUploadImage(id,data,)
+          return  venuesUploadImage(id,data,)
         }
 
 
@@ -564,22 +564,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type VenuesControllerUploadImageMutationResult = NonNullable<Awaited<ReturnType<typeof venuesControllerUploadImage>>>
-    export type VenuesControllerUploadImageMutationBody = VenuesControllerUploadImageBody
-    export type VenuesControllerUploadImageMutationError = unknown
-    export type VenuesControllerUploadImageMutationVariables = {id: string;data: VenuesControllerUploadImageBody}
+    export type VenuesUploadImageMutationResult = NonNullable<Awaited<ReturnType<typeof venuesUploadImage>>>
+    export type VenuesUploadImageMutationBody = VenuesUploadImageBody
+    export type VenuesUploadImageMutationError = unknown
+    export type VenuesUploadImageMutationVariables = {id: string;data: VenuesUploadImageBody}
 
-    export const useVenuesControllerUploadImage = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesControllerUploadImage>>, TError,VenuesControllerUploadImageMutationVariables, TContext>, }
+    export const useVenuesUploadImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venuesUploadImage>>, TError,VenuesUploadImageMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof venuesControllerUploadImage>>,
+        Awaited<ReturnType<typeof venuesUploadImage>>,
         TError,
-        VenuesControllerUploadImageMutationVariables,
+        VenuesUploadImageMutationVariables,
         TContext
       > => {
-      return useMutation(getVenuesControllerUploadImageMutationOptions(options), queryClient);
+      return useMutation(getVenuesUploadImageMutationOptions(options), queryClient);
     }
-    export const venuesControllerGetStats = (
+    export const venuesGetStats = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -594,66 +594,66 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getVenuesControllerGetStatsQueryKey = (id: string,) => {
+export const getVenuesGetStatsQueryKey = (id: string,) => {
     return [
     `/api/venues/${id}/stats`
     ] as const;
     }
 
 
-export const getVenuesControllerGetStatsQueryOptions = <TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+export const getVenuesGetStatsQueryOptions = <TData = Awaited<ReturnType<typeof venuesGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getVenuesControllerGetStatsQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getVenuesGetStatsQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesControllerGetStats>>> = ({ signal }) => venuesControllerGetStats(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesGetStats>>> = ({ signal }) => venuesGetStats(id, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type VenuesControllerGetStatsQueryResult = NonNullable<Awaited<ReturnType<typeof venuesControllerGetStats>>>
-export type VenuesControllerGetStatsQueryError = unknown
+export type VenuesGetStatsQueryResult = NonNullable<Awaited<ReturnType<typeof venuesGetStats>>>
+export type VenuesGetStatsQueryError = unknown
 
 
-export function useVenuesControllerGetStats<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>> & Pick<
+export function useVenuesGetStats<TData = Awaited<ReturnType<typeof venuesGetStats>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof venuesControllerGetStats>>,
+          Awaited<ReturnType<typeof venuesGetStats>>,
           TError,
-          Awaited<ReturnType<typeof venuesControllerGetStats>>
+          Awaited<ReturnType<typeof venuesGetStats>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerGetStats<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>> & Pick<
+export function useVenuesGetStats<TData = Awaited<ReturnType<typeof venuesGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof venuesControllerGetStats>>,
+          Awaited<ReturnType<typeof venuesGetStats>>,
           TError,
-          Awaited<ReturnType<typeof venuesControllerGetStats>>
+          Awaited<ReturnType<typeof venuesGetStats>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerGetStats<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+export function useVenuesGetStats<TData = Awaited<ReturnType<typeof venuesGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useVenuesControllerGetStats<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+export function useVenuesGetStats<TData = Awaited<ReturnType<typeof venuesGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getVenuesControllerGetStatsQueryOptions(id,options)
+  const queryOptions = getVenuesGetStatsQueryOptions(id,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -665,47 +665,47 @@ export function useVenuesControllerGetStats<TData = Awaited<ReturnType<typeof ve
 
 
 
-export const getVenuesControllerGetStatsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+export const getVenuesGetStatsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof venuesGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getVenuesControllerGetStatsQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getVenuesGetStatsQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesControllerGetStats>>> = ({ signal }) => venuesControllerGetStats(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof venuesGetStats>>> = ({ signal }) => venuesGetStats(id, signal);
 
 
 
 
 
-   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
 }
 
-export type VenuesControllerGetStatsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof venuesControllerGetStats>>>
-export type VenuesControllerGetStatsSuspenseQueryError = unknown
+export type VenuesGetStatsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof venuesGetStats>>>
+export type VenuesGetStatsSuspenseQueryError = unknown
 
 
-export function useVenuesControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
- id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+export function useVenuesGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesGetStats>>, TError = unknown>(
+ id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+export function useVenuesGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useVenuesControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+export function useVenuesGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useVenuesControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesControllerGetStats>>, TError, TData>>, }
+export function useVenuesGetStatsSuspense<TData = Awaited<ReturnType<typeof venuesGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof venuesGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getVenuesControllerGetStatsSuspenseQueryOptions(id,options)
+  const queryOptions = getVenuesGetStatsSuspenseQueryOptions(id,options)
 
   const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

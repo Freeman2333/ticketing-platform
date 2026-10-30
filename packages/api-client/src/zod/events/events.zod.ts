@@ -7,13 +7,13 @@
 import * as zod from 'zod';
 
 
-export const EventsControllerListEventsQueryParams = zod.object({
+export const EventsListEventsQueryParams = zod.object({
   "title": zod.string().optional(),
   "page": zod.number().optional(),
   "limit": zod.number().optional()
 })
 
-export const EventsControllerListEventsResponse = zod.object({
+export const EventsListEventsResponse = zod.object({
   "items": zod.array(zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
@@ -25,13 +25,13 @@ export const EventsControllerListEventsResponse = zod.object({
   "hasMore": zod.boolean()
 })
 
-export const EventsControllerCreateBody = zod.object({
+export const EventsCreateBody = zod.object({
   "venueId": zod.string(),
   "title": zod.string(),
   "startsAt": zod.string()
 })
 
-export const EventsControllerCreateResponse = zod.object({
+export const EventsCreateResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),
@@ -40,13 +40,13 @@ export const EventsControllerCreateResponse = zod.object({
   "posterUrl": zod.string().nullable()
 })
 
-export const EventsControllerListMyEventsQueryParams = zod.object({
+export const EventsListMyEventsQueryParams = zod.object({
   "page": zod.number().optional(),
   "limit": zod.number().optional(),
   "venueId": zod.string().optional()
 })
 
-export const EventsControllerListMyEventsResponse = zod.object({
+export const EventsListMyEventsResponse = zod.object({
   "items": zod.array(zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
@@ -58,7 +58,7 @@ export const EventsControllerListMyEventsResponse = zod.object({
   "hasMore": zod.boolean()
 })
 
-export const EventsControllerGetRecentlyViewedResponse = zod.object({
+export const EventsGetRecentlyViewedResponse = zod.object({
   "recentlyViewed": zod.array(zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
@@ -77,11 +77,11 @@ export const EventsControllerGetRecentlyViewedResponse = zod.object({
 }))
 })
 
-export const EventsControllerGetEventParams = zod.object({
+export const EventsGetEventParams = zod.object({
   "id": zod.string()
 })
 
-export const EventsControllerGetEventResponse = zod.object({
+export const EventsGetEventResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),
@@ -90,22 +90,22 @@ export const EventsControllerGetEventResponse = zod.object({
   "posterUrl": zod.string().nullable()
 })
 
-export const EventsControllerRemoveParams = zod.object({
+export const EventsRemoveParams = zod.object({
   "id": zod.string()
 })
 
-export const EventsControllerRemoveResponse = zod.void()
+export const EventsRemoveResponse = zod.void()
 
-export const EventsControllerUpdateParams = zod.object({
+export const EventsUpdateParams = zod.object({
   "id": zod.string()
 })
 
-export const EventsControllerUpdateBody = zod.object({
+export const EventsUpdateBody = zod.object({
   "title": zod.string().optional(),
   "startsAt": zod.string().optional()
 })
 
-export const EventsControllerUpdateResponse = zod.object({
+export const EventsUpdateResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),
@@ -114,20 +114,20 @@ export const EventsControllerUpdateResponse = zod.object({
   "posterUrl": zod.string().nullable()
 })
 
-export const EventsControllerGetStatsParams = zod.object({
+export const EventsGetStatsParams = zod.object({
   "id": zod.string()
 })
 
-export const EventsControllerGetStatsResponse = zod.object({
+export const EventsGetStatsResponse = zod.object({
   "ticketsSold": zod.number(),
   "revenue": zod.number()
 })
 
-export const EventsControllerGetSeatsParams = zod.object({
+export const EventsGetSeatsParams = zod.object({
   "id": zod.string()
 })
 
-export const EventsControllerGetSeatsResponseItem = zod.object({
+export const EventsGetSeatsResponseItem = zod.object({
   "id": zod.string(),
   "eventId": zod.string(),
   "seatTypeId": zod.string(),
@@ -135,13 +135,13 @@ export const EventsControllerGetSeatsResponseItem = zod.object({
   "status": zod.enum(['available', 'held', 'booked']),
   "price": zod.number()
 })
-export const EventsControllerGetSeatsResponse = zod.array(EventsControllerGetSeatsResponseItem)
+export const EventsGetSeatsResponse = zod.array(EventsGetSeatsResponseItem)
 
-export const EventsControllerCreateSeatsParams = zod.object({
+export const EventsCreateSeatsParams = zod.object({
   "id": zod.string()
 })
 
-export const EventsControllerCreateSeatsBody = zod.object({
+export const EventsCreateSeatsBody = zod.object({
   "rows": zod.array(zod.object({
   "label": zod.string(),
   "count": zod.number(),
@@ -149,19 +149,19 @@ export const EventsControllerCreateSeatsBody = zod.object({
 }))
 })
 
-export const EventsControllerCreateSeatsResponseItem = zod.object({
+export const EventsCreateSeatsResponseItem = zod.object({
   "id": zod.string(),
   "eventId": zod.string(),
   "label": zod.string(),
   "price": zod.number()
 })
-export const EventsControllerCreateSeatsResponse = zod.array(EventsControllerCreateSeatsResponseItem)
+export const EventsCreateSeatsResponse = zod.array(EventsCreateSeatsResponseItem)
 
-export const EventsControllerListSeatTypesParams = zod.object({
+export const EventsListSeatTypesParams = zod.object({
   "id": zod.string()
 })
 
-export const EventsControllerListSeatTypesResponseItem = zod.object({
+export const EventsListSeatTypesResponseItem = zod.object({
   "id": zod.string(),
   "eventId": zod.string(),
   "label": zod.string(),
@@ -170,39 +170,39 @@ export const EventsControllerListSeatTypesResponseItem = zod.object({
   "heldCount": zod.number(),
   "bookedCount": zod.number()
 })
-export const EventsControllerListSeatTypesResponse = zod.array(EventsControllerListSeatTypesResponseItem)
+export const EventsListSeatTypesResponse = zod.array(EventsListSeatTypesResponseItem)
 
-export const EventsControllerUpdateSeatTypeParams = zod.object({
+export const EventsUpdateSeatTypeParams = zod.object({
   "id": zod.string(),
   "seatTypeId": zod.string()
 })
 
-export const EventsControllerUpdateSeatTypeBody = zod.object({
+export const EventsUpdateSeatTypeBody = zod.object({
   "price": zod.number()
 })
 
-export const EventsControllerUpdateSeatTypeResponse = zod.object({
+export const EventsUpdateSeatTypeResponse = zod.object({
   "id": zod.string(),
   "eventId": zod.string(),
   "label": zod.string(),
   "price": zod.number()
 })
 
-export const EventsControllerRecordViewParams = zod.object({
+export const EventsRecordViewParams = zod.object({
   "id": zod.string()
 })
 
-export const EventsControllerRecordViewResponse = zod.void()
+export const EventsRecordViewResponse = zod.void()
 
-export const EventsControllerUploadPosterParams = zod.object({
+export const EventsUploadPosterParams = zod.object({
   "id": zod.string()
 })
 
-export const EventsControllerUploadPosterBody = zod.object({
+export const EventsUploadPosterBody = zod.object({
   "file": zod.instanceof(Blob).optional()
 })
 
-export const EventsControllerUploadPosterResponse = zod.object({
+export const EventsUploadPosterResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
   "title": zod.string(),

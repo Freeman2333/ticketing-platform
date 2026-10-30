@@ -5,12 +5,12 @@ import { z } from 'zod';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  getVenuesControllerFindMineQueryKey,
-  getVenuesControllerFindOneQueryKey,
-  useVenuesControllerFindOneSuspense,
-  useVenuesControllerUpdate,
-  useVenuesControllerUploadImage,
-  VenuesControllerUpdateBody,
+  getVenuesFindMineQueryKey,
+  getVenuesFindOneQueryKey,
+  useVenuesFindOneSuspense,
+  useVenuesUpdate,
+  useVenuesUploadImage,
+  VenuesUpdateBody,
 } from '@ticketing/api-client';
 import {
   Button,
@@ -31,7 +31,7 @@ import {
 } from '@ticketing/ui';
 import { ImageDropzone } from '../components/ImageDropzone';
 
-type EditVenueFormValues = z.infer<typeof VenuesControllerUpdateBody>;
+type EditVenueFormValues = z.infer<typeof VenuesUpdateBody>;
 
 function EditVenueFormSkeleton() {
   return <Skeleton className="h-64 w-full" />;
@@ -40,17 +40,17 @@ function EditVenueFormSkeleton() {
 function EditVenueContent({ id }: { id: string }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { data: venue } = useVenuesControllerFindOneSuspense(id);
+  const { data: venue } = useVenuesFindOneSuspense(id);
   const [file, setFile] = useState<File | null>(null);
   const form = useForm<EditVenueFormValues>({
-    resolver: zodResolver(VenuesControllerUpdateBody),
+    resolver: zodResolver(VenuesUpdateBody),
     defaultValues: {
       name: venue.name,
       address: venue.address,
     },
   });
-  const updateMutation = useVenuesControllerUpdate();
-  const uploadMutation = useVenuesControllerUploadImage();
+  const updateMutation = useVenuesUpdate();
+  const uploadMutation = useVenuesUploadImage();
 
   async function onSubmit(values: EditVenueFormValues) {
     try {
@@ -59,10 +59,10 @@ function EditVenueContent({ id }: { id: string }) {
         await uploadMutation.mutateAsync({ id, data: { file } });
       }
       queryClient.invalidateQueries({
-        queryKey: getVenuesControllerFindMineQueryKey(),
+        queryKey: getVenuesFindMineQueryKey(),
       });
       queryClient.invalidateQueries({
-        queryKey: getVenuesControllerFindOneQueryKey(id),
+        queryKey: getVenuesFindOneQueryKey(id),
       });
       navigate(`/organizer/venues/${id}`);
     } catch {

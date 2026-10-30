@@ -7,12 +7,12 @@
 import * as zod from 'zod';
 
 
-export const OrdersControllerCreateOrderBody = zod.object({
+export const OrdersCreateOrderBody = zod.object({
   "eventId": zod.string(),
   "seatIds": zod.array(zod.string())
 })
 
-export const OrdersControllerCreateOrderResponse = zod.object({
+export const OrdersCreateOrderResponse = zod.object({
   "id": zod.string(),
   "userId": zod.string(),
   "eventId": zod.string(),
@@ -34,7 +34,7 @@ export const OrdersControllerCreateOrderResponse = zod.object({
   "ticketsPdfUrl": zod.string().nullable()
 })
 
-export const OrdersControllerListOrdersResponseItem = zod.object({
+export const OrdersListOrdersResponseItem = zod.object({
   "id": zod.string(),
   "userId": zod.string(),
   "eventId": zod.string(),
@@ -55,13 +55,13 @@ export const OrdersControllerListOrdersResponseItem = zod.object({
 })),
   "ticketsPdfUrl": zod.string().nullable()
 })
-export const OrdersControllerListOrdersResponse = zod.array(OrdersControllerListOrdersResponseItem)
+export const OrdersListOrdersResponse = zod.array(OrdersListOrdersResponseItem)
 
-export const OrdersControllerGetOrderParams = zod.object({
+export const OrdersGetOrderParams = zod.object({
   "id": zod.string()
 })
 
-export const OrdersControllerGetOrderResponse = zod.object({
+export const OrdersGetOrderResponse = zod.object({
   "id": zod.string(),
   "userId": zod.string(),
   "eventId": zod.string(),
@@ -83,11 +83,11 @@ export const OrdersControllerGetOrderResponse = zod.object({
   "ticketsPdfUrl": zod.string().nullable()
 })
 
-export const OrdersControllerCancelOrderParams = zod.object({
+export const OrdersCancelOrderParams = zod.object({
   "id": zod.string()
 })
 
-export const OrdersControllerCancelOrderResponse = zod.object({
+export const OrdersCancelOrderResponse = zod.object({
   "id": zod.string(),
   "userId": zod.string(),
   "eventId": zod.string(),

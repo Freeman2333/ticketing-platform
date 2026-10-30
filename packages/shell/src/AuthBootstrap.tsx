@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { setAccessToken } from '@ticketing/auth-client';
-import { authControllerRefresh } from '@ticketing/api-client';
+import { authRefresh } from '@ticketing/api-client';
 
 export function AuthBootstrap({ children }: { children: ReactNode }) {
   const [isReady, setIsReady] = useState(false);
@@ -10,7 +10,7 @@ export function AuthBootstrap({ children }: { children: ReactNode }) {
     if (hasStarted.current) return;
     hasStarted.current = true;
 
-    authControllerRefresh()
+    authRefresh()
       .then((response) => setAccessToken(response.accessToken))
       .catch(() => setAccessToken(null))
       .finally(() => setIsReady(true));

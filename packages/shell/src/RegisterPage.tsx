@@ -4,8 +4,8 @@ import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { setAccessToken } from '@ticketing/auth-client';
 import {
-  AuthControllerRegisterBody,
-  useAuthControllerRegister,
+  AuthRegisterBody,
+  useAuthRegister,
 } from '@ticketing/api-client';
 import {
   Button,
@@ -28,14 +28,14 @@ import {
   SelectValue,
 } from '@ticketing/ui';
 
-type RegisterFormValues = z.infer<typeof AuthControllerRegisterBody>;
+type RegisterFormValues = z.infer<typeof AuthRegisterBody>;
 
 export function RegisterPage() {
   const navigate = useNavigate();
   const form = useForm<RegisterFormValues>({
-    resolver: zodResolver(AuthControllerRegisterBody),
+    resolver: zodResolver(AuthRegisterBody),
   });
-  const registerMutation = useAuthControllerRegister();
+  const registerMutation = useAuthRegister();
 
   async function onSubmit(values: RegisterFormValues) {
     try {

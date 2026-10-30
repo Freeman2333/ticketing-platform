@@ -7,17 +7,17 @@
 import * as zod from 'zod';
 
 
-export const authControllerRegisterBodyPasswordMin = 8;
+export const authRegisterBodyPasswordMin = 8;
 
 
 
-export const AuthControllerRegisterBody = zod.object({
+export const AuthRegisterBody = zod.object({
   "email": zod.email(),
-  "password": zod.string().min(authControllerRegisterBodyPasswordMin),
+  "password": zod.string().min(authRegisterBodyPasswordMin),
   "role": zod.enum(['attendee', 'organizer'])
 })
 
-export const AuthControllerRegisterResponse = zod.object({
+export const AuthRegisterResponse = zod.object({
   "accessToken": zod.string(),
   "user": zod.object({
   "id": zod.string(),
@@ -26,16 +26,16 @@ export const AuthControllerRegisterResponse = zod.object({
 })
 })
 
-export const authControllerLoginBodyPasswordMin = 8;
+export const authLoginBodyPasswordMin = 8;
 
 
 
-export const AuthControllerLoginBody = zod.object({
+export const AuthLoginBody = zod.object({
   "email": zod.email(),
-  "password": zod.string().min(authControllerLoginBodyPasswordMin)
+  "password": zod.string().min(authLoginBodyPasswordMin)
 })
 
-export const AuthControllerLoginResponse = zod.object({
+export const AuthLoginResponse = zod.object({
   "accessToken": zod.string(),
   "user": zod.object({
   "id": zod.string(),
@@ -44,13 +44,13 @@ export const AuthControllerLoginResponse = zod.object({
 })
 })
 
-export const AuthControllerRefreshResponse = zod.object({
+export const AuthRefreshResponse = zod.object({
   "accessToken": zod.string()
 })
 
-export const AuthControllerLogoutResponse = zod.void()
+export const AuthLogoutResponse = zod.void()
 
-export const AuthControllerMeResponse = zod.object({
+export const AuthMeResponse = zod.object({
   "id": zod.string(),
   "email": zod.string(),
   "role": zod.enum(['attendee', 'organizer', 'admin'])

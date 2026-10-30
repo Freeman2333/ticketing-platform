@@ -2,14 +2,14 @@ import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { useQueryClient } from '@tanstack/react-query';
 import type { SeatDto } from '@ticketing/api-client';
-import { getEventsControllerGetSeatsQueryKey } from '@ticketing/api-client';
+import { getEventsGetSeatsQueryKey } from '@ticketing/api-client';
 
 export function useSeatAvailability(eventId: string) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
     const socket = io(process.env.NX_PUBLIC_API_URL);
-    const seatsQueryKey = getEventsControllerGetSeatsQueryKey(eventId);
+    const seatsQueryKey = getEventsGetSeatsQueryKey(eventId);
     let hasConnectedBefore = false;
 
     socket.on('connect', () => {

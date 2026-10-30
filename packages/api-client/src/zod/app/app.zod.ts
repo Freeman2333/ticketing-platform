@@ -7,5 +7,5 @@
 import * as zod from 'zod';
 
 
-export const AppControllerGetDataResponse = zod.unknown()
+export const AppGetDataResponse = zod.unknown()
 

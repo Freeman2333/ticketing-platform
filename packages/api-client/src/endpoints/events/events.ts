@@ -41,9 +41,9 @@ import type {
   EventDto,
   EventListDto,
   EventStatsDto,
-  EventsControllerListEventsParams,
-  EventsControllerListMyEventsParams,
-  EventsControllerUploadPosterBody,
+  EventsListEventsParams,
+  EventsListMyEventsParams,
+  EventsUploadPosterBody,
   RecentlyViewedDto,
   SeatDto,
   SeatTypeDto,
@@ -72,8 +72,8 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   return result;
 };
 
-export const eventsControllerListEvents = (
-    params?: EventsControllerListEventsParams,
+export const eventsListEvents = (
+    params?: EventsListEventsParams,
  signal?: AbortSignal
 ) => {
 
@@ -88,72 +88,72 @@ export const eventsControllerListEvents = (
 
 
 
-export const getEventsControllerListEventsInfiniteQueryKey = (params?: EventsControllerListEventsParams,) => {
+export const getEventsListEventsInfiniteQueryKey = (params?: EventsListEventsParams,) => {
     return [
     'infinite', `/api/events`, ...(params ? [params] : [])
     ] as const;
     }
 
-export const getEventsControllerListEventsQueryKey = (params?: EventsControllerListEventsParams,) => {
+export const getEventsListEventsQueryKey = (params?: EventsListEventsParams,) => {
     return [
     `/api/events`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getEventsControllerListEventsInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(params?: EventsControllerListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>>, }
+export const getEventsListEventsInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof eventsListEvents>>, EventsListEventsParams['page']>, TError = unknown>(params?: EventsListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListEventsInfiniteQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getEventsListEventsInfiniteQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListEvents>>, QueryKey, EventsControllerListEventsParams['page']> = ({ signal, pageParam }) => eventsControllerListEvents({...params, 'page': pageParam ?? params?.['page']}, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsListEvents>>, QueryKey, EventsListEventsParams['page']> = ({ signal, pageParam }) => eventsListEvents({...params, 'page': pageParam ?? params?.['page']}, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type EventsControllerListEventsInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListEvents>>>
-export type EventsControllerListEventsInfiniteQueryError = unknown
+export type EventsListEventsInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof eventsListEvents>>>
+export type EventsListEventsInfiniteQueryError = unknown
 
 
-export function useEventsControllerListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
- params: undefined |  EventsControllerListEventsParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>> & Pick<
+export function useEventsListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListEvents>>, EventsListEventsParams['page']>, TError = unknown>(
+ params: undefined |  EventsListEventsParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerListEvents>>,
+          Awaited<ReturnType<typeof eventsListEvents>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerListEvents>>, QueryKey
+          Awaited<ReturnType<typeof eventsListEvents>>, QueryKey
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>> & Pick<
+export function useEventsListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListEvents>>, EventsListEventsParams['page']>, TError = unknown>(
+ params?: EventsListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerListEvents>>,
+          Awaited<ReturnType<typeof eventsListEvents>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerListEvents>>, QueryKey
+          Awaited<ReturnType<typeof eventsListEvents>>, QueryKey
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>>, }
+export function useEventsListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListEvents>>, EventsListEventsParams['page']>, TError = unknown>(
+ params?: EventsListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']>>, }
  , queryClient?: QueryClient
   ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>>, }
+export function useEventsListEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListEvents>>, EventsListEventsParams['page']>, TError = unknown>(
+ params?: EventsListEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']>>, }
  , queryClient?: QueryClient
  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerListEventsInfiniteQueryOptions(params,options)
+  const queryOptions = getEventsListEventsInfiniteQueryOptions(params,options)
 
   const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -165,59 +165,59 @@ export function useEventsControllerListEventsInfinite<TData = InfiniteData<Await
 
 
 
-export const getEventsControllerListEventsQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>(params?: EventsControllerListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>>, }
+export const getEventsListEventsQueryOptions = <TData = Awaited<ReturnType<typeof eventsListEvents>>, TError = unknown>(params?: EventsListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListEventsQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getEventsListEventsQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListEvents>>> = ({ signal }) => eventsControllerListEvents(params, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsListEvents>>> = ({ signal }) => eventsListEvents(params, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type EventsControllerListEventsQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListEvents>>>
-export type EventsControllerListEventsQueryError = unknown
+export type EventsListEventsQueryResult = NonNullable<Awaited<ReturnType<typeof eventsListEvents>>>
+export type EventsListEventsQueryError = unknown
 
 
-export function useEventsControllerListEvents<TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>(
- params: undefined |  EventsControllerListEventsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>> & Pick<
+export function useEventsListEvents<TData = Awaited<ReturnType<typeof eventsListEvents>>, TError = unknown>(
+ params: undefined |  EventsListEventsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerListEvents>>,
+          Awaited<ReturnType<typeof eventsListEvents>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerListEvents>>
+          Awaited<ReturnType<typeof eventsListEvents>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListEvents<TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>(
- params?: EventsControllerListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>> & Pick<
+export function useEventsListEvents<TData = Awaited<ReturnType<typeof eventsListEvents>>, TError = unknown>(
+ params?: EventsListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerListEvents>>,
+          Awaited<ReturnType<typeof eventsListEvents>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerListEvents>>
+          Awaited<ReturnType<typeof eventsListEvents>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListEvents<TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>(
- params?: EventsControllerListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>>, }
+export function useEventsListEvents<TData = Awaited<ReturnType<typeof eventsListEvents>>, TError = unknown>(
+ params?: EventsListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerListEvents<TData = Awaited<ReturnType<typeof eventsControllerListEvents>>, TError = unknown>(
- params?: EventsControllerListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData>>, }
+export function useEventsListEvents<TData = Awaited<ReturnType<typeof eventsListEvents>>, TError = unknown>(
+ params?: EventsListEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerListEventsQueryOptions(params,options)
+  const queryOptions = getEventsListEventsQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -229,47 +229,47 @@ export function useEventsControllerListEvents<TData = Awaited<ReturnType<typeof 
 
 
 
-export const getEventsControllerListEventsSuspenseInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(params?: EventsControllerListEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>>, }
+export const getEventsListEventsSuspenseInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof eventsListEvents>>, EventsListEventsParams['page']>, TError = unknown>(params?: EventsListEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListEventsInfiniteQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getEventsListEventsInfiniteQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListEvents>>, QueryKey, EventsControllerListEventsParams['page']> = ({ signal, pageParam }) => eventsControllerListEvents({...params, 'page': pageParam ?? params?.['page']}, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsListEvents>>, QueryKey, EventsListEventsParams['page']> = ({ signal, pageParam }) => eventsListEvents({...params, 'page': pageParam ?? params?.['page']}, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type EventsControllerListEventsSuspenseInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListEvents>>>
-export type EventsControllerListEventsSuspenseInfiniteQueryError = unknown
+export type EventsListEventsSuspenseInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof eventsListEvents>>>
+export type EventsListEventsSuspenseInfiniteQueryError = unknown
 
 
-export function useEventsControllerListEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
- params: undefined |  EventsControllerListEventsParams, options: { query:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>>, }
+export function useEventsListEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListEvents>>, EventsListEventsParams['page']>, TError = unknown>(
+ params: undefined |  EventsListEventsParams, options: { query:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>>, }
+export function useEventsListEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListEvents>>, EventsListEventsParams['page']>, TError = unknown>(
+ params?: EventsListEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>>, }
+export function useEventsListEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListEvents>>, EventsListEventsParams['page']>, TError = unknown>(
+ params?: EventsListEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerListEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListEvents>>, EventsControllerListEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListEvents>>, TError, TData, QueryKey, EventsControllerListEventsParams['page']>>, }
+export function useEventsListEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListEvents>>, EventsListEventsParams['page']>, TError = unknown>(
+ params?: EventsListEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListEvents>>, TError, TData, QueryKey, EventsListEventsParams['page']>>, }
  , queryClient?: QueryClient
  ):  UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerListEventsSuspenseInfiniteQueryOptions(params,options)
+  const queryOptions = getEventsListEventsSuspenseInfiniteQueryOptions(params,options)
 
   const query = useSuspenseInfiniteQuery(queryOptions, queryClient) as  UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -281,7 +281,7 @@ export function useEventsControllerListEventsSuspenseInfinite<TData = InfiniteDa
 
 
 
-export const eventsControllerCreate = (
+export const eventsCreate = (
     createEventDto: CreateEventDto,
  signal?: AbortSignal
 ) => {
@@ -298,13 +298,13 @@ export const eventsControllerCreate = (
 
 
 
-export const getEventsControllerCreateMutationKey = () => ['eventsControllerCreate'] as const;
+export const getEventsCreateMutationKey = () => ['eventsCreate'] as const;
 
-export const getEventsControllerCreateMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreate>>, TError,EventsControllerCreateMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreate>>, TError,EventsControllerCreateMutationVariables, TContext> => {
+export const getEventsCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsCreate>>, TError,EventsCreateMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof eventsCreate>>, TError,EventsCreateMutationVariables, TContext> => {
 
-const mutationKey = getEventsControllerCreateMutationKey();
+const mutationKey = getEventsCreateMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -314,10 +314,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerCreate>>, EventsControllerCreateMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsCreate>>, EventsCreateMutationVariables> = (props) => {
           const {data} = props ?? {};
 
-          return  eventsControllerCreate(data,)
+          return  eventsCreate(data,)
         }
 
 
@@ -327,23 +327,23 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type EventsControllerCreateMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerCreate>>>
-    export type EventsControllerCreateMutationBody = CreateEventDto
-    export type EventsControllerCreateMutationError = unknown
-    export type EventsControllerCreateMutationVariables = {data: CreateEventDto}
+    export type EventsCreateMutationResult = NonNullable<Awaited<ReturnType<typeof eventsCreate>>>
+    export type EventsCreateMutationBody = CreateEventDto
+    export type EventsCreateMutationError = unknown
+    export type EventsCreateMutationVariables = {data: CreateEventDto}
 
-    export const useEventsControllerCreate = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreate>>, TError,EventsControllerCreateMutationVariables, TContext>, }
+    export const useEventsCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsCreate>>, TError,EventsCreateMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof eventsControllerCreate>>,
+        Awaited<ReturnType<typeof eventsCreate>>,
         TError,
-        EventsControllerCreateMutationVariables,
+        EventsCreateMutationVariables,
         TContext
       > => {
-      return useMutation(getEventsControllerCreateMutationOptions(options), queryClient);
+      return useMutation(getEventsCreateMutationOptions(options), queryClient);
     }
-    export const eventsControllerListMyEvents = (
-    params?: EventsControllerListMyEventsParams,
+    export const eventsListMyEvents = (
+    params?: EventsListMyEventsParams,
  signal?: AbortSignal
 ) => {
 
@@ -358,72 +358,72 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getEventsControllerListMyEventsInfiniteQueryKey = (params?: EventsControllerListMyEventsParams,) => {
+export const getEventsListMyEventsInfiniteQueryKey = (params?: EventsListMyEventsParams,) => {
     return [
     'infinite', `/api/events/mine`, ...(params ? [params] : [])
     ] as const;
     }
 
-export const getEventsControllerListMyEventsQueryKey = (params?: EventsControllerListMyEventsParams,) => {
+export const getEventsListMyEventsQueryKey = (params?: EventsListMyEventsParams,) => {
     return [
     `/api/events/mine`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getEventsControllerListMyEventsInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, EventsControllerListMyEventsParams['page']>, TError = unknown>(params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']>>, }
+export const getEventsListMyEventsInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof eventsListMyEvents>>, EventsListMyEventsParams['page']>, TError = unknown>(params?: EventsListMyEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListMyEventsInfiniteQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getEventsListMyEventsInfiniteQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, QueryKey, EventsControllerListMyEventsParams['page']> = ({ signal, pageParam }) => eventsControllerListMyEvents({...params, 'page': pageParam ?? params?.['page']}, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsListMyEvents>>, QueryKey, EventsListMyEventsParams['page']> = ({ signal, pageParam }) => eventsListMyEvents({...params, 'page': pageParam ?? params?.['page']}, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type EventsControllerListMyEventsInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListMyEvents>>>
-export type EventsControllerListMyEventsInfiniteQueryError = unknown
+export type EventsListMyEventsInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof eventsListMyEvents>>>
+export type EventsListMyEventsInfiniteQueryError = unknown
 
 
-export function useEventsControllerListMyEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, EventsControllerListMyEventsParams['page']>, TError = unknown>(
- params: undefined |  EventsControllerListMyEventsParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']>> & Pick<
+export function useEventsListMyEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListMyEvents>>, EventsListMyEventsParams['page']>, TError = unknown>(
+ params: undefined |  EventsListMyEventsParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerListMyEvents>>,
+          Awaited<ReturnType<typeof eventsListMyEvents>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerListMyEvents>>, QueryKey
+          Awaited<ReturnType<typeof eventsListMyEvents>>, QueryKey
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListMyEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, EventsControllerListMyEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']>> & Pick<
+export function useEventsListMyEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListMyEvents>>, EventsListMyEventsParams['page']>, TError = unknown>(
+ params?: EventsListMyEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerListMyEvents>>,
+          Awaited<ReturnType<typeof eventsListMyEvents>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerListMyEvents>>, QueryKey
+          Awaited<ReturnType<typeof eventsListMyEvents>>, QueryKey
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListMyEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, EventsControllerListMyEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']>>, }
+export function useEventsListMyEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListMyEvents>>, EventsListMyEventsParams['page']>, TError = unknown>(
+ params?: EventsListMyEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']>>, }
  , queryClient?: QueryClient
   ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerListMyEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, EventsControllerListMyEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']>>, }
+export function useEventsListMyEventsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListMyEvents>>, EventsListMyEventsParams['page']>, TError = unknown>(
+ params?: EventsListMyEventsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']>>, }
  , queryClient?: QueryClient
  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerListMyEventsInfiniteQueryOptions(params,options)
+  const queryOptions = getEventsListMyEventsInfiniteQueryOptions(params,options)
 
   const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -435,59 +435,59 @@ export function useEventsControllerListMyEventsInfinite<TData = InfiniteData<Awa
 
 
 
-export const getEventsControllerListMyEventsQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>>, }
+export const getEventsListMyEventsQueryOptions = <TData = Awaited<ReturnType<typeof eventsListMyEvents>>, TError = unknown>(params?: EventsListMyEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListMyEventsQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getEventsListMyEventsQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListMyEvents>>> = ({ signal }) => eventsControllerListMyEvents(params, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsListMyEvents>>> = ({ signal }) => eventsListMyEvents(params, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type EventsControllerListMyEventsQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListMyEvents>>>
-export type EventsControllerListMyEventsQueryError = unknown
+export type EventsListMyEventsQueryResult = NonNullable<Awaited<ReturnType<typeof eventsListMyEvents>>>
+export type EventsListMyEventsQueryError = unknown
 
 
-export function useEventsControllerListMyEvents<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
- params: undefined |  EventsControllerListMyEventsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>> & Pick<
+export function useEventsListMyEvents<TData = Awaited<ReturnType<typeof eventsListMyEvents>>, TError = unknown>(
+ params: undefined |  EventsListMyEventsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerListMyEvents>>,
+          Awaited<ReturnType<typeof eventsListMyEvents>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerListMyEvents>>
+          Awaited<ReturnType<typeof eventsListMyEvents>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListMyEvents<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
- params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>> & Pick<
+export function useEventsListMyEvents<TData = Awaited<ReturnType<typeof eventsListMyEvents>>, TError = unknown>(
+ params?: EventsListMyEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerListMyEvents>>,
+          Awaited<ReturnType<typeof eventsListMyEvents>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerListMyEvents>>
+          Awaited<ReturnType<typeof eventsListMyEvents>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListMyEvents<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
- params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>>, }
+export function useEventsListMyEvents<TData = Awaited<ReturnType<typeof eventsListMyEvents>>, TError = unknown>(
+ params?: EventsListMyEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerListMyEvents<TData = Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError = unknown>(
- params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData>>, }
+export function useEventsListMyEvents<TData = Awaited<ReturnType<typeof eventsListMyEvents>>, TError = unknown>(
+ params?: EventsListMyEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerListMyEventsQueryOptions(params,options)
+  const queryOptions = getEventsListMyEventsQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -499,47 +499,47 @@ export function useEventsControllerListMyEvents<TData = Awaited<ReturnType<typeo
 
 
 
-export const getEventsControllerListMyEventsSuspenseInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, EventsControllerListMyEventsParams['page']>, TError = unknown>(params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']>>, }
+export const getEventsListMyEventsSuspenseInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof eventsListMyEvents>>, EventsListMyEventsParams['page']>, TError = unknown>(params?: EventsListMyEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListMyEventsInfiniteQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getEventsListMyEventsInfiniteQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, QueryKey, EventsControllerListMyEventsParams['page']> = ({ signal, pageParam }) => eventsControllerListMyEvents({...params, 'page': pageParam ?? params?.['page']}, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsListMyEvents>>, QueryKey, EventsListMyEventsParams['page']> = ({ signal, pageParam }) => eventsListMyEvents({...params, 'page': pageParam ?? params?.['page']}, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type EventsControllerListMyEventsSuspenseInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListMyEvents>>>
-export type EventsControllerListMyEventsSuspenseInfiniteQueryError = unknown
+export type EventsListMyEventsSuspenseInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof eventsListMyEvents>>>
+export type EventsListMyEventsSuspenseInfiniteQueryError = unknown
 
 
-export function useEventsControllerListMyEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, EventsControllerListMyEventsParams['page']>, TError = unknown>(
- params: undefined |  EventsControllerListMyEventsParams, options: { query:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']>>, }
+export function useEventsListMyEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListMyEvents>>, EventsListMyEventsParams['page']>, TError = unknown>(
+ params: undefined |  EventsListMyEventsParams, options: { query:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListMyEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, EventsControllerListMyEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']>>, }
+export function useEventsListMyEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListMyEvents>>, EventsListMyEventsParams['page']>, TError = unknown>(
+ params?: EventsListMyEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListMyEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, EventsControllerListMyEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']>>, }
+export function useEventsListMyEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListMyEvents>>, EventsListMyEventsParams['page']>, TError = unknown>(
+ params?: EventsListMyEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerListMyEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, EventsControllerListMyEventsParams['page']>, TError = unknown>(
- params?: EventsControllerListMyEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsControllerListMyEvents>>, TError, TData, QueryKey, EventsControllerListMyEventsParams['page']>>, }
+export function useEventsListMyEventsSuspenseInfinite<TData = InfiniteData<Awaited<ReturnType<typeof eventsListMyEvents>>, EventsListMyEventsParams['page']>, TError = unknown>(
+ params?: EventsListMyEventsParams, options?: { query?:Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof eventsListMyEvents>>, TError, TData, QueryKey, EventsListMyEventsParams['page']>>, }
  , queryClient?: QueryClient
  ):  UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerListMyEventsSuspenseInfiniteQueryOptions(params,options)
+  const queryOptions = getEventsListMyEventsSuspenseInfiniteQueryOptions(params,options)
 
   const query = useSuspenseInfiniteQuery(queryOptions, queryClient) as  UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -551,7 +551,7 @@ export function useEventsControllerListMyEventsSuspenseInfinite<TData = Infinite
 
 
 
-export const eventsControllerGetRecentlyViewed = (
+export const eventsGetRecentlyViewed = (
 
  signal?: AbortSignal
 ) => {
@@ -566,66 +566,66 @@ export const eventsControllerGetRecentlyViewed = (
 
 
 
-export const getEventsControllerGetRecentlyViewedQueryKey = () => {
+export const getEventsGetRecentlyViewedQueryKey = () => {
     return [
     `/api/events/recently-viewed`
     ] as const;
     }
 
 
-export const getEventsControllerGetRecentlyViewedQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData>>, }
+export const getEventsGetRecentlyViewedQueryOptions = <TData = Awaited<ReturnType<typeof eventsGetRecentlyViewed>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetRecentlyViewed>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerGetRecentlyViewedQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getEventsGetRecentlyViewedQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>> = ({ signal }) => eventsControllerGetRecentlyViewed(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsGetRecentlyViewed>>> = ({ signal }) => eventsGetRecentlyViewed(signal);
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsGetRecentlyViewed>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type EventsControllerGetRecentlyViewedQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>>
-export type EventsControllerGetRecentlyViewedQueryError = unknown
+export type EventsGetRecentlyViewedQueryResult = NonNullable<Awaited<ReturnType<typeof eventsGetRecentlyViewed>>>
+export type EventsGetRecentlyViewedQueryError = unknown
 
 
-export function useEventsControllerGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData>> & Pick<
+export function useEventsGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsGetRecentlyViewed>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetRecentlyViewed>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>,
+          Awaited<ReturnType<typeof eventsGetRecentlyViewed>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>
+          Awaited<ReturnType<typeof eventsGetRecentlyViewed>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData>> & Pick<
+export function useEventsGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsGetRecentlyViewed>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetRecentlyViewed>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>,
+          Awaited<ReturnType<typeof eventsGetRecentlyViewed>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>
+          Awaited<ReturnType<typeof eventsGetRecentlyViewed>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData>>, }
+export function useEventsGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsGetRecentlyViewed>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetRecentlyViewed>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetRecentlyViewed>>, TError, TData>>, }
+export function useEventsGetRecentlyViewed<TData = Awaited<ReturnType<typeof eventsGetRecentlyViewed>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetRecentlyViewed>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerGetRecentlyViewedQueryOptions(options)
+  const queryOptions = getEventsGetRecentlyViewedQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -637,7 +637,7 @@ export function useEventsControllerGetRecentlyViewed<TData = Awaited<ReturnType<
 
 
 
-export const eventsControllerGetEvent = (
+export const eventsGetEvent = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -652,66 +652,66 @@ export const eventsControllerGetEvent = (
 
 
 
-export const getEventsControllerGetEventQueryKey = (id: string,) => {
+export const getEventsGetEventQueryKey = (id: string,) => {
     return [
     `/api/events/${id}`
     ] as const;
     }
 
 
-export const getEventsControllerGetEventQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+export const getEventsGetEventQueryOptions = <TData = Awaited<ReturnType<typeof eventsGetEvent>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerGetEventQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getEventsGetEventQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerGetEvent>>> = ({ signal }) => eventsControllerGetEvent(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsGetEvent>>> = ({ signal }) => eventsGetEvent(id, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type EventsControllerGetEventQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerGetEvent>>>
-export type EventsControllerGetEventQueryError = unknown
+export type EventsGetEventQueryResult = NonNullable<Awaited<ReturnType<typeof eventsGetEvent>>>
+export type EventsGetEventQueryError = unknown
 
 
-export function useEventsControllerGetEvent<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>> & Pick<
+export function useEventsGetEvent<TData = Awaited<ReturnType<typeof eventsGetEvent>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerGetEvent>>,
+          Awaited<ReturnType<typeof eventsGetEvent>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerGetEvent>>
+          Awaited<ReturnType<typeof eventsGetEvent>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetEvent<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>> & Pick<
+export function useEventsGetEvent<TData = Awaited<ReturnType<typeof eventsGetEvent>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerGetEvent>>,
+          Awaited<ReturnType<typeof eventsGetEvent>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerGetEvent>>
+          Awaited<ReturnType<typeof eventsGetEvent>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetEvent<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+export function useEventsGetEvent<TData = Awaited<ReturnType<typeof eventsGetEvent>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerGetEvent<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+export function useEventsGetEvent<TData = Awaited<ReturnType<typeof eventsGetEvent>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerGetEventQueryOptions(id,options)
+  const queryOptions = getEventsGetEventQueryOptions(id,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -723,47 +723,47 @@ export function useEventsControllerGetEvent<TData = Awaited<ReturnType<typeof ev
 
 
 
-export const getEventsControllerGetEventSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+export const getEventsGetEventSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof eventsGetEvent>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerGetEventQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getEventsGetEventQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerGetEvent>>> = ({ signal }) => eventsControllerGetEvent(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsGetEvent>>> = ({ signal }) => eventsGetEvent(id, signal);
 
 
 
 
 
-   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
 }
 
-export type EventsControllerGetEventSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerGetEvent>>>
-export type EventsControllerGetEventSuspenseQueryError = unknown
+export type EventsGetEventSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof eventsGetEvent>>>
+export type EventsGetEventSuspenseQueryError = unknown
 
 
-export function useEventsControllerGetEventSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
- id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+export function useEventsGetEventSuspense<TData = Awaited<ReturnType<typeof eventsGetEvent>>, TError = unknown>(
+ id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetEventSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+export function useEventsGetEventSuspense<TData = Awaited<ReturnType<typeof eventsGetEvent>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetEventSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+export function useEventsGetEventSuspense<TData = Awaited<ReturnType<typeof eventsGetEvent>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerGetEventSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+export function useEventsGetEventSuspense<TData = Awaited<ReturnType<typeof eventsGetEvent>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetEvent>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerGetEventSuspenseQueryOptions(id,options)
+  const queryOptions = getEventsGetEventSuspenseQueryOptions(id,options)
 
   const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -775,7 +775,7 @@ export function useEventsControllerGetEventSuspense<TData = Awaited<ReturnType<t
 
 
 
-export const eventsControllerRemove = (
+export const eventsRemove = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -790,13 +790,13 @@ export const eventsControllerRemove = (
 
 
 
-export const getEventsControllerRemoveMutationKey = () => ['eventsControllerRemove'] as const;
+export const getEventsRemoveMutationKey = () => ['eventsRemove'] as const;
 
-export const getEventsControllerRemoveMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRemove>>, TError,EventsControllerRemoveMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRemove>>, TError,EventsControllerRemoveMutationVariables, TContext> => {
+export const getEventsRemoveMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsRemove>>, TError,EventsRemoveMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof eventsRemove>>, TError,EventsRemoveMutationVariables, TContext> => {
 
-const mutationKey = getEventsControllerRemoveMutationKey();
+const mutationKey = getEventsRemoveMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -806,10 +806,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerRemove>>, EventsControllerRemoveMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsRemove>>, EventsRemoveMutationVariables> = (props) => {
           const {id} = props ?? {};
 
-          return  eventsControllerRemove(id,)
+          return  eventsRemove(id,)
         }
 
 
@@ -819,22 +819,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type EventsControllerRemoveMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerRemove>>>
+    export type EventsRemoveMutationResult = NonNullable<Awaited<ReturnType<typeof eventsRemove>>>
 
-    export type EventsControllerRemoveMutationError = unknown
-    export type EventsControllerRemoveMutationVariables = {id: string}
+    export type EventsRemoveMutationError = unknown
+    export type EventsRemoveMutationVariables = {id: string}
 
-    export const useEventsControllerRemove = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRemove>>, TError,EventsControllerRemoveMutationVariables, TContext>, }
+    export const useEventsRemove = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsRemove>>, TError,EventsRemoveMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof eventsControllerRemove>>,
+        Awaited<ReturnType<typeof eventsRemove>>,
         TError,
-        EventsControllerRemoveMutationVariables,
+        EventsRemoveMutationVariables,
         TContext
       > => {
-      return useMutation(getEventsControllerRemoveMutationOptions(options), queryClient);
+      return useMutation(getEventsRemoveMutationOptions(options), queryClient);
     }
-    export const eventsControllerUpdate = (
+    export const eventsUpdate = (
     id: string,
     updateEventDto: UpdateEventDto,
  signal?: AbortSignal
@@ -852,13 +852,13 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getEventsControllerUpdateMutationKey = () => ['eventsControllerUpdate'] as const;
+export const getEventsUpdateMutationKey = () => ['eventsUpdate'] as const;
 
-export const getEventsControllerUpdateMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdate>>, TError,EventsControllerUpdateMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdate>>, TError,EventsControllerUpdateMutationVariables, TContext> => {
+export const getEventsUpdateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsUpdate>>, TError,EventsUpdateMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof eventsUpdate>>, TError,EventsUpdateMutationVariables, TContext> => {
 
-const mutationKey = getEventsControllerUpdateMutationKey();
+const mutationKey = getEventsUpdateMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -868,10 +868,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerUpdate>>, EventsControllerUpdateMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsUpdate>>, EventsUpdateMutationVariables> = (props) => {
           const {id,data} = props ?? {};
 
-          return  eventsControllerUpdate(id,data,)
+          return  eventsUpdate(id,data,)
         }
 
 
@@ -881,22 +881,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type EventsControllerUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerUpdate>>>
-    export type EventsControllerUpdateMutationBody = UpdateEventDto
-    export type EventsControllerUpdateMutationError = unknown
-    export type EventsControllerUpdateMutationVariables = {id: string;data: UpdateEventDto}
+    export type EventsUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof eventsUpdate>>>
+    export type EventsUpdateMutationBody = UpdateEventDto
+    export type EventsUpdateMutationError = unknown
+    export type EventsUpdateMutationVariables = {id: string;data: UpdateEventDto}
 
-    export const useEventsControllerUpdate = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdate>>, TError,EventsControllerUpdateMutationVariables, TContext>, }
+    export const useEventsUpdate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsUpdate>>, TError,EventsUpdateMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof eventsControllerUpdate>>,
+        Awaited<ReturnType<typeof eventsUpdate>>,
         TError,
-        EventsControllerUpdateMutationVariables,
+        EventsUpdateMutationVariables,
         TContext
       > => {
-      return useMutation(getEventsControllerUpdateMutationOptions(options), queryClient);
+      return useMutation(getEventsUpdateMutationOptions(options), queryClient);
     }
-    export const eventsControllerGetStats = (
+    export const eventsGetStats = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -911,66 +911,66 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getEventsControllerGetStatsQueryKey = (id: string,) => {
+export const getEventsGetStatsQueryKey = (id: string,) => {
     return [
     `/api/events/${id}/stats`
     ] as const;
     }
 
 
-export const getEventsControllerGetStatsQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+export const getEventsGetStatsQueryOptions = <TData = Awaited<ReturnType<typeof eventsGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerGetStatsQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getEventsGetStatsQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerGetStats>>> = ({ signal }) => eventsControllerGetStats(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsGetStats>>> = ({ signal }) => eventsGetStats(id, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type EventsControllerGetStatsQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerGetStats>>>
-export type EventsControllerGetStatsQueryError = unknown
+export type EventsGetStatsQueryResult = NonNullable<Awaited<ReturnType<typeof eventsGetStats>>>
+export type EventsGetStatsQueryError = unknown
 
 
-export function useEventsControllerGetStats<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>> & Pick<
+export function useEventsGetStats<TData = Awaited<ReturnType<typeof eventsGetStats>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerGetStats>>,
+          Awaited<ReturnType<typeof eventsGetStats>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerGetStats>>
+          Awaited<ReturnType<typeof eventsGetStats>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetStats<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>> & Pick<
+export function useEventsGetStats<TData = Awaited<ReturnType<typeof eventsGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerGetStats>>,
+          Awaited<ReturnType<typeof eventsGetStats>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerGetStats>>
+          Awaited<ReturnType<typeof eventsGetStats>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetStats<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+export function useEventsGetStats<TData = Awaited<ReturnType<typeof eventsGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerGetStats<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+export function useEventsGetStats<TData = Awaited<ReturnType<typeof eventsGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerGetStatsQueryOptions(id,options)
+  const queryOptions = getEventsGetStatsQueryOptions(id,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -982,47 +982,47 @@ export function useEventsControllerGetStats<TData = Awaited<ReturnType<typeof ev
 
 
 
-export const getEventsControllerGetStatsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+export const getEventsGetStatsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof eventsGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerGetStatsQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getEventsGetStatsQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerGetStats>>> = ({ signal }) => eventsControllerGetStats(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsGetStats>>> = ({ signal }) => eventsGetStats(id, signal);
 
 
 
 
 
-   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
 }
 
-export type EventsControllerGetStatsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerGetStats>>>
-export type EventsControllerGetStatsSuspenseQueryError = unknown
+export type EventsGetStatsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof eventsGetStats>>>
+export type EventsGetStatsSuspenseQueryError = unknown
 
 
-export function useEventsControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
- id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+export function useEventsGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsGetStats>>, TError = unknown>(
+ id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+export function useEventsGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+export function useEventsGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+export function useEventsGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsGetStats>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerGetStatsSuspenseQueryOptions(id,options)
+  const queryOptions = getEventsGetStatsSuspenseQueryOptions(id,options)
 
   const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -1034,7 +1034,7 @@ export function useEventsControllerGetStatsSuspense<TData = Awaited<ReturnType<t
 
 
 
-export const eventsControllerGetSeats = (
+export const eventsGetSeats = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -1049,66 +1049,66 @@ export const eventsControllerGetSeats = (
 
 
 
-export const getEventsControllerGetSeatsQueryKey = (id: string,) => {
+export const getEventsGetSeatsQueryKey = (id: string,) => {
     return [
     `/api/events/${id}/seats`
     ] as const;
     }
 
 
-export const getEventsControllerGetSeatsQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerGetSeats>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetSeats>>, TError, TData>>, }
+export const getEventsGetSeatsQueryOptions = <TData = Awaited<ReturnType<typeof eventsGetSeats>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetSeats>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerGetSeatsQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getEventsGetSeatsQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerGetSeats>>> = ({ signal }) => eventsControllerGetSeats(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsGetSeats>>> = ({ signal }) => eventsGetSeats(id, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetSeats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsGetSeats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type EventsControllerGetSeatsQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerGetSeats>>>
-export type EventsControllerGetSeatsQueryError = unknown
+export type EventsGetSeatsQueryResult = NonNullable<Awaited<ReturnType<typeof eventsGetSeats>>>
+export type EventsGetSeatsQueryError = unknown
 
 
-export function useEventsControllerGetSeats<TData = Awaited<ReturnType<typeof eventsControllerGetSeats>>, TError = unknown>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetSeats>>, TError, TData>> & Pick<
+export function useEventsGetSeats<TData = Awaited<ReturnType<typeof eventsGetSeats>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetSeats>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerGetSeats>>,
+          Awaited<ReturnType<typeof eventsGetSeats>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerGetSeats>>
+          Awaited<ReturnType<typeof eventsGetSeats>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetSeats<TData = Awaited<ReturnType<typeof eventsControllerGetSeats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetSeats>>, TError, TData>> & Pick<
+export function useEventsGetSeats<TData = Awaited<ReturnType<typeof eventsGetSeats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetSeats>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerGetSeats>>,
+          Awaited<ReturnType<typeof eventsGetSeats>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerGetSeats>>
+          Awaited<ReturnType<typeof eventsGetSeats>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerGetSeats<TData = Awaited<ReturnType<typeof eventsControllerGetSeats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetSeats>>, TError, TData>>, }
+export function useEventsGetSeats<TData = Awaited<ReturnType<typeof eventsGetSeats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetSeats>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerGetSeats<TData = Awaited<ReturnType<typeof eventsControllerGetSeats>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetSeats>>, TError, TData>>, }
+export function useEventsGetSeats<TData = Awaited<ReturnType<typeof eventsGetSeats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsGetSeats>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerGetSeatsQueryOptions(id,options)
+  const queryOptions = getEventsGetSeatsQueryOptions(id,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -1120,7 +1120,7 @@ export function useEventsControllerGetSeats<TData = Awaited<ReturnType<typeof ev
 
 
 
-export const eventsControllerCreateSeats = (
+export const eventsCreateSeats = (
     id: string,
     createSeatsDto: CreateSeatsDto,
  signal?: AbortSignal
@@ -1138,13 +1138,13 @@ export const eventsControllerCreateSeats = (
 
 
 
-export const getEventsControllerCreateSeatsMutationKey = () => ['eventsControllerCreateSeats'] as const;
+export const getEventsCreateSeatsMutationKey = () => ['eventsCreateSeats'] as const;
 
-export const getEventsControllerCreateSeatsMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreateSeats>>, TError,EventsControllerCreateSeatsMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreateSeats>>, TError,EventsControllerCreateSeatsMutationVariables, TContext> => {
+export const getEventsCreateSeatsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsCreateSeats>>, TError,EventsCreateSeatsMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof eventsCreateSeats>>, TError,EventsCreateSeatsMutationVariables, TContext> => {
 
-const mutationKey = getEventsControllerCreateSeatsMutationKey();
+const mutationKey = getEventsCreateSeatsMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1154,10 +1154,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerCreateSeats>>, EventsControllerCreateSeatsMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsCreateSeats>>, EventsCreateSeatsMutationVariables> = (props) => {
           const {id,data} = props ?? {};
 
-          return  eventsControllerCreateSeats(id,data,)
+          return  eventsCreateSeats(id,data,)
         }
 
 
@@ -1167,22 +1167,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type EventsControllerCreateSeatsMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerCreateSeats>>>
-    export type EventsControllerCreateSeatsMutationBody = CreateSeatsDto
-    export type EventsControllerCreateSeatsMutationError = unknown
-    export type EventsControllerCreateSeatsMutationVariables = {id: string;data: CreateSeatsDto}
+    export type EventsCreateSeatsMutationResult = NonNullable<Awaited<ReturnType<typeof eventsCreateSeats>>>
+    export type EventsCreateSeatsMutationBody = CreateSeatsDto
+    export type EventsCreateSeatsMutationError = unknown
+    export type EventsCreateSeatsMutationVariables = {id: string;data: CreateSeatsDto}
 
-    export const useEventsControllerCreateSeats = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreateSeats>>, TError,EventsControllerCreateSeatsMutationVariables, TContext>, }
+    export const useEventsCreateSeats = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsCreateSeats>>, TError,EventsCreateSeatsMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof eventsControllerCreateSeats>>,
+        Awaited<ReturnType<typeof eventsCreateSeats>>,
         TError,
-        EventsControllerCreateSeatsMutationVariables,
+        EventsCreateSeatsMutationVariables,
         TContext
       > => {
-      return useMutation(getEventsControllerCreateSeatsMutationOptions(options), queryClient);
+      return useMutation(getEventsCreateSeatsMutationOptions(options), queryClient);
     }
-    export const eventsControllerListSeatTypes = (
+    export const eventsListSeatTypes = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -1197,66 +1197,66 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getEventsControllerListSeatTypesQueryKey = (id: string,) => {
+export const getEventsListSeatTypesQueryKey = (id: string,) => {
     return [
     `/api/events/${id}/seat-types`
     ] as const;
     }
 
 
-export const getEventsControllerListSeatTypesQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+export const getEventsListSeatTypesQueryOptions = <TData = Awaited<ReturnType<typeof eventsListSeatTypes>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListSeatTypesQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getEventsListSeatTypesQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>> = ({ signal }) => eventsControllerListSeatTypes(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsListSeatTypes>>> = ({ signal }) => eventsListSeatTypes(id, signal);
 
 
 
 
 
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type EventsControllerListSeatTypesQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>>
-export type EventsControllerListSeatTypesQueryError = unknown
+export type EventsListSeatTypesQueryResult = NonNullable<Awaited<ReturnType<typeof eventsListSeatTypes>>>
+export type EventsListSeatTypesQueryError = unknown
 
 
-export function useEventsControllerListSeatTypes<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>> & Pick<
+export function useEventsListSeatTypes<TData = Awaited<ReturnType<typeof eventsListSeatTypes>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerListSeatTypes>>,
+          Awaited<ReturnType<typeof eventsListSeatTypes>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerListSeatTypes>>
+          Awaited<ReturnType<typeof eventsListSeatTypes>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListSeatTypes<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>> & Pick<
+export function useEventsListSeatTypes<TData = Awaited<ReturnType<typeof eventsListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof eventsControllerListSeatTypes>>,
+          Awaited<ReturnType<typeof eventsListSeatTypes>>,
           TError,
-          Awaited<ReturnType<typeof eventsControllerListSeatTypes>>
+          Awaited<ReturnType<typeof eventsListSeatTypes>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListSeatTypes<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+export function useEventsListSeatTypes<TData = Awaited<ReturnType<typeof eventsListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerListSeatTypes<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+export function useEventsListSeatTypes<TData = Awaited<ReturnType<typeof eventsListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerListSeatTypesQueryOptions(id,options)
+  const queryOptions = getEventsListSeatTypesQueryOptions(id,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -1268,47 +1268,47 @@ export function useEventsControllerListSeatTypes<TData = Awaited<ReturnType<type
 
 
 
-export const getEventsControllerListSeatTypesSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+export const getEventsListSeatTypesSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof eventsListSeatTypes>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListSeatTypesQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getEventsListSeatTypesQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>> = ({ signal }) => eventsControllerListSeatTypes(id, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsListSeatTypes>>> = ({ signal }) => eventsListSeatTypes(id, signal);
 
 
 
 
 
-   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
 }
 
-export type EventsControllerListSeatTypesSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>>
-export type EventsControllerListSeatTypesSuspenseQueryError = unknown
+export type EventsListSeatTypesSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof eventsListSeatTypes>>>
+export type EventsListSeatTypesSuspenseQueryError = unknown
 
 
-export function useEventsControllerListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
- id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+export function useEventsListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsListSeatTypes>>, TError = unknown>(
+ id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+export function useEventsListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useEventsControllerListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+export function useEventsListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useEventsControllerListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+export function useEventsListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsListSeatTypes>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getEventsControllerListSeatTypesSuspenseQueryOptions(id,options)
+  const queryOptions = getEventsListSeatTypesSuspenseQueryOptions(id,options)
 
   const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -1320,7 +1320,7 @@ export function useEventsControllerListSeatTypesSuspense<TData = Awaited<ReturnT
 
 
 
-export const eventsControllerUpdateSeatType = (
+export const eventsUpdateSeatType = (
     id: string,
     seatTypeId: string,
     updateSeatTypeDto: UpdateSeatTypeDto,
@@ -1339,13 +1339,13 @@ export const eventsControllerUpdateSeatType = (
 
 
 
-export const getEventsControllerUpdateSeatTypeMutationKey = () => ['eventsControllerUpdateSeatType'] as const;
+export const getEventsUpdateSeatTypeMutationKey = () => ['eventsUpdateSeatType'] as const;
 
-export const getEventsControllerUpdateSeatTypeMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>, TError,EventsControllerUpdateSeatTypeMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>, TError,EventsControllerUpdateSeatTypeMutationVariables, TContext> => {
+export const getEventsUpdateSeatTypeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsUpdateSeatType>>, TError,EventsUpdateSeatTypeMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof eventsUpdateSeatType>>, TError,EventsUpdateSeatTypeMutationVariables, TContext> => {
 
-const mutationKey = getEventsControllerUpdateSeatTypeMutationKey();
+const mutationKey = getEventsUpdateSeatTypeMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1355,10 +1355,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>, EventsControllerUpdateSeatTypeMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsUpdateSeatType>>, EventsUpdateSeatTypeMutationVariables> = (props) => {
           const {id,seatTypeId,data} = props ?? {};
 
-          return  eventsControllerUpdateSeatType(id,seatTypeId,data,)
+          return  eventsUpdateSeatType(id,seatTypeId,data,)
         }
 
 
@@ -1368,22 +1368,22 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type EventsControllerUpdateSeatTypeMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>>
-    export type EventsControllerUpdateSeatTypeMutationBody = UpdateSeatTypeDto
-    export type EventsControllerUpdateSeatTypeMutationError = unknown
-    export type EventsControllerUpdateSeatTypeMutationVariables = {id: string;seatTypeId: string;data: UpdateSeatTypeDto}
+    export type EventsUpdateSeatTypeMutationResult = NonNullable<Awaited<ReturnType<typeof eventsUpdateSeatType>>>
+    export type EventsUpdateSeatTypeMutationBody = UpdateSeatTypeDto
+    export type EventsUpdateSeatTypeMutationError = unknown
+    export type EventsUpdateSeatTypeMutationVariables = {id: string;seatTypeId: string;data: UpdateSeatTypeDto}
 
-    export const useEventsControllerUpdateSeatType = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>, TError,EventsControllerUpdateSeatTypeMutationVariables, TContext>, }
+    export const useEventsUpdateSeatType = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsUpdateSeatType>>, TError,EventsUpdateSeatTypeMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof eventsControllerUpdateSeatType>>,
+        Awaited<ReturnType<typeof eventsUpdateSeatType>>,
         TError,
-        EventsControllerUpdateSeatTypeMutationVariables,
+        EventsUpdateSeatTypeMutationVariables,
         TContext
       > => {
-      return useMutation(getEventsControllerUpdateSeatTypeMutationOptions(options), queryClient);
+      return useMutation(getEventsUpdateSeatTypeMutationOptions(options), queryClient);
     }
-    export const eventsControllerRecordView = (
+    export const eventsRecordView = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -1398,13 +1398,13 @@ const {mutation: mutationOptions} = options ?
 
 
 
-export const getEventsControllerRecordViewMutationKey = () => ['eventsControllerRecordView'] as const;
+export const getEventsRecordViewMutationKey = () => ['eventsRecordView'] as const;
 
-export const getEventsControllerRecordViewMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRecordView>>, TError,EventsControllerRecordViewMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRecordView>>, TError,EventsControllerRecordViewMutationVariables, TContext> => {
+export const getEventsRecordViewMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsRecordView>>, TError,EventsRecordViewMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof eventsRecordView>>, TError,EventsRecordViewMutationVariables, TContext> => {
 
-const mutationKey = getEventsControllerRecordViewMutationKey();
+const mutationKey = getEventsRecordViewMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1414,10 +1414,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerRecordView>>, EventsControllerRecordViewMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsRecordView>>, EventsRecordViewMutationVariables> = (props) => {
           const {id} = props ?? {};
 
-          return  eventsControllerRecordView(id,)
+          return  eventsRecordView(id,)
         }
 
 
@@ -1427,30 +1427,30 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type EventsControllerRecordViewMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerRecordView>>>
+    export type EventsRecordViewMutationResult = NonNullable<Awaited<ReturnType<typeof eventsRecordView>>>
 
-    export type EventsControllerRecordViewMutationError = unknown
-    export type EventsControllerRecordViewMutationVariables = {id: string}
+    export type EventsRecordViewMutationError = unknown
+    export type EventsRecordViewMutationVariables = {id: string}
 
-    export const useEventsControllerRecordView = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRecordView>>, TError,EventsControllerRecordViewMutationVariables, TContext>, }
+    export const useEventsRecordView = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsRecordView>>, TError,EventsRecordViewMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof eventsControllerRecordView>>,
+        Awaited<ReturnType<typeof eventsRecordView>>,
         TError,
-        EventsControllerRecordViewMutationVariables,
+        EventsRecordViewMutationVariables,
         TContext
       > => {
-      return useMutation(getEventsControllerRecordViewMutationOptions(options), queryClient);
+      return useMutation(getEventsRecordViewMutationOptions(options), queryClient);
     }
-    export const eventsControllerUploadPoster = (
+    export const eventsUploadPoster = (
     id: string,
-    eventsControllerUploadPosterBody: EventsControllerUploadPosterBody,
+    eventsUploadPosterBody: EventsUploadPosterBody,
  signal?: AbortSignal
 ) => {
 
       const formData = new FormData();
-if(eventsControllerUploadPosterBody.file !== undefined) {
- formData.append(`file`, eventsControllerUploadPosterBody.file);
+if(eventsUploadPosterBody.file !== undefined) {
+ formData.append(`file`, eventsUploadPosterBody.file);
  }
 
       return customInstance<EventDto>(
@@ -1464,13 +1464,13 @@ if(eventsControllerUploadPosterBody.file !== undefined) {
 
 
 
-export const getEventsControllerUploadPosterMutationKey = () => ['eventsControllerUploadPoster'] as const;
+export const getEventsUploadPosterMutationKey = () => ['eventsUploadPoster'] as const;
 
-export const getEventsControllerUploadPosterMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUploadPoster>>, TError,EventsControllerUploadPosterMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUploadPoster>>, TError,EventsControllerUploadPosterMutationVariables, TContext> => {
+export const getEventsUploadPosterMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsUploadPoster>>, TError,EventsUploadPosterMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof eventsUploadPoster>>, TError,EventsUploadPosterMutationVariables, TContext> => {
 
-const mutationKey = getEventsControllerUploadPosterMutationKey();
+const mutationKey = getEventsUploadPosterMutationKey();
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1480,10 +1480,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerUploadPoster>>, EventsControllerUploadPosterMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsUploadPoster>>, EventsUploadPosterMutationVariables> = (props) => {
           const {id,data} = props ?? {};
 
-          return  eventsControllerUploadPoster(id,data,)
+          return  eventsUploadPoster(id,data,)
         }
 
 
@@ -1493,18 +1493,18 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type EventsControllerUploadPosterMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerUploadPoster>>>
-    export type EventsControllerUploadPosterMutationBody = EventsControllerUploadPosterBody
-    export type EventsControllerUploadPosterMutationError = unknown
-    export type EventsControllerUploadPosterMutationVariables = {id: string;data: EventsControllerUploadPosterBody}
+    export type EventsUploadPosterMutationResult = NonNullable<Awaited<ReturnType<typeof eventsUploadPoster>>>
+    export type EventsUploadPosterMutationBody = EventsUploadPosterBody
+    export type EventsUploadPosterMutationError = unknown
+    export type EventsUploadPosterMutationVariables = {id: string;data: EventsUploadPosterBody}
 
-    export const useEventsControllerUploadPoster = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUploadPoster>>, TError,EventsControllerUploadPosterMutationVariables, TContext>, }
+    export const useEventsUploadPoster = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsUploadPoster>>, TError,EventsUploadPosterMutationVariables, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof eventsControllerUploadPoster>>,
+        Awaited<ReturnType<typeof eventsUploadPoster>>,
         TError,
-        EventsControllerUploadPosterMutationVariables,
+        EventsUploadPosterMutationVariables,
         TContext
       > => {
-      return useMutation(getEventsControllerUploadPosterMutationOptions(options), queryClient);
+      return useMutation(getEventsUploadPosterMutationOptions(options), queryClient);
     }

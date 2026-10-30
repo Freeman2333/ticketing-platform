@@ -5,6 +5,6 @@
  * OpenAPI spec version: 0.1
  */
 
-export type EventsControllerUploadPosterBody = {
+export type VenuesUploadImageBody = {
   file?: Blob | File;
 };

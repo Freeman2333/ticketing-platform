@@ -15,46 +15,46 @@ export default defineConfig({
           name: 'customInstance',
         },
         operations: {
-          EventsController_listEvents: {
+          Events_listEvents: {
             query: {
               useSuspenseInfiniteQuery: true,
               useInfinite: true,
               useInfiniteQueryParam: 'page',
             },
           },
-          VenuesController_findMine: {
+          Venues_findMine: {
             query: {
               useSuspenseQuery: true,
             },
           },
-          VenuesController_findOne: {
+          Venues_findOne: {
             query: {
               useSuspenseQuery: true,
             },
           },
-          VenuesController_getStats: {
+          Venues_getStats: {
             query: {
               useSuspenseQuery: true,
             },
           },
-          EventsController_listMyEvents: {
+          Events_listMyEvents: {
             query: {
               useSuspenseInfiniteQuery: true,
               useInfinite: true,
               useInfiniteQueryParam: 'page',
             },
           },
-          EventsController_getEvent: {
+          Events_getEvent: {
             query: {
               useSuspenseQuery: true,
             },
           },
-          EventsController_getStats: {
+          Events_getStats: {
             query: {
               useSuspenseQuery: true,
             },
           },
-          EventsController_listSeatTypes: {
+          Events_listSeatTypes: {
             query: {
               useSuspenseQuery: true,
             },

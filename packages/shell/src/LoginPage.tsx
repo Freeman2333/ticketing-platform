@@ -5,8 +5,8 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { setAccessToken } from '@ticketing/auth-client';
 import { getSafeRedirect } from './lib/safe-redirect';
 import {
-  AuthControllerLoginBody,
-  useAuthControllerLogin,
+  AuthLoginBody,
+  useAuthLogin,
 } from '@ticketing/api-client';
 import {
   Button,
@@ -24,16 +24,16 @@ import {
   Input,
 } from '@ticketing/ui';
 
-type LoginFormValues = z.infer<typeof AuthControllerLoginBody>;
+type LoginFormValues = z.infer<typeof AuthLoginBody>;
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = getSafeRedirect(searchParams.get('redirect'));
   const form = useForm<LoginFormValues>({
-    resolver: zodResolver(AuthControllerLoginBody),
+    resolver: zodResolver(AuthLoginBody),
   });
-  const loginMutation = useAuthControllerLogin();
+  const loginMutation = useAuthLogin();
 
   async function onSubmit(values: LoginFormValues) {
     try {

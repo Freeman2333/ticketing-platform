@@ -1,6 +1,6 @@
 import {
   OrderDtoStatus,
-  useOrdersControllerGetOrder,
+  useOrdersGetOrder,
 } from '@ticketing/api-client';
 import { useIsReturningFromCheckout } from './use-is-returning-from-checkout';
 
@@ -12,7 +12,7 @@ export function useOrder(orderId: string) {
     isLoading,
     isError,
     refetch,
-  } = useOrdersControllerGetOrder(orderId, {
+  } = useOrdersGetOrder(orderId, {
     query: {
       refetchInterval: (query) => {
         const current = query.state.data;
