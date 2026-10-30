@@ -90,6 +90,12 @@ export const EventsControllerGetEventResponse = zod.object({
   "posterUrl": zod.string().nullable()
 })
 
+export const EventsControllerRemoveParams = zod.object({
+  "id": zod.string()
+})
+
+export const EventsControllerRemoveResponse = zod.void()
+
 export const EventsControllerUpdateParams = zod.object({
   "id": zod.string()
 })

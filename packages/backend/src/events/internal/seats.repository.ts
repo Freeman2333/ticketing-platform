@@ -36,6 +36,12 @@ export class SeatsRepository {
     });
   }
 
+  countBookedByEventId(eventId: string) {
+    return this.prisma.seat.count({
+      where: { eventId, status: 'booked' },
+    });
+  }
+
   async holdIfAvailable(eventId: string, seatIds: string[]): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
       const result = await tx.seat.updateMany({

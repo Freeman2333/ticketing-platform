@@ -718,7 +718,66 @@ export function useEventsControllerGetEvent<TData = Awaited<ReturnType<typeof ev
 
 
 
-export const eventsControllerUpdate = (
+export const eventsControllerRemove = (
+    id: string,
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<void>(
+      {url: `/api/events/${id}`, method: 'DELETE', signal
+    },
+      );
+    }
+
+
+
+
+export const getEventsControllerRemoveMutationKey = () => ['eventsControllerRemove'] as const;
+
+export const getEventsControllerRemoveMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRemove>>, TError,EventsControllerRemoveMutationVariables, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRemove>>, TError,EventsControllerRemoveMutationVariables, TContext> => {
+
+const mutationKey = getEventsControllerRemoveMutationKey();
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerRemove>>, EventsControllerRemoveMutationVariables> = (props) => {
+          const {id} = props ?? {};
+
+          return  eventsControllerRemove(id,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EventsControllerRemoveMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerRemove>>>
+
+    export type EventsControllerRemoveMutationError = unknown
+    export type EventsControllerRemoveMutationVariables = {id: string}
+
+    export const useEventsControllerRemove = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRemove>>, TError,EventsControllerRemoveMutationVariables, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof eventsControllerRemove>>,
+        TError,
+        EventsControllerRemoveMutationVariables,
+        TContext
+      > => {
+      return useMutation(getEventsControllerRemoveMutationOptions(options), queryClient);
+    }
+    export const eventsControllerUpdate = (
     id: string,
     updateEventDto: UpdateEventDto,
  signal?: AbortSignal

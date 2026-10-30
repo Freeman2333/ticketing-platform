@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -183,6 +184,22 @@ export class EventsController {
     }
 
     return this.eventsService.updateSeatTypePrice(seatTypeId, dto.price);
+  }
+
+  @Delete(':id')
+  @Roles(Role.organizer)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string, @Req() req: Request): Promise<void> {
+    const event = await this.eventsService.getEvent(id);
+    if (!event) throw new NotFoundException();
+
+    const venue = await this.venuesRepository.findById(event.venueId);
+    if (!venue || venue.organizerId !== req.user!.sub) {
+      throw new NotFoundException();
+    }
+
+    await this.eventsService.deleteEvent(id);
   }
 
   @Post(':id/view')

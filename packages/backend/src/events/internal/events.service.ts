@@ -218,6 +218,16 @@ export class EventsService implements EventsApi {
     return this.toEventDto(event);
   }
 
+  async deleteEvent(id: string): Promise<void> {
+    const bookedCount = await this.seatsRepository.countBookedByEventId(id);
+    if (bookedCount > 0) {
+      throw new ConflictException('Event still has sold tickets');
+    }
+
+    await this.eventsRepository.deleteWithChildren(id);
+    await this.redis.del(`cache:event:${id}`);
+  }
+
   async setPosterUrl(id: string, posterUrl: string): Promise<EventDto> {
     const event = await this.eventsRepository.update(id, { posterUrl });
     await this.redis.del(`cache:event:${id}`);

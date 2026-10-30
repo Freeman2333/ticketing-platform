@@ -60,4 +60,14 @@ export class EventsRepository {
   ) {
     return this.prisma.event.update({ where: { id }, data });
   }
+
+  async deleteWithChildren(id: string): Promise<void> {
+    await this.prisma.$transaction([
+      this.prisma.eventView.deleteMany({ where: { eventId: id } }),
+      this.prisma.eventRevenueEntry.deleteMany({ where: { eventId: id } }),
+      this.prisma.seat.deleteMany({ where: { eventId: id } }),
+      this.prisma.seatType.deleteMany({ where: { eventId: id } }),
+      this.prisma.event.delete({ where: { id } }),
+    ]);
+  }
 }
