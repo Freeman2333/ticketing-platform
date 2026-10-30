@@ -19,6 +19,7 @@ export * from './eventListDto.js';
 export * from './eventsControllerListEventsParams.js';
 export * from './eventsControllerListMyEventsParams.js';
 export * from './eventsControllerUploadPosterBody.js';
+export * from './eventStatsDto.js';
 export * from './loginDto.js';
 export * from './orderDto.js';
 export * from './orderDtoStatus.js';

@@ -5,10 +5,12 @@
  * OpenAPI spec version: 0.1
  */
 import {
+  queryOptions as queryOptionsBuilder,
   useInfiniteQuery,
   useMutation,
   useQuery,
-  useSuspenseInfiniteQuery
+  useSuspenseInfiniteQuery,
+  useSuspenseQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
@@ -28,7 +30,9 @@ import type {
   UseQueryOptions,
   UseQueryResult,
   UseSuspenseInfiniteQueryOptions,
-  UseSuspenseInfiniteQueryResult
+  UseSuspenseInfiniteQueryResult,
+  UseSuspenseQueryOptions,
+  UseSuspenseQueryResult
 } from '@tanstack/react-query';
 
 import type {
@@ -36,6 +40,7 @@ import type {
   CreateSeatsDto,
   EventDto,
   EventListDto,
+  EventStatsDto,
   EventsControllerListEventsParams,
   EventsControllerListMyEventsParams,
   EventsControllerUploadPosterBody,
@@ -718,6 +723,58 @@ export function useEventsControllerGetEvent<TData = Awaited<ReturnType<typeof ev
 
 
 
+export const getEventsControllerGetEventSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerGetEventQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerGetEvent>>> = ({ signal }) => eventsControllerGetEvent(id, signal);
+
+
+
+
+
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+}
+
+export type EventsControllerGetEventSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerGetEvent>>>
+export type EventsControllerGetEventSuspenseQueryError = unknown
+
+
+export function useEventsControllerGetEventSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
+ id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerGetEventSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerGetEventSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerGetEventSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetEvent>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerGetEventSuspenseQueryOptions(id,options)
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 export const eventsControllerRemove = (
     id: string,
  signal?: AbortSignal
@@ -839,7 +896,145 @@ const {mutation: mutationOptions} = options ?
       > => {
       return useMutation(getEventsControllerUpdateMutationOptions(options), queryClient);
     }
-    export const eventsControllerGetSeats = (
+    export const eventsControllerGetStats = (
+    id: string,
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<EventStatsDto>(
+      {url: `/api/events/${id}/stats`, method: 'GET', signal
+    },
+      );
+    }
+
+
+
+
+export const getEventsControllerGetStatsQueryKey = (id: string,) => {
+    return [
+    `/api/events/${id}/stats`
+    ] as const;
+    }
+
+
+export const getEventsControllerGetStatsQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerGetStatsQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerGetStats>>> = ({ signal }) => eventsControllerGetStats(id, signal);
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type EventsControllerGetStatsQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerGetStats>>>
+export type EventsControllerGetStatsQueryError = unknown
+
+
+export function useEventsControllerGetStats<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerGetStats>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerGetStats>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerGetStats<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerGetStats>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerGetStats>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerGetStats<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerGetStats<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerGetStatsQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export const getEventsControllerGetStatsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerGetStatsQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerGetStats>>> = ({ signal }) => eventsControllerGetStats(id, signal);
+
+
+
+
+
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+}
+
+export type EventsControllerGetStatsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerGetStats>>>
+export type EventsControllerGetStatsSuspenseQueryError = unknown
+
+
+export function useEventsControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
+ id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerGetStatsSuspense<TData = Awaited<ReturnType<typeof eventsControllerGetStats>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerGetStats>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerGetStatsSuspenseQueryOptions(id,options)
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export const eventsControllerGetSeats = (
     id: string,
  signal?: AbortSignal
 ) => {
@@ -1064,6 +1259,58 @@ export function useEventsControllerListSeatTypes<TData = Awaited<ReturnType<type
   const queryOptions = getEventsControllerListSeatTypesQueryOptions(id,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export const getEventsControllerListSeatTypesSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListSeatTypesQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>> = ({ signal }) => eventsControllerListSeatTypes(id, signal);
+
+
+
+
+
+   return  queryOptionsBuilder({ queryKey, ...queryOptions, queryFn: queryOptions?.queryFn ?? queryFn}) as UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> } & { throwOnError?: ((this: never, error: TError) => boolean) & { readonly __inferenceOnly: never } }
+}
+
+export type EventsControllerListSeatTypesSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>>
+export type EventsControllerListSeatTypesSuspenseQueryError = unknown
+
+
+export function useEventsControllerListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
+ id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerListSeatTypesSuspense<TData = Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof eventsControllerListSeatTypes>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerListSeatTypesSuspenseQueryOptions(id,options)
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }

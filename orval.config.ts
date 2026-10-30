@@ -44,6 +44,21 @@ export default defineConfig({
               useInfiniteQueryParam: 'page',
             },
           },
+          EventsController_getEvent: {
+            query: {
+              useSuspenseQuery: true,
+            },
+          },
+          EventsController_getStats: {
+            query: {
+              useSuspenseQuery: true,
+            },
+          },
+          EventsController_listSeatTypes: {
+            query: {
+              useSuspenseQuery: true,
+            },
+          },
         },
       },
     },

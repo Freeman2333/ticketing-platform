@@ -114,6 +114,15 @@ export const EventsControllerUpdateResponse = zod.object({
   "posterUrl": zod.string().nullable()
 })
 
+export const EventsControllerGetStatsParams = zod.object({
+  "id": zod.string()
+})
+
+export const EventsControllerGetStatsResponse = zod.object({
+  "ticketsSold": zod.number(),
+  "revenue": zod.number()
+})
+
 export const EventsControllerGetSeatsParams = zod.object({
   "id": zod.string()
 })
