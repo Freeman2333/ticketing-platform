@@ -25,6 +25,8 @@ import {
 import type { Request } from 'express';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../generated/prisma/client';
+import { EventRevenueRepository } from './event-revenue.repository';
+import { EventsRepository } from './events.repository';
 import { processPosterImage } from './process-poster-image';
 import { PosterStorageService } from './poster-storage.service';
 import { SeatsRepository } from './seats.repository';
@@ -40,6 +42,8 @@ export class VenuesController {
     private readonly venuesRepository: VenuesRepository,
     private readonly posterStorageService: PosterStorageService,
     private readonly seatsRepository: SeatsRepository,
+    private readonly eventsRepository: EventsRepository,
+    private readonly eventRevenueRepository: EventRevenueRepository,
   ) {}
 
   @Post()
@@ -155,8 +159,9 @@ export class VenuesController {
     }
 
     const ticketsSold = await this.seatsRepository.countBookedByVenueId(id);
-    // revenue placeholder until the Part E read-model lands - no longer
-    // computable from Seat, which no longer stores price.
-    return { ticketsSold, revenue: 0 };
+    const eventIds = await this.eventsRepository.findIdsByVenueId(id);
+    const revenueResult =
+      await this.eventRevenueRepository.sumByEventIds(eventIds);
+    return { ticketsSold, revenue: revenueResult._sum.amount ?? 0 };
   }
 }

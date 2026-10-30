@@ -38,6 +38,16 @@ async function bootstrap() {
     },
   });
 
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [process.env.RABBITMQ_URL as string],
+      queue: 'event_revenue_queue',
+      queueOptions: { durable: true },
+      noAck: false,
+    },
+  });
+
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 

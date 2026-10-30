@@ -34,6 +34,14 @@ export class EventsRepository {
     });
   }
 
+  async findIdsByVenueId(venueId: string): Promise<string[]> {
+    const events = await this.prisma.event.findMany({
+      where: { venueId },
+      select: { id: true },
+    });
+    return events.map((event) => event.id);
+  }
+
   findUpcoming(excludeIds: string[], take: number) {
     return this.prisma.event.findMany({
       where: { id: { notIn: excludeIds } },

@@ -35,6 +35,15 @@ import { ORDERS_API } from './public/orders-api.interface';
           queueOptions: { durable: true },
         },
       },
+      {
+        name: 'EVENT_REVENUE_QUEUE_CLIENT',
+        transport: Transport.RMQ,
+        options: {
+          urls: [process.env.RABBITMQ_URL as string],
+          queue: 'event_revenue_queue',
+          queueOptions: { durable: true },
+        },
+      },
     ]),
   ],
   controllers: [OrdersController, OrdersSagaController],

@@ -68,10 +68,11 @@ model Event {
   startsAt    DateTime @map("starts_at")
   posterUrl   String?  @map("poster_url")
 
-  venue     Venue      @relation(fields: [venueId], references: [id])
-  seats     Seat[]
-  seatTypes SeatType[]
-  views     EventView[]
+  venue          Venue               @relation(fields: [venueId], references: [id])
+  seats          Seat[]
+  seatTypes      SeatType[]
+  views          EventView[]
+  revenueEntries EventRevenueEntry[]
 
   @@map("events")
   @@schema("events")
@@ -111,6 +112,18 @@ model Seat {
 
   @@index([eventId, status])
   @@map("seats")
+  @@schema("events")
+}
+
+model EventRevenueEntry {
+  orderId String @id @map("order_id")
+  eventId String @map("event_id")
+  amount  Int
+
+  event Event @relation(fields: [eventId], references: [id])
+
+  @@index([eventId])
+  @@map("event_revenue_entries")
   @@schema("events")
 }
 

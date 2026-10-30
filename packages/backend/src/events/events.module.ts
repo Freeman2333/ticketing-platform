@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { EventRevenueController } from './internal/event-revenue.controller';
+import { EventRevenueRepository } from './internal/event-revenue.repository';
 import { EventViewsRepository } from './internal/event-views.repository';
 import { EventsController } from './internal/events.controller';
 import { EventsGateway } from './internal/events.gateway';
@@ -13,11 +15,12 @@ import { VenuesRepository } from './internal/venues.repository';
 import { EVENTS_API } from './public/events-api.interface';
 
 @Module({
-  controllers: [EventsController, VenuesController],
+  controllers: [EventsController, VenuesController, EventRevenueController],
   providers: [
     EventsService,
     EventsGateway,
     EventsRepository,
+    EventRevenueRepository,
     EventViewsRepository,
     PosterStorageService,
     SeatLockService,

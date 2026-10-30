@@ -110,10 +110,16 @@ export class OrdersService implements OrdersApi {
       order.items.map((item) => item.seatId),
     );
 
+    const amount = order.items.reduce((sum, item) => sum + item.price, 0);
     await this.ordersRepository.markPaidAndCreateOutboxEvent(
       orderId,
       'order.paid',
-      { orderId, orderItemIds: order.items.map((item) => item.id) },
+      {
+        orderId,
+        eventId: order.eventId,
+        amount,
+        orderItemIds: order.items.map((item) => item.id),
+      },
     );
   }
 
