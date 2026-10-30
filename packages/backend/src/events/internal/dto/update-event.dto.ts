@@ -12,4 +12,9 @@ export class UpdateEventDto {
   @IsOptional()
   @IsDateString()
   startsAt?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  endsAt?: string;
 }

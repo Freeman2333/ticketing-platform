@@ -204,14 +204,20 @@ export class EventsService implements EventsApi {
     venueId: string,
     title: string,
     startsAt: Date,
+    endsAt: Date,
   ): Promise<EventDto> {
-    const event = await this.eventsRepository.create(venueId, title, startsAt);
+    const event = await this.eventsRepository.create(
+      venueId,
+      title,
+      startsAt,
+      endsAt,
+    );
     return this.toEventDto(event);
   }
 
   async updateEvent(
     id: string,
-    data: { title?: string; startsAt?: Date },
+    data: { title?: string; startsAt?: Date; endsAt?: Date },
   ): Promise<EventDto> {
     const event = await this.eventsRepository.update(id, data);
     await this.redis.del(`cache:event:${id}`);
@@ -241,6 +247,7 @@ export class EventsService implements EventsApi {
       title: event.title,
       description: event.description,
       startsAt: event.startsAt,
+      endsAt: event.endsAt,
       posterUrl: event.posterUrl,
     };
   }

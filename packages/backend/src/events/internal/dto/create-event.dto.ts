@@ -14,4 +14,8 @@ export class CreateEventDto {
   @ApiProperty()
   @IsDateString()
   startsAt!: string;
+
+  @ApiProperty()
+  @IsDateString()
+  endsAt!: string;
 }

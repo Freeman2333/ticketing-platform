@@ -16,6 +16,9 @@ export class EventDto {
   @ApiProperty()
   startsAt!: Date;
 
+  @ApiProperty()
+  endsAt!: Date;
+
   @ApiProperty({ type: String, nullable: true })
   posterUrl!: string | null;
 }

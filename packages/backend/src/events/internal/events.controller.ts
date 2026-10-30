@@ -263,6 +263,7 @@ export class EventsController {
       dto.venueId,
       dto.title,
       new Date(dto.startsAt),
+      new Date(dto.endsAt),
     );
   }
 
@@ -286,6 +287,7 @@ export class EventsController {
     return this.eventsService.updateEvent(id, {
       title: dto.title,
       startsAt: dto.startsAt ? new Date(dto.startsAt) : undefined,
+      endsAt: dto.endsAt ? new Date(dto.endsAt) : undefined,
     });
   }
 
