@@ -15,4 +15,7 @@ export class VenueDto {
 
   @ApiProperty({ type: String, nullable: true })
   imageUrl!: string | null;
+
+  @ApiProperty()
+  isShared!: boolean;
 }

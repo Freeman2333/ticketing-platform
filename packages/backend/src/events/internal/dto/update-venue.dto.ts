@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, MinLength } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class UpdateVenueDto {
   @ApiPropertyOptional()
@@ -13,4 +13,9 @@ export class UpdateVenueDto {
   @IsString()
   @MinLength(1)
   address?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  isShared?: boolean;
 }

@@ -8,4 +8,5 @@
 export interface CreateVenueDto {
   name: string;
   address: string;
+  isShared?: boolean;
 }

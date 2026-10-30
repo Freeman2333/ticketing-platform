@@ -51,7 +51,12 @@ export class VenuesController {
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: VenueDto })
   create(@Body() dto: CreateVenueDto, @Req() req: Request): Promise<VenueDto> {
-    return this.venuesRepository.create(req.user!.sub, dto.name, dto.address);
+    return this.venuesRepository.create(
+      req.user!.sub,
+      dto.name,
+      dto.address,
+      dto.isShared,
+    );
   }
 
   @Get()

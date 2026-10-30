@@ -12,4 +12,5 @@ export interface VenueDto {
   address: string;
   /** @nullable */
   imageUrl: string | null;
+  isShared: boolean;
 }

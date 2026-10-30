@@ -53,6 +53,7 @@ model Venue {
   name        String
   address     String
   imageUrl    String? @map("image_url")
+  isShared    Boolean @default(false) @map("is_shared")
 
   events Event[]
 

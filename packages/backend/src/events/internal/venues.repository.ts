@@ -13,13 +13,25 @@ export class VenuesRepository {
     return this.prisma.venue.findMany({ where: { organizerId } });
   }
 
-  create(organizerId: string, name: string, address: string) {
-    return this.prisma.venue.create({ data: { organizerId, name, address } });
+  create(
+    organizerId: string,
+    name: string,
+    address: string,
+    isShared?: boolean,
+  ) {
+    return this.prisma.venue.create({
+      data: { organizerId, name, address, isShared },
+    });
   }
 
   update(
     id: string,
-    data: { name?: string; address?: string; imageUrl?: string },
+    data: {
+      name?: string;
+      address?: string;
+      imageUrl?: string;
+      isShared?: boolean;
+    },
   ) {
     return this.prisma.venue.update({ where: { id }, data });
   }

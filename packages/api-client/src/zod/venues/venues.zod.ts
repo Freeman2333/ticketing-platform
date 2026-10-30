@@ -9,7 +9,8 @@ import * as zod from 'zod';
 
 export const VenuesCreateBody = zod.object({
   "name": zod.string(),
-  "address": zod.string()
+  "address": zod.string(),
+  "isShared": zod.boolean().optional()
 })
 
 export const VenuesCreateResponse = zod.object({
@@ -17,7 +18,8 @@ export const VenuesCreateResponse = zod.object({
   "organizerId": zod.string(),
   "name": zod.string(),
   "address": zod.string(),
-  "imageUrl": zod.string().nullable()
+  "imageUrl": zod.string().nullable(),
+  "isShared": zod.boolean()
 })
 
 export const VenuesFindMineResponseItem = zod.object({
@@ -25,7 +27,8 @@ export const VenuesFindMineResponseItem = zod.object({
   "organizerId": zod.string(),
   "name": zod.string(),
   "address": zod.string(),
-  "imageUrl": zod.string().nullable()
+  "imageUrl": zod.string().nullable(),
+  "isShared": zod.boolean()
 })
 export const VenuesFindMineResponse = zod.array(VenuesFindMineResponseItem)
 
@@ -38,7 +41,8 @@ export const VenuesFindOneResponse = zod.object({
   "organizerId": zod.string(),
   "name": zod.string(),
   "address": zod.string(),
-  "imageUrl": zod.string().nullable()
+  "imageUrl": zod.string().nullable(),
+  "isShared": zod.boolean()
 })
 
 export const VenuesUpdateParams = zod.object({
@@ -47,7 +51,8 @@ export const VenuesUpdateParams = zod.object({
 
 export const VenuesUpdateBody = zod.object({
   "name": zod.string().optional(),
-  "address": zod.string().optional()
+  "address": zod.string().optional(),
+  "isShared": zod.boolean().optional()
 })
 
 export const VenuesUpdateResponse = zod.object({
@@ -55,7 +60,8 @@ export const VenuesUpdateResponse = zod.object({
   "organizerId": zod.string(),
   "name": zod.string(),
   "address": zod.string(),
-  "imageUrl": zod.string().nullable()
+  "imageUrl": zod.string().nullable(),
+  "isShared": zod.boolean()
 })
 
 export const VenuesRemoveParams = zod.object({
@@ -77,7 +83,8 @@ export const VenuesUploadImageResponse = zod.object({
   "organizerId": zod.string(),
   "name": zod.string(),
   "address": zod.string(),
-  "imageUrl": zod.string().nullable()
+  "imageUrl": zod.string().nullable(),
+  "isShared": zod.boolean()
 })
 
 export const VenuesGetStatsParams = zod.object({

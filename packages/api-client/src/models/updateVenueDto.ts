@@ -8,4 +8,5 @@
 export interface UpdateVenueDto {
   name?: string;
   address?: string;
+  isShared?: boolean;
 }
