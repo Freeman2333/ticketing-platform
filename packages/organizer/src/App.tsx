@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { OrganizerHeader } from './OrganizerHeader';
+import { EventDetailsPage } from './events/EventDetailsPage';
 import { OrganizerEventsPage } from './events/OrganizerEventsPage';
 import { CreateVenuePage } from './venues/CreateVenuePage';
 import { EditVenuePage } from './venues/EditVenuePage';
@@ -14,6 +15,7 @@ export function App() {
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
         <Routes>
           <Route path="/" element={<OrganizerEventsPage />} />
+          <Route path="/events/:id" element={<EventDetailsPage />} />
           <Route path="/venues" element={<VenuesPage />} />
           <Route path="/venues/new" element={<CreateVenuePage />} />
           <Route path="/venues/:id" element={<VenueDetailsPage />} />
