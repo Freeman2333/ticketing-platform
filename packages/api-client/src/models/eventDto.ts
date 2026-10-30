@@ -12,6 +12,7 @@ export interface EventDto {
   /** @nullable */
   description: string | null;
   startsAt: string;
+  endsAt: string;
   /** @nullable */
   posterUrl: string | null;
 }

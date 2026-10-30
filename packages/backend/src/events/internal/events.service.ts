@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client';
 import type {
   Event,
@@ -206,22 +210,60 @@ export class EventsService implements EventsApi {
     startsAt: Date,
     endsAt: Date,
   ): Promise<EventDto> {
-    const event = await this.eventsRepository.create(
-      venueId,
-      title,
-      startsAt,
-      endsAt,
-    );
-    return this.toEventDto(event);
+    if (endsAt <= startsAt) {
+      throw new BadRequestException('endsAt must be after startsAt');
+    }
+
+    try {
+      const event = await this.eventsRepository.create(
+        venueId,
+        title,
+        startsAt,
+        endsAt,
+      );
+      return this.toEventDto(event);
+    } catch (error) {
+      if (this.isOverlapConflictError(error)) {
+        throw new ConflictException(
+          'This venue is already booked for an overlapping time',
+        );
+      }
+      throw error;
+    }
   }
 
   async updateEvent(
     id: string,
     data: { title?: string; startsAt?: Date; endsAt?: Date },
   ): Promise<EventDto> {
-    const event = await this.eventsRepository.update(id, data);
-    await this.redis.del(`cache:event:${id}`);
-    return this.toEventDto(event);
+    if (data.startsAt || data.endsAt) {
+      const current = await this.eventsRepository.findById(id);
+      const effectiveStartsAt = data.startsAt ?? current!.startsAt;
+      const effectiveEndsAt = data.endsAt ?? current!.endsAt;
+      if (effectiveEndsAt <= effectiveStartsAt) {
+        throw new BadRequestException('endsAt must be after startsAt');
+      }
+    }
+
+    try {
+      const event = await this.eventsRepository.update(id, data);
+      await this.redis.del(`cache:event:${id}`);
+      return this.toEventDto(event);
+    } catch (error) {
+      if (this.isOverlapConflictError(error)) {
+        throw new ConflictException(
+          'This venue is already booked for an overlapping time',
+        );
+      }
+      throw error;
+    }
+  }
+
+  private isOverlapConflictError(error: unknown): boolean {
+    return (
+      error instanceof Error &&
+      error.message.includes('no_overlapping_events')
+    );
   }
 
   async deleteEvent(id: string): Promise<void> {

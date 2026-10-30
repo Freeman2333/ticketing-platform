@@ -8,4 +8,5 @@
 export interface UpdateEventDto {
   title?: string;
   startsAt?: string;
+  endsAt?: string;
 }

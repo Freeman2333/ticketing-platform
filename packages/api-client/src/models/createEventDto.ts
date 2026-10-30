@@ -9,4 +9,5 @@ export interface CreateEventDto {
   venueId: string;
   title: string;
   startsAt: string;
+  endsAt: string;
 }
