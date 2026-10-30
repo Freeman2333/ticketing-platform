@@ -34,12 +34,15 @@ import { RecentlyViewedDto } from '../public/dto/recently-viewed.dto';
 import { SeatDto } from '../public/dto/seat.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { CreateSeatsDto } from './dto/create-seats.dto';
+import { EventStatsDto } from './dto/event-stats.dto';
 import { SeatTypeWithCountsDto } from './dto/seat-type-with-counts.dto';
 import { SeatTypeDto } from './dto/seat-type.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { UpdateSeatTypeDto } from './dto/update-seat-type.dto';
+import { EventRevenueRepository } from './event-revenue.repository';
 import { EventsService } from './events.service';
 import { SeatTypesRepository } from './seat-types.repository';
+import { SeatsRepository } from './seats.repository';
 import { PosterStorageService } from './poster-storage.service';
 import { processPosterImage } from './process-poster-image';
 import { VenuesRepository } from './venues.repository';
@@ -51,6 +54,8 @@ export class EventsController {
     private readonly venuesRepository: VenuesRepository,
     private readonly posterStorageService: PosterStorageService,
     private readonly seatTypesRepository: SeatTypesRepository,
+    private readonly seatsRepository: SeatsRepository,
+    private readonly eventRevenueRepository: EventRevenueRepository,
   ) {}
 
   @Get()
@@ -109,6 +114,29 @@ export class EventsController {
     if (!event) throw new NotFoundException();
 
     return event;
+  }
+
+  @Get(':id/stats')
+  @Roles(Role.organizer)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: EventStatsDto })
+  async getStats(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<EventStatsDto> {
+    const event = await this.eventsService.getEvent(id);
+    if (!event) throw new NotFoundException();
+
+    const venue = await this.venuesRepository.findById(event.venueId);
+    if (!venue || venue.organizerId !== req.user!.sub) {
+      throw new NotFoundException();
+    }
+
+    const ticketsSold = await this.seatsRepository.countBookedByEventId(id);
+    const revenueResult = await this.eventRevenueRepository.sumByEventIds([
+      id,
+    ]);
+    return { ticketsSold, revenue: revenueResult._sum.amount ?? 0 };
   }
 
   @Get(':id/seats')
