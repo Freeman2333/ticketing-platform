@@ -21,6 +21,7 @@ import {
   ErrorBoundary,
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,6 +29,7 @@ import {
   Input,
   Skeleton,
   Spinner,
+  Switch,
 } from '@ticketing/ui';
 import { ImageDropzone } from '../components/ImageDropzone';
 
@@ -47,6 +49,7 @@ function EditVenueContent({ id }: { id: string }) {
     defaultValues: {
       name: venue.name,
       address: venue.address,
+      isShared: venue.isShared,
     },
   });
   const updateMutation = useVenuesUpdate();
@@ -106,6 +109,28 @@ function EditVenueContent({ id }: { id: string }) {
                         <Input {...field} />
                       </FormControl>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="isShared"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center justify-between rounded-md border p-3">
+                      <div>
+                        <FormLabel>Shared venue</FormLabel>
+                        <FormDescription>
+                          Allow other organizers to book this venue (subject
+                          to your approval).
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value ?? false}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
                     </FormItem>
                   )}
                 />

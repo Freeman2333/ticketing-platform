@@ -13,6 +13,7 @@ export * from './components/ui/select';
 export * from './components/ui/skeleton';
 export * from './components/ui/sonner';
 export * from './components/ui/spinner';
+export * from './components/ui/switch';
 export * from './components/ui/tooltip';
 export * from './hooks/use-countdown';
 export * from './hooks/use-debounce';

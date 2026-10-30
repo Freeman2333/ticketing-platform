@@ -7,6 +7,7 @@ import {
   useVenuesGetStatsSuspense,
 } from '@ticketing/api-client';
 import {
+  Badge,
   Button,
   Card,
   CardContent,
@@ -58,7 +59,12 @@ function VenueDetailsContent({ id }: { id: string }) {
 
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">{venue.name}</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-semibold">{venue.name}</h1>
+            <Badge variant={venue.isShared ? 'success' : 'destructive'}>
+              {venue.isShared ? 'Shared venue' : 'Private venue'}
+            </Badge>
+          </div>
           <p className="text-muted-foreground">{venue.address}</p>
         </div>
         {isOwner && (
