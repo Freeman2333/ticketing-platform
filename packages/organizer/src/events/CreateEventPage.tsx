@@ -19,6 +19,7 @@ import {
 import { EventPreviewCard } from './components/EventPreviewCard';
 import { TicketTypeFields } from './components/TicketTypeFields';
 import { useCreateEvent } from './hooks/useCreateEvent';
+import { useVenueBusyRanges } from './hooks/useVenueBusyRanges';
 
 const createEventFormSchema = z.object({
   venueId: z.string().min(1, 'Venue is required'),
@@ -68,6 +69,8 @@ function CreateEventContent() {
   const watchedVenueId = form.watch('venueId');
   const venueName = venues.find((venue) => venue.id === watchedVenueId)?.name;
 
+  const disabledRanges = useVenueBusyRanges(watchedVenueId);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -104,14 +107,15 @@ function CreateEventContent() {
                 <EventTimeRangePicker
                   startsAt={form.watch('startsAt')}
                   endsAt={form.watch('endsAt')}
+                  disabledRanges={disabledRanges}
                   onStartsAtChange={(date) =>
                     form.setValue('startsAt', date as Date, {
-                      shouldValidate: true,
+                      shouldValidate: Boolean(date),
                     })
                   }
                   onEndsAtChange={(date) =>
                     form.setValue('endsAt', date as Date, {
-                      shouldValidate: true,
+                      shouldValidate: Boolean(date),
                     })
                   }
                 />
@@ -126,7 +130,7 @@ function CreateEventContent() {
             </FormItem>
 
             <div className="grid gap-3">
-              <TicketTypeFields control={form.control} />
+              <TicketTypeFields control={form.control} name="seatTypes" />
             </div>
 
             {form.formState.errors.root?.serverError && (

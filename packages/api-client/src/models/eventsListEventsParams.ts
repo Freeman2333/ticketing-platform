@@ -9,4 +9,6 @@ export type EventsListEventsParams = {
 title?: string;
 page?: number;
 limit?: number;
+venueId?: string;
+excludeEventId?: string;
 };

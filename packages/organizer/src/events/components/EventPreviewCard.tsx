@@ -4,12 +4,14 @@ import { ImageDropzone } from '../../components/ImageDropzone';
 export function EventPreviewCard({
   file,
   onFileChange,
+  initialImageUrl,
   title,
   venueName,
   startsAt,
 }: {
   file: File | null;
   onFileChange: (file: File | null) => void;
+  initialImageUrl?: string | null;
   title: string;
   venueName: string | undefined;
   startsAt: Date | undefined;
@@ -19,6 +21,7 @@ export function EventPreviewCard({
       <ImageDropzone
         file={file}
         onFileChange={onFileChange}
+        initialImageUrl={initialImageUrl}
         aspectRatio="video"
       />
       <CardContent className="flex flex-col gap-1 py-4">

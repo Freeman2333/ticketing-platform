@@ -10,7 +10,9 @@ import * as zod from 'zod';
 export const EventsListEventsQueryParams = zod.object({
   "title": zod.string().optional(),
   "page": zod.number().optional(),
-  "limit": zod.number().optional()
+  "limit": zod.number().optional(),
+  "venueId": zod.string().optional(),
+  "excludeEventId": zod.string().optional()
 })
 
 export const EventsListEventsResponse = zod.object({

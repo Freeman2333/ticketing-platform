@@ -63,16 +63,22 @@ export class EventsController {
   @ApiQuery({ name: 'title', required: false })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'venueId', required: false, type: String })
+  @ApiQuery({ name: 'excludeEventId', required: false, type: String })
   @ApiOkResponse({ type: EventListDto })
   listEvents(
     @Query('title') title?: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('venueId') venueId?: string,
+    @Query('excludeEventId') excludeEventId?: string,
   ): Promise<EventListDto> {
     return this.eventsService.listEvents({
       title,
       page: page ? Number(page) : undefined,
       limit: limit ? Number(limit) : undefined,
+      venueId,
+      excludeEventId,
     });
   }
 

@@ -59,15 +59,24 @@ export class EventsService implements EventsApi {
     title?: string;
     page?: number;
     limit?: number;
+    venueId?: string;
+    excludeEventId?: string;
   }): Promise<EventListDto> {
     const limit = filter?.limit ?? DEFAULT_LIMIT;
     const page = filter?.page ?? DEFAULT_PAGE;
-    const cacheKey = `cache:events:list:${filter?.title ?? ''}:${page}:${limit}`;
+    const cacheKey = `cache:events:list:${filter?.title ?? ''}:${filter?.venueId ?? ''}:${filter?.excludeEventId ?? ''}:${page}:${limit}`;
     const cached = await this.redis.get(cacheKey);
     if (cached) return JSON.parse(cached);
 
     const { items: events, hasMore } = await paginate(
-      (skip, take) => this.eventsRepository.findMany(filter?.title, skip, take),
+      (skip, take) =>
+        this.eventsRepository.findMany(
+          filter?.title,
+          skip,
+          take,
+          filter?.venueId,
+          filter?.excludeEventId,
+        ),
       page,
       limit,
     );
@@ -237,6 +246,13 @@ export class EventsService implements EventsApi {
     data: { title?: string; startsAt?: Date; endsAt?: Date },
   ): Promise<EventDto> {
     if (data.startsAt || data.endsAt) {
+      const bookedCount = await this.seatsRepository.countBookedByEventId(id);
+      if (bookedCount > 0) {
+        throw new ConflictException(
+          'Cannot change the time of an event with sold tickets',
+        );
+      }
+
       const current = await this.eventsRepository.findById(id);
       const effectiveStartsAt = data.startsAt ?? current!.startsAt;
       const effectiveEndsAt = data.endsAt ?? current!.endsAt;

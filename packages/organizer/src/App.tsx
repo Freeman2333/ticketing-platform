@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { OrganizerHeader } from './OrganizerHeader';
 import { CreateEventPage } from './events/CreateEventPage';
+import { EditEventPage } from './events/EditEventPage';
 import { EventDetailsPage } from './events/EventDetailsPage';
 import { OrganizerEventsPage } from './events/OrganizerEventsPage';
 import { CreateVenuePage } from './venues/CreateVenuePage';
@@ -18,6 +19,7 @@ export function App() {
           <Route path="/" element={<OrganizerEventsPage />} />
           <Route path="/events/new" element={<CreateEventPage />} />
           <Route path="/events/:id" element={<EventDetailsPage />} />
+          <Route path="/events/:id/edit" element={<EditEventPage />} />
           <Route path="/venues" element={<VenuesPage />} />
           <Route path="/venues/new" element={<CreateVenuePage />} />
           <Route path="/venues/:id" element={<VenueDetailsPage />} />

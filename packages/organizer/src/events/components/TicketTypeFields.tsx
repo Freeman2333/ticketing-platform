@@ -1,4 +1,11 @@
-import { useFieldArray, type Control } from 'react-hook-form';
+import {
+  useFieldArray,
+  type Control,
+  type FieldArray,
+  type FieldArrayPath,
+  type FieldValues,
+  type Path,
+} from 'react-hook-form';
 import { Trash2 } from 'lucide-react';
 import {
   Button,
@@ -8,16 +15,19 @@ import {
   FormMessage,
   Input,
 } from '@ticketing/ui';
-import type { CreateEventFormValues } from '../CreateEventPage';
 
-export function TicketTypeFields({
+export function TicketTypeFields<TFieldValues extends FieldValues>({
   control,
+  name,
+  minItems = 1,
 }: {
-  control: Control<CreateEventFormValues>;
+  control: Control<TFieldValues>;
+  name: FieldArrayPath<TFieldValues>;
+  minItems?: number;
 }) {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'seatTypes',
+    name,
   });
 
   return (
@@ -36,7 +46,7 @@ export function TicketTypeFields({
         >
           <FormField
             control={control}
-            name={`seatTypes.${index}.label`}
+            name={`${name}.${index}.label` as Path<TFieldValues>}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -49,7 +59,7 @@ export function TicketTypeFields({
 
           <FormField
             control={control}
-            name={`seatTypes.${index}.price`}
+            name={`${name}.${index}.price` as Path<TFieldValues>}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -69,7 +79,7 @@ export function TicketTypeFields({
 
           <FormField
             control={control}
-            name={`seatTypes.${index}.count`}
+            name={`${name}.${index}.count` as Path<TFieldValues>}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -91,7 +101,7 @@ export function TicketTypeFields({
             type="button"
             variant="ghost"
             size="icon"
-            disabled={fields.length === 1}
+            disabled={fields.length <= minItems}
             onClick={() => remove(index)}
           >
             <Trash2 className="size-4" />
@@ -102,7 +112,13 @@ export function TicketTypeFields({
       <Button
         type="button"
         variant="outline"
-        onClick={() => append({ label: '', price: 0, count: 1 })}
+        onClick={() =>
+          append({
+            label: '',
+            price: 0,
+            count: 1,
+          } as FieldArray<TFieldValues, FieldArrayPath<TFieldValues>>)
+        }
       >
         + Add ticket type
       </Button>
