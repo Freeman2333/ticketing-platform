@@ -15,17 +15,8 @@ import {
   CardHeader,
   CardTitle,
   Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  FormSelectField,
+  FormTextField,
 } from '@ticketing/ui';
 
 type RegisterFormValues = z.infer<typeof AuthRegisterBody>;
@@ -63,54 +54,29 @@ export function RegisterPage() {
               </CardHeader>
               <CardContent>
                 <div className="grid gap-6">
-                  <FormField
+                  <FormTextField
                     control={form.control}
                     name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input type="email" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="Email"
+                    type="email"
                   />
 
-                  <FormField
+                  <FormTextField
                     control={form.control}
                     name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="Password"
+                    type="password"
                   />
 
-                  <FormField
+                  <FormSelectField
                     control={form.control}
                     name="role"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>I am a...</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select a role" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="attendee">Attendee</SelectItem>
-                            <SelectItem value="organizer">Organizer</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="I am a..."
+                    placeholder="Select a role"
+                    options={[
+                      { value: 'attendee', label: 'Attendee' },
+                      { value: 'organizer', label: 'Organizer' },
+                    ]}
                   />
 
                   {form.formState.errors.root?.serverError && (

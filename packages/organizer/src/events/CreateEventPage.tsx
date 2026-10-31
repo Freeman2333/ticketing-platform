@@ -9,16 +9,10 @@ import {
   EventTimeRangePicker,
   Form,
   FormControl,
-  FormField,
   FormItem,
   FormLabel,
-  FormMessage,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  FormSelectField,
+  FormTextField,
   Skeleton,
   Spinner,
 } from '@ticketing/ui';
@@ -78,44 +72,18 @@ function CreateEventContent() {
           <div className="grid gap-6">
             <h1 className="text-xl font-semibold">Create event</h1>
 
-            <FormField
+            <FormSelectField
               control={form.control}
               name="venueId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Venue</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a venue" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {venues.map((venue) => (
-                        <SelectItem key={venue.id} value={venue.id}>
-                          {venue.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Venue"
+              placeholder="Select a venue"
+              options={venues.map((venue) => ({
+                value: venue.id,
+                label: venue.name,
+              }))}
             />
 
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <FormTextField control={form.control} name="title" label="Title" />
 
             <FormItem>
               <FormLabel>Date &amp; time</FormLabel>

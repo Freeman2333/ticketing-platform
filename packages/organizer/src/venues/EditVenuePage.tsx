@@ -11,16 +11,10 @@ import {
   Button,
   ErrorBoundary,
   Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
+  FormSwitchField,
+  FormTextField,
   Skeleton,
   Spinner,
-  Switch,
 } from '@ticketing/ui';
 import { VenuePreviewCard } from './components/VenuePreviewCard';
 import { useUpdateVenue } from './hooks/useUpdateVenue';
@@ -72,54 +66,19 @@ function EditVenueContent({ id }: { id: string }) {
           <div className="grid gap-6">
             <h1 className="text-xl font-semibold">Edit venue</h1>
 
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <FormTextField control={form.control} name="name" label="Name" />
 
-            <FormField
+            <FormTextField
               control={form.control}
               name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Address</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Address"
             />
 
-            <FormField
+            <FormSwitchField
               control={form.control}
               name="isShared"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between rounded-md border p-3">
-                  <div>
-                    <FormLabel>Shared venue</FormLabel>
-                    <FormDescription>
-                      Allow other organizers to book this venue (subject to
-                      your approval).
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value ?? false}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
+              label="Shared venue"
+              description="Allow other organizers to book this venue (subject to your approval)."
             />
 
             {form.formState.errors.root?.serverError && (

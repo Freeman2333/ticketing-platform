@@ -16,12 +16,7 @@ import {
   CardHeader,
   CardTitle,
   Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
+  FormTextField,
 } from '@ticketing/ui';
 
 type LoginFormValues = z.infer<typeof AuthLoginBody>;
@@ -61,32 +56,18 @@ export function LoginPage() {
               </CardHeader>
               <CardContent>
                 <div className="grid gap-6">
-                  <FormField
+                  <FormTextField
                     control={form.control}
                     name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input type="email" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="Email"
+                    type="email"
                   />
 
-                  <FormField
+                  <FormTextField
                     control={form.control}
                     name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="Password"
+                    type="password"
                   />
 
                   {form.formState.errors.root?.serverError && (
