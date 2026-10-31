@@ -64,6 +64,7 @@ model Venue {
 model Event {
   id          String   @id @default(uuid())
   venueId     String   @map("venue_id")
+  organizerId String   @map("organizer_id")
   title       String
   description String?
   startsAt    DateTime @map("starts_at")

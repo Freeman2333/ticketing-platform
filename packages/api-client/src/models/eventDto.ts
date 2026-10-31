@@ -8,6 +8,7 @@
 export interface EventDto {
   id: string;
   venueId: string;
+  organizerId: string;
   title: string;
   /** @nullable */
   description: string | null;

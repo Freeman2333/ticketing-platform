@@ -215,6 +215,7 @@ export class EventsService implements EventsApi {
 
   async createEvent(
     venueId: string,
+    organizerId: string,
     title: string,
     startsAt: Date,
     endsAt: Date,
@@ -226,6 +227,7 @@ export class EventsService implements EventsApi {
     try {
       const event = await this.eventsRepository.create(
         venueId,
+        organizerId,
         title,
         startsAt,
         endsAt,
@@ -302,6 +304,7 @@ export class EventsService implements EventsApi {
     return {
       id: event.id,
       venueId: event.venueId,
+      organizerId: event.organizerId,
       title: event.title,
       description: event.description,
       startsAt: event.startsAt,

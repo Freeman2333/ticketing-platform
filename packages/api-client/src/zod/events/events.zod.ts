@@ -19,6 +19,7 @@ export const EventsListEventsResponse = zod.object({
   "items": zod.array(zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
+  "organizerId": zod.string(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
@@ -38,6 +39,7 @@ export const EventsCreateBody = zod.object({
 export const EventsCreateResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
+  "organizerId": zod.string(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
@@ -55,6 +57,7 @@ export const EventsListMyEventsResponse = zod.object({
   "items": zod.array(zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
+  "organizerId": zod.string(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
@@ -68,6 +71,7 @@ export const EventsGetRecentlyViewedResponse = zod.object({
   "recentlyViewed": zod.array(zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
+  "organizerId": zod.string(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
@@ -77,6 +81,7 @@ export const EventsGetRecentlyViewedResponse = zod.object({
   "upcoming": zod.array(zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
+  "organizerId": zod.string(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
@@ -92,6 +97,7 @@ export const EventsGetEventParams = zod.object({
 export const EventsGetEventResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
+  "organizerId": zod.string(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
@@ -118,6 +124,7 @@ export const EventsUpdateBody = zod.object({
 export const EventsUpdateResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
+  "organizerId": zod.string(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),
@@ -216,6 +223,7 @@ export const EventsUploadPosterBody = zod.object({
 export const EventsUploadPosterResponse = zod.object({
   "id": zod.string(),
   "venueId": zod.string(),
+  "organizerId": zod.string(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "startsAt": zod.iso.datetime({"offset":true}),

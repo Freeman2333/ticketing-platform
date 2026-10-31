@@ -60,9 +60,15 @@ export class EventsRepository {
     });
   }
 
-  create(venueId: string, title: string, startsAt: Date, endsAt: Date) {
+  create(
+    venueId: string,
+    organizerId: string,
+    title: string,
+    startsAt: Date,
+    endsAt: Date,
+  ) {
     return this.prisma.event.create({
-      data: { venueId, title, startsAt, endsAt },
+      data: { venueId, organizerId, title, startsAt, endsAt },
     });
   }
 

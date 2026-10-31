@@ -37,7 +37,7 @@ function EventDetailsContent({ id }: { id: string }) {
   const { deleteEvent, isPending: isDeleting } = useDeleteEvent();
 
   const userId = useUserId();
-  const isOwner = venue.organizerId === userId;
+  const isOwner = event.organizerId === userId;
 
   return (
     <div className="flex flex-col gap-6">

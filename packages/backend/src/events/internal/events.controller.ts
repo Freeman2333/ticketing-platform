@@ -133,8 +133,7 @@ export class EventsController {
     const event = await this.eventsService.getEvent(id);
     if (!event) throw new NotFoundException();
 
-    const venue = await this.venuesRepository.findById(event.venueId);
-    if (!venue || venue.organizerId !== req.user!.sub) {
+    if (event.organizerId !== req.user!.sub) {
       throw new NotFoundException();
     }
 
@@ -167,8 +166,7 @@ export class EventsController {
     const event = await this.eventsService.getEvent(id);
     if (!event) throw new NotFoundException();
 
-    const venue = await this.venuesRepository.findById(event.venueId);
-    if (!venue || venue.organizerId !== req.user!.sub) {
+    if (event.organizerId !== req.user!.sub) {
       throw new NotFoundException();
     }
 
@@ -186,8 +184,7 @@ export class EventsController {
     const event = await this.eventsService.getEvent(id);
     if (!event) throw new NotFoundException();
 
-    const venue = await this.venuesRepository.findById(event.venueId);
-    if (!venue || venue.organizerId !== req.user!.sub) {
+    if (event.organizerId !== req.user!.sub) {
       throw new NotFoundException();
     }
 
@@ -207,8 +204,7 @@ export class EventsController {
     const event = await this.eventsService.getEvent(id);
     if (!event) throw new NotFoundException();
 
-    const venue = await this.venuesRepository.findById(event.venueId);
-    if (!venue || venue.organizerId !== req.user!.sub) {
+    if (event.organizerId !== req.user!.sub) {
       throw new NotFoundException();
     }
 
@@ -228,8 +224,7 @@ export class EventsController {
     const event = await this.eventsService.getEvent(id);
     if (!event) throw new NotFoundException();
 
-    const venue = await this.venuesRepository.findById(event.venueId);
-    if (!venue || venue.organizerId !== req.user!.sub) {
+    if (event.organizerId !== req.user!.sub) {
       throw new NotFoundException();
     }
 
@@ -267,6 +262,7 @@ export class EventsController {
 
     return this.eventsService.createEvent(
       dto.venueId,
+      req.user!.sub,
       dto.title,
       new Date(dto.startsAt),
       new Date(dto.endsAt),
@@ -285,8 +281,7 @@ export class EventsController {
     const event = await this.eventsService.getEvent(id);
     if (!event) throw new NotFoundException();
 
-    const venue = await this.venuesRepository.findById(event.venueId);
-    if (!venue || venue.organizerId !== req.user!.sub) {
+    if (event.organizerId !== req.user!.sub) {
       throw new NotFoundException();
     }
 
@@ -317,8 +312,7 @@ export class EventsController {
     const event = await this.eventsService.getEvent(id);
     if (!event) throw new NotFoundException();
 
-    const venue = await this.venuesRepository.findById(event.venueId);
-    if (!venue || venue.organizerId !== req.user!.sub) {
+    if (event.organizerId !== req.user!.sub) {
       throw new NotFoundException();
     }
 

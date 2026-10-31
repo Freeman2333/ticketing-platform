@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { useUserId } from '@ticketing/auth-client';
 import {
   useEventsGetEvent,
   useEventsGetSeats,
   useEventsRecordView,
 } from '@ticketing/api-client';
-import { formatDateTime } from '@ticketing/ui';
+import { Button, formatDateTime } from '@ticketing/ui';
 import { ReservationPanel } from './components/ReservationPanel';
 import { SeatMap } from './seats/SeatMap';
 import { SeatMapSkeleton } from './seats/SeatMapSkeleton';
@@ -16,6 +17,8 @@ export function EventDetailsPage() {
   const { data: event, isLoading: isEventLoading } = useEventsGetEvent(
     eventId!,
   );
+  const userId = useUserId();
+  const isOwner = !!event && event.organizerId === userId;
   const { data: seats, isLoading: isSeatsLoading } = useEventsGetSeats(
     eventId!,
   );
@@ -55,10 +58,19 @@ export function EventDetailsPage() {
           fetchPriority="high"
         />
       )}
-      <h1 className="mt-4 text-2xl font-semibold">{event.title}</h1>
-      <p className="text-muted-foreground">
-        {formatDateTime(event.startsAt)}
-      </p>
+      <div className="mt-4 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">{event.title}</h1>
+          <p className="text-muted-foreground">
+            {formatDateTime(event.startsAt)}
+          </p>
+        </div>
+        {isOwner && (
+          <Button variant="outline" asChild>
+            <Link to={`/organizer/events/${event.id}/edit`}>Edit</Link>
+          </Button>
+        )}
+      </div>
       {event.description && <p className="mt-4">{event.description}</p>}
 
       <h2 className="mt-6 text-lg font-semibold">Seats</h2>

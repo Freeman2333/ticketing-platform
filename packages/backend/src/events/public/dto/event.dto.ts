@@ -8,6 +8,9 @@ export class EventDto {
   venueId!: string;
 
   @ApiProperty()
+  organizerId!: string;
+
+  @ApiProperty()
   title!: string;
 
   @ApiProperty({ type: String, nullable: true })
