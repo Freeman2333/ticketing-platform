@@ -2,22 +2,13 @@ import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
 import {
-  getVenuesFindMineQueryKey,
-  getVenuesFindOneQueryKey,
   useVenuesFindOneSuspense,
-  useVenuesUpdate,
-  useVenuesUploadImage,
   VenuesUpdateBody,
 } from '@ticketing/api-client';
 import {
   Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
   ErrorBoundary,
   Form,
   FormControl,
@@ -31,7 +22,8 @@ import {
   Spinner,
   Switch,
 } from '@ticketing/ui';
-import { ImageDropzone } from '../components/ImageDropzone';
+import { VenuePreviewCard } from './components/VenuePreviewCard';
+import { useUpdateVenue } from './hooks/useUpdateVenue';
 
 type EditVenueFormValues = z.infer<typeof VenuesUpdateBody>;
 
@@ -40,8 +32,6 @@ function EditVenueFormSkeleton() {
 }
 
 function EditVenueContent({ id }: { id: string }) {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { data: venue } = useVenuesFindOneSuspense(id);
   const [file, setFile] = useState<File | null>(null);
   const form = useForm<EditVenueFormValues>({
@@ -52,22 +42,11 @@ function EditVenueContent({ id }: { id: string }) {
       isShared: venue.isShared,
     },
   });
-  const updateMutation = useVenuesUpdate();
-  const uploadMutation = useVenuesUploadImage();
+  const { updateVenue } = useUpdateVenue(id);
 
   async function onSubmit(values: EditVenueFormValues) {
     try {
-      await updateMutation.mutateAsync({ id, data: values });
-      if (file) {
-        await uploadMutation.mutateAsync({ id, data: { file } });
-      }
-      queryClient.invalidateQueries({
-        queryKey: getVenuesFindMineQueryKey(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: getVenuesFindOneQueryKey(id),
-      });
-      navigate(`/organizer/venues/${id}`);
+      await updateVenue(values, file);
     } catch {
       form.setError('root.serverError', {
         message: 'Could not update venue.',
@@ -78,88 +57,83 @@ function EditVenueContent({ id }: { id: string }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Card>
-          <CardHeader>
-            <CardTitle>Edit venue</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-8 sm:grid-cols-2">
-              <div className="grid gap-6">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+        <div className="grid gap-8 lg:grid-cols-[380px_1fr] lg:items-start">
+          <div className="lg:sticky lg:top-6 lg:self-start">
+            <VenuePreviewCard
+              file={file}
+              onFileChange={setFile}
+              initialImageUrl={venue.imageUrl}
+              name={form.watch('name') ?? ''}
+              address={form.watch('address') ?? ''}
+              isShared={form.watch('isShared') ?? false}
+            />
+          </div>
 
-                <FormField
-                  control={form.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <div className="grid gap-6">
+            <h1 className="text-xl font-semibold">Edit venue</h1>
 
-                <FormField
-                  control={form.control}
-                  name="isShared"
-                  render={({ field }) => (
-                    <FormItem className="flex items-center justify-between rounded-md border p-3">
-                      <div>
-                        <FormLabel>Shared venue</FormLabel>
-                        <FormDescription>
-                          Allow other organizers to book this venue (subject
-                          to your approval).
-                        </FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value ?? false}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                {form.formState.errors.root?.serverError && (
-                  <p className="text-destructive text-sm">
-                    {form.formState.errors.root.serverError.message}
-                  </p>
-                )}
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                <Button type="submit" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting && <Spinner />}
-                  Save
-                </Button>
-              </div>
+            <FormField
+              control={form.control}
+              name="isShared"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between rounded-md border p-3">
+                  <div>
+                    <FormLabel>Shared venue</FormLabel>
+                    <FormDescription>
+                      Allow other organizers to book this venue (subject to
+                      your approval).
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value ?? false}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
 
-              <FormItem>
-                <FormLabel>Photo</FormLabel>
-                <FormControl>
-                  <ImageDropzone
-                    file={file}
-                    onFileChange={setFile}
-                    initialImageUrl={venue.imageUrl}
-                  />
-                </FormControl>
-              </FormItem>
-            </div>
-          </CardContent>
-        </Card>
+            {form.formState.errors.root?.serverError && (
+              <p className="text-destructive text-sm">
+                {form.formState.errors.root.serverError.message}
+              </p>
+            )}
+
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting && <Spinner />}
+              Save
+            </Button>
+          </div>
+        </div>
       </form>
     </Form>
   );
@@ -169,7 +143,7 @@ export function EditVenuePage() {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <div className="mx-auto w-full max-w-3xl">
+    <div className="mx-auto w-full max-w-5xl">
       <ErrorBoundary fallback={<p>Failed to load venue.</p>}>
         <Suspense fallback={<EditVenueFormSkeleton />}>
           <EditVenueContent id={id!} />
