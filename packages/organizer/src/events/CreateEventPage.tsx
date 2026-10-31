@@ -17,6 +17,7 @@ import {
   Spinner,
 } from '@ticketing/ui';
 import { EventPreviewCard } from './components/EventPreviewCard';
+import { TicketTypeFields } from './components/TicketTypeFields';
 import { useCreateEvent } from './hooks/useCreateEvent';
 
 const createEventFormSchema = z.object({
@@ -24,9 +25,18 @@ const createEventFormSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   startsAt: z.date({ message: 'Start is required' }),
   endsAt: z.date({ message: 'End is required' }),
+  seatTypes: z
+    .array(
+      z.object({
+        label: z.string().min(1, 'Label is required'),
+        price: z.number().min(1, 'Price must be 1 or more'),
+        count: z.number().int().min(1, 'Quantity must be at least 1'),
+      }),
+    )
+    .min(1, 'Add at least one ticket type'),
 });
 
-type CreateEventFormValues = z.infer<typeof createEventFormSchema>;
+export type CreateEventFormValues = z.infer<typeof createEventFormSchema>;
 
 function CreateEventFormSkeleton() {
   return <Skeleton className="h-64 w-full" />;
@@ -38,13 +48,16 @@ function CreateEventContent() {
   const [file, setFile] = useState<File | null>(null);
   const form = useForm<CreateEventFormValues>({
     resolver: zodResolver(createEventFormSchema),
+    defaultValues: {
+      seatTypes: [{ label: 'General Admission', price: 0, count: 1 }],
+    },
   });
-  
+
   const { createEvent } = useCreateEvent();
 
   async function onSubmit(values: CreateEventFormValues) {
     try {
-      await createEvent(values, file);
+      await createEvent(values, values.seatTypes, file);
     } catch {
       form.setError('root.serverError', {
         message: 'Could not create event.',
@@ -111,6 +124,10 @@ function CreateEventContent() {
                 </p>
               )}
             </FormItem>
+
+            <div className="grid gap-3">
+              <TicketTypeFields control={form.control} />
+            </div>
 
             {form.formState.errors.root?.serverError && (
               <p className="text-destructive text-sm">
